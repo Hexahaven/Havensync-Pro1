@@ -1,4 +1,5 @@
-import {View, Text, Image, TouchableOpacity, Video} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
+import Video from 'react-native-video';
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 
@@ -29,10 +30,12 @@ export function GreetingSection() {
         />
 
         <TouchableOpacity onPress={handleEditProfile}>
-          <Image
-            source={require('../assets/images/dummy-login.png')}
-            className="w-12 h-12 rounded-full border-2 border-gray-300"
-          />
+          {/* Using a placeholder view instead of the missing image */}
+          <View 
+            className="w-12 h-12 rounded-full border-2 border-gray-300 bg-gray-400 flex items-center justify-center"
+          >
+            <Text className="text-white font-bold">User</Text>
+          </View>
         </TouchableOpacity>
       </View>
       <View className="m-4 mt-0 mb-8">
