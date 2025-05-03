@@ -1,1 +1,3 @@
 node_modules
+*.apk
+android/app/build/
