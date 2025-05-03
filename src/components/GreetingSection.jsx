@@ -1,4 +1,4 @@
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TouchableOpacity, Video} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 
@@ -20,9 +20,12 @@ export function GreetingSection() {
   return (
     <>
       <View className="m-3 flex-row justify-between items-center">
-        <Image
-          source={require('../assets/images/hexa-haven-logo.png')}
-          className="w-1/3 h-full"
+        <Video
+          source={require('../assets/videos/welcome.mp4')}
+          className="w-1/3 h-24"
+          resizeMode="contain"
+          repeat
+          muted
         />
 
         <TouchableOpacity onPress={handleEditProfile}>
