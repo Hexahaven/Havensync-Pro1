@@ -406,6 +406,30 @@
         }
       }
     },
+    "react-native-video": {
+      "root": "C:\\Users\\Sathish\\Havensync-Pro1\\node_modules\\react-native-video",
+      "name": "react-native-video",
+      "platforms": {
+        "ios": {
+          "podspecPath": "C:\\Users\\Sathish\\Havensync-Pro1\\node_modules\\react-native-video\\react-native-video.podspec",
+          "version": "6.13.0",
+          "configurations": [],
+          "scriptPhases": []
+        },
+        "android": {
+          "sourceDir": "C:\\Users\\Sathish\\Havensync-Pro1\\node_modules\\react-native-video\\android",
+          "packageImportPath": "import com.brentvatne.react.ReactVideoPackage;",
+          "packageInstance": "new ReactVideoPackage()",
+          "buildTypes": [],
+          "componentDescriptors": [],
+          "cmakeListsPath": "C:/Users/Sathish/Havensync-Pro1/node_modules/react-native-video/android/build/generated/source/codegen/jni/CMakeLists.txt",
+          "cxxModuleCMakeListsModuleName": null,
+          "cxxModuleCMakeListsPath": null,
+          "cxxModuleHeaderName": null,
+          "isPureCxxDependency": false
+        }
+      }
+    },
     "react-native-wifi-reborn": {
       "root": "C:\\Users\\Sathish\\Havensync-Pro1\\node_modules\\react-native-wifi-reborn",
       "name": "react-native-wifi-reborn",
