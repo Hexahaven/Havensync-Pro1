@@ -1,66 +1,67 @@
-import React, {useEffect} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  Animated,
-  Easing,
-} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import {useDispatch, useSelector} from 'react-redux';
-import {clearUser} from '../redux/slices/authSlice';
+import React, {useEffect, useState} from 'react';
+import {View, Text, TouchableOpacity, StyleSheet, StatusBar} from 'react-native';
+import Video from 'react-native-video';
+import {useNavigation} from '@react-navigation/native';
 
-export default function WelcomeScreen({navigation}) {
-  const dispatch = useDispatch();
-  const user = useSelector(state => state.auth.user);
-  const fadeAnim = new Animated.Value(0);
-  const slideAnim = new Animated.Value(100);
+export default function HexaWelcomeScreen() {
+  const navigation = useNavigation();
+  const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 1000,
-        easing: Easing.out(Easing.ease),
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [fadeAnim, slideAnim]);
+    const timer = setTimeout(() => {
+      setShowButton(true);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const handleLogout = () => {
-    dispatch(clearUser());
+  const handleContinue = () => {
     navigation.navigate('HexaLoginScreen');
   };
 
   return (
-    <LinearGradient
-      colors={['#6a11cb', '#2575fc']}
-      className="flex-1 justify-center items-center p-6">
-      <Animated.View
-        style={{opacity: fadeAnim, transform: [{translateY: slideAnim}]}}>
-        <Image
-          source={require('../assets/images/hexa-haven-logo.png')}
-          className="mb-8"
-        />
-        <Text className="text-3xl font-bold mb-2 text-white">
-          Welcome, {user?.fullName}!
-        </Text>
-        <Text className="text-lg text-white mb-8 text-center">
-          We're glad to have you here. Start exploring and make the most out of
-          our services.
-        </Text>
-        <TouchableOpacity
-          onPress={handleLogout}
-          className="bg-white py-3 px-6 rounded-lg shadow-md">
-          <Text className="text-blue-600 text-lg font-semibold">Log In</Text>
-        </TouchableOpacity>
-      </Animated.View>
-    </LinearGradient>
+    <View style={styles.container}>
+      <StatusBar hidden />
+      <Video
+        source={require('../assets/videos/welcome.mp4')}
+        style={StyleSheet.absoluteFill}
+        resizeMode="cover"
+        repeat={false}
+        paused={false}
+      />
+      {showButton && (
+        <View style={styles.bottomContainer}>
+          <TouchableOpacity style={styles.button} onPress={handleContinue}>
+            <Text style={styles.buttonText}>Continue</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  bottomContainer: {
+    position: 'absolute',
+    bottom: 40,
+    width: '100%',
+    alignItems: 'center',
+  },
+  button: {
+    backgroundColor: 'white',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  buttonText: {
+    color: '#2575fc',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+});
