@@ -1,67 +1,72 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, StatusBar} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions} from 'react-native';
 import Video from 'react-native-video';
-import {useNavigation} from '@react-navigation/native';
 
-export default function HexaWelcomeScreen() {
-  const navigation = useNavigation();
+const {height} = Dimensions.get('window');
+
+export default function HexaWelcomeScreen({navigation}) {
   const [showButton, setShowButton] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowButton(true);
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }).start();
     }, 5000);
     return () => clearTimeout(timer);
   }, []);
 
-  const handleContinue = () => {
-    navigation.navigate('HexaLoginScreen');
-  };
-
   return (
     <View style={styles.container}>
-      <StatusBar hidden />
       <Video
-        source={require('../assets/videos/welcome.mp4')}
-        style={StyleSheet.absoluteFill}
+        source={require('../assets/welcome.mp4')}
+        style={styles.backgroundVideo}
         resizeMode="cover"
-        repeat={false}
-        paused={false}
+        repeat
       />
       {showButton && (
-        <View style={styles.bottomContainer}>
-          <TouchableOpacity style={styles.button} onPress={handleContinue}>
+        <Animated.View style={{...styles.buttonContainer, opacity: fadeAnim}}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HexaLoginScreen')}>
             <Text style={styles.buttonText}>Continue</Text>
           </TouchableOpacity>
-        </View>
+        </Animated.View>
       )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  bottomContainer: {
+  container: {flex: 1},
+  backgroundVideo: {
     position: 'absolute',
-    bottom: 40,
+    top: 0,
+    left: 0,
+    height: '100%',
     width: '100%',
-    alignItems: 'center',
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: height * 0.12, // slightly above the bottom
+    alignSelf: 'center',
   },
   button: {
-    backgroundColor: 'white',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 8,
+    backgroundColor: '#ffffffee',
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 16,
+    elevation: 8,
     shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
   },
   buttonText: {
     color: '#2575fc',
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '700',
   },
 });
