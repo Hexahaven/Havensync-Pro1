@@ -267,7 +267,7 @@
       "platforms": {
         "ios": {
           "podspecPath": "C:\\Users\\Sathish\\Havensync-Pro1\\node_modules\\react-native-reanimated\\RNReanimated.podspec",
-          "version": "3.17.1",
+          "version": "3.17.5",
           "configurations": [],
           "scriptPhases": []
         },
