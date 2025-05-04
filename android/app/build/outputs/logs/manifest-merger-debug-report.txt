@@ -20,6 +20,7 @@ MERGED from [:react-native-image-picker] C:\Users\Sathish\Havensync-Pro1\node_mo
 MERGED from [:react-native-linear-gradient] C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-linear-gradient\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:2:1-7:12
 MERGED from [:react-native-reanimated] C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-reanimated\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:2:1-7:12
 MERGED from [:react-native-svg] C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-svg\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:2:1-7:12
+MERGED from [:react-native-vector-icons] C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-vector-icons\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:2:1-7:12
 MERGED from [:react-native-wifi-reborn] C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-wifi-reborn\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:2:1-13:12
 MERGED from [com.facebook.react:react-android:0.76.6] C:\Users\Sathish\.gradle\caches\8.10.2\transforms\e1725c6eca62f7b272bec9fef692a344\transformed\react-android-0.76.6-debug\AndroidManifest.xml:2:1-24:12
 MERGED from [com.google.android.material:material:1.6.1] C:\Users\Sathish\.gradle\caches\8.10.2\transforms\8b5f594f8f601b8a136e288bf8580a37\transformed\material-1.6.1\AndroidManifest.xml:17:1-26:12
@@ -314,6 +315,8 @@ MERGED from [:react-native-reanimated] C:\Users\Sathish\Havensync-Pro1\node_modu
 MERGED from [:react-native-reanimated] C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-reanimated\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:5:5-44
 MERGED from [:react-native-svg] C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-svg\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:5:5-44
 MERGED from [:react-native-svg] C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-svg\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:5:5-44
+MERGED from [:react-native-vector-icons] C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-vector-icons\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:5:5-44
+MERGED from [:react-native-vector-icons] C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-vector-icons\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:5:5-44
 MERGED from [:react-native-wifi-reborn] C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-wifi-reborn\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:5:5-44
 MERGED from [:react-native-wifi-reborn] C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-wifi-reborn\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:5:5-44
 MERGED from [com.facebook.react:react-android:0.76.6] C:\Users\Sathish\.gradle\caches\8.10.2\transforms\e1725c6eca62f7b272bec9fef692a344\transformed\react-android-0.76.6-debug\AndroidManifest.xml:10:5-44

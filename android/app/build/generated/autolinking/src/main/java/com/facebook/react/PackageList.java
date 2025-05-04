@@ -38,6 +38,8 @@ import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
 // react-native-svg
 import com.horcrux.svg.SvgPackage;
+// react-native-vector-icons
+import com.oblador.vectoricons.VectorIconsPackage;
 // react-native-video
 import com.brentvatne.react.ReactVideoPackage;
 // react-native-wifi-reborn
@@ -101,6 +103,7 @@ public class PackageList {
       new SafeAreaContextPackage(),
       new RNScreensPackage(),
       new SvgPackage(),
+      new VectorIconsPackage(),
       new ReactVideoPackage(),
       new RNWifiPackage()
     ));
