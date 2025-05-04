@@ -81,30 +81,22 @@ export default function Routes() {
       <Stack.Screen
         name="HexaWelcomeScreen"
         component={Components.HexaWelcomeScreen}
-        options={{
-          headerShown: false,
-        }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="HexaLoginScreen"
         component={Components.HexaLoginScreen}
-        options={{
-          headerShown: false,
-        }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="HexaSignUpScreen"
         component={Components.HexaSignUpScreen}
-        options={{
-          headerShown: false,
-        }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="HexaDashboard"
         component={Components.HexaDashboard}
-        options={{
-          headerShown: false,
-        }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="HexaDevices"
@@ -130,6 +122,33 @@ export default function Routes() {
             />
           ),
         })}
+      />
+      <Stack.Screen
+        name="ForgotPassword"
+        component={Components.ForgotPassword}
+        options={{
+          header: () => (
+            <CustomHeader title="Forgot Password" showBackButton />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="OTPVerification"
+        component={Components.OTPVerification}
+        options={{
+          header: () => (
+            <CustomHeader title="OTP Verification" showBackButton />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="ResetPassword"
+        component={Components.ResetPassword}
+        options={{
+          header: () => (
+            <CustomHeader title="Reset Password" showBackButton />
+          ),
+        }}
       />
     </Stack.Navigator>
   );
