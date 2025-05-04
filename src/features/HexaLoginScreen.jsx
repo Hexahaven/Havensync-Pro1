@@ -72,10 +72,10 @@ export default function HexaLoginScreen({navigation}) {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          onPress={() => Alert.alert('Redirect', 'Password reset flow coming soon!')}>
-          <Text style={styles.forgotText}>Forgot Password?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('ForgotPasswordRequest')}>
+          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
         </TouchableOpacity>
+
 
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Login</Text>
