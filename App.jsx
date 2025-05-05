@@ -1,14 +1,18 @@
-import {Provider} from 'react-redux';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context'; // ✅ add this
 import store from './src/redux/store';
-import { NavigationContainer } from "@react-navigation/native";
-import Routes from "./src/routes/Route";
+import Routes from './src/routes/Route';
 
 export default function App() {
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <Routes />
-      </NavigationContainer>
+      <SafeAreaProvider> {/* ✅ wrap this */}
+        <NavigationContainer>
+          <Routes />
+        </NavigationContainer>
+      </SafeAreaProvider>
     </Provider>
   );
 }
