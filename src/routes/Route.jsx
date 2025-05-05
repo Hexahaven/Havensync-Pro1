@@ -94,6 +94,33 @@ export default function Routes() {
         options={{headerShown: false}}
       />
       <Stack.Screen
+        name="ForgotPasswordRequest"
+        component={Components.ForgotPasswordRequest}
+        options={{
+          header: () => (
+            <CustomHeader title="Forgot Password" showBackButton />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="OTPVerification"
+        component={Components.OTPVerification}
+        options={{
+          header: () => (
+            <CustomHeader title="OTP Verification" showBackButton />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="ResetPassword"
+        component={Components.ResetPassword}
+        options={{
+          header: () => (
+            <CustomHeader title="Reset Password" showBackButton />
+          ),
+        }}
+      />
+      <Stack.Screen
         name="HexaDashboard"
         component={Components.HexaDashboard}
         options={{headerShown: false}}
@@ -122,33 +149,6 @@ export default function Routes() {
             />
           ),
         })}
-      />
-      <Stack.Screen
-        name="ForgotPassword"
-        component={Components.ForgotPassword}
-        options={{
-          header: () => (
-            <CustomHeader title="Forgot Password" showBackButton />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="OTPVerification"
-        component={Components.OTPVerification}
-        options={{
-          header: () => (
-            <CustomHeader title="OTP Verification" showBackButton />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="ResetPassword"
-        component={Components.ResetPassword}
-        options={{
-          header: () => (
-            <CustomHeader title="Reset Password" showBackButton />
-          ),
-        }}
       />
     </Stack.Navigator>
   );
