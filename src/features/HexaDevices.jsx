@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, TextInput, Modal, Image, Animated, Easing } from 'react-native';
-import { MaterialIcons, Feather } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
+import Feather from 'react-native-vector-icons/Feather';
+// Note: If you need LinearGradient, you'll need to install react-native-linear-gradient
+// import LinearGradient from 'react-native-linear-gradient';
 
 const sampleDevices = [
-  { id: '1', name: 'Living Room', isOn: false, image: require('../assets/icons/livingroom.png') },
-  { id: '2', name: 'Bedroom', isOn: true, image: require('../assets/icons/bedroom.png') },
-  { id: '3', name: 'Kitchen', isOn: false, image: require('../assets/icons/kitchen.png') },
+  { id: '1', name: 'Living Room', isOn: false, image: require('../assets/icons/nodevice.png') },
+  { id: '2', name: 'Bedroom', isOn: true, image: require('../assets/icons/nodevice.png') },
+  { id: '3', name: 'Kitchen', isOn: false, image: require('../assets/icons/nodevice.png') },
 ];
 
 export default function HexaDevices() {
