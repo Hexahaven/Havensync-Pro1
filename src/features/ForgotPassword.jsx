@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-const ForgotPasswordRequest = ({ navigation }) => {
+const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState('');
 
   return (
@@ -25,7 +25,7 @@ const ForgotPasswordRequest = ({ navigation }) => {
   );
 };
 
-export default ForgotPasswordRequest;
+export default ForgotPassword;
 
 const styles = StyleSheet.create({
   container: {
