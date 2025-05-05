@@ -120,27 +120,7 @@ export default function Routes() {
           header: () => <CustomHeader title="Reset Password" showBackButton={true} />,
         }}
       />
-      <Stack.Screen
-        name="Dashboard"
-        component={Components.HexaDashboard}
-        options={{
-          header: () => <CustomHeader title="Dashboard" showBackButton={false} />,
-        }}
-      />
-      <Stack.Screen
-        name="Devices"
-        component={Components.HexaDevices}
-        options={{
-          header: () => <CustomHeader title="Devices" showBackButton={true} />,
-        }}
-      />
-      <Stack.Screen
-        name="EditProfile"
-        component={Components.HexaEditProfile}
-        options={{
-          header: () => <CustomHeader title="Edit Profile" showBackButton={true} />,
-        }}
-      />
+      
     </Stack.Navigator>
   );
 }
