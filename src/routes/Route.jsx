@@ -79,26 +79,30 @@ export default function Routes() {
         gestureDirection: 'horizontal',
       }}>
       <Stack.Screen
-        name="HexaWelcomeScreen"
+        name="Welcome"
         component={Components.HexaWelcomeScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="HexaLoginScreen"
+        name="Login"
         component={Components.HexaLoginScreen}
-        options={{headerShown: false}}
+        options={{
+          header: () => <CustomHeader title="Login" showBackButton={true} />,
+        }}
       />
       <Stack.Screen
-        name="HexaSignUpScreen"
+        name="SignUp"
         component={Components.HexaSignUpScreen}
-        options={{headerShown: false}}
+        options={{
+          header: () => <CustomHeader title="Sign Up" showBackButton={true} />,
+        }}
       />
       <Stack.Screen
-        name="ForgotPasswordRequest"
+        name="ForgotPassword"
         component={Components.ForgotPasswordRequest}
         options={{
           header: () => (
-            <CustomHeader title="Forgot Password" showBackButton />
+            <CustomHeader title="Forgot Password" showBackButton={true} />
           ),
         }}
       />
@@ -106,49 +110,36 @@ export default function Routes() {
         name="OTPVerification"
         component={Components.OTPVerification}
         options={{
-          header: () => (
-            <CustomHeader title="OTP Verification" showBackButton />
-          ),
+          header: () => <CustomHeader title="Verify OTP" showBackButton={true} />,
         }}
       />
       <Stack.Screen
         name="ResetPassword"
         component={Components.ResetPassword}
         options={{
-          header: () => (
-            <CustomHeader title="Reset Password" showBackButton />
-          ),
+          header: () => <CustomHeader title="Reset Password" showBackButton={true} />,
         }}
       />
       <Stack.Screen
-        name="HexaDashboard"
+        name="Dashboard"
         component={Components.HexaDashboard}
-        options={{headerShown: false}}
+        options={{
+          header: () => <CustomHeader title="Dashboard" showBackButton={false} />,
+        }}
       />
       <Stack.Screen
-        name="HexaDevices"
+        name="Devices"
         component={Components.HexaDevices}
-        options={({route}) => ({
-          header: () => (
-            <CustomHeader
-              title={route.params?.title || route.name}
-              showBackButton={true}
-            />
-          ),
-        })}
-        initialParams={{deviceId: null}}
+        options={{
+          header: () => <CustomHeader title="Devices" showBackButton={true} />,
+        }}
       />
       <Stack.Screen
-        name="HexaEditProfile"
+        name="EditProfile"
         component={Components.HexaEditProfile}
-        options={({route}) => ({
-          header: () => (
-            <CustomHeader
-              title={route.params?.title || route.name}
-              showBackButton={true}
-            />
-          ),
-        })}
+        options={{
+          header: () => <CustomHeader title="Edit Profile" showBackButton={true} />,
+        }}
       />
     </Stack.Navigator>
   );
