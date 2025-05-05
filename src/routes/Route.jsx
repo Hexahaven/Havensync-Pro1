@@ -94,8 +94,8 @@ export default function Routes() {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="ForgotPassword"
-        component={Components.ForgotPassword}
+        name="ForgotPasswordRequest"
+        component={Components.ForgotPasswordRequest}
         options={{
           header: () => (
             <CustomHeader title="Forgot Password" showBackButton />
