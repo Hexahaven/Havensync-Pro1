@@ -1,356 +1,230 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {useSelector, useDispatch} from 'react-redux';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {
-  faFan,
-  faCheckSquare,
-  faSquare,
-  faToggleOn,
-  faToggleOff,
-  faClock,
-  faLightbulb,
-} from '@fortawesome/free-solid-svg-icons';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  Easing,
-} from 'react-native-reanimated';
-import Slider from '@react-native-community/slider';
-import TimePickerModal from '../components/TimePickerModal';
-import DelayTimerModal from '../components/DelayTimerModal';
-import {
-  updateDevice,
-  setTimer,
-  decrementTimer,
-  resetTimer,
-  setMainToggleTimer,
-  decrementMainToggleTimer,
-  resetMainToggleTimer,
-} from '../redux/slices/switchSlice';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, TextInput, Modal, Image, Animated, Easing } from 'react-native';
+import { MaterialIcons, Feather } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+
+const sampleDevices = [
+  { id: '1', name: 'Living Room', isOn: false, image: require('../assets/icons/livingroom.png') },
+  { id: '2', name: 'Bedroom', isOn: true, image: require('../assets/icons/bedroom.png') },
+  { id: '3', name: 'Kitchen', isOn: false, image: require('../assets/icons/kitchen.png') },
+];
 
 export default function HexaDevices() {
-  const navigation = useNavigation();
-  const route = useRoute();
-  const dispatch = useDispatch();
-
-  const selectedDevice = useSelector(state =>
-    state.switches.activeDevices.find(
-      device => device.id === Number(route.params.deviceId),
-    ),
-  );
-
-  const timers = useSelector(
-    state => state.switches.timers[selectedDevice?.id] || {},
-  );
-
-  const mainToggleTimer = useSelector(state => state.switches.mainToggleTimer);
-
-  const [mainToggle, setMainToggle] = useState(false);
-  const [switchStates, setSwitchStates] = useState(
-    selectedDevice?.switches || [],
-  );
-  const [checkedStates, setCheckedStates] = useState(
-    selectedDevice?.switches.map(() => false) || [],
-  );
-  const [fanSpeeds, setFanSpeeds] = useState(
-    selectedDevice?.regulators.map(() => 0) || [],
-  );
+  const [devices, setDevices] = useState(sampleDevices);
+  const [editingId, setEditingId] = useState(null);
+  const [editedName, setEditedName] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedSwitchIndex, setSelectedSwitchIndex] = useState(null);
-  const [delayModalVisible, setDelayModalVisible] = useState(false);
+  const [selectedDevice, setSelectedDevice] = useState(null);
 
-  const fanRotations = [
-    useSharedValue(0),
-    useSharedValue(0),
-    useSharedValue(0),
-    useSharedValue(0),
-    useSharedValue(0),
-    useSharedValue(0),
-  ];
-
-  const animatedFanStyles = fanRotations.map(rotation =>
-    useAnimatedStyle(() => ({
-      transform: [{rotate: `${rotation.value}deg`}],
-    })),
-  );
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (mainToggleTimer > 0) {
-        dispatch(decrementMainToggleTimer());
-      } else if (mainToggleTimer === 0) {
-        handleMainToggleTimerEnd();
-        dispatch(resetMainToggleTimer());
+  const toggleDevice = (id) => {
+    const updated = devices.map(device => {
+      if (device.id === id) {
+        return { ...device, isOn: !device.isOn };
       }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [mainToggleTimer]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      Object.keys(timers).forEach(switchIndex => {
-        if (timers[switchIndex] > 0) {
-          dispatch(decrementTimer({deviceId: selectedDevice.id, switchIndex}));
-        } else if (timers[switchIndex] === 0) {
-          handleTimerEnd(Number(switchIndex));
-          dispatch(resetTimer({deviceId: selectedDevice.id, switchIndex}));
-        }
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [timers, selectedDevice?.id]);
-
-  const handleMainToggleTimerEnd = () => {
-    setMainToggle(false);
-    const newSwitchStates = [...switchStates];
-    const newCheckedStates = [...checkedStates];
-    checkedStates.forEach((isChecked, index) => {
-      if (isChecked) {
-        newSwitchStates[index] = false;
-        newCheckedStates[index] = false;
-        if (selectedDevice?.regulators.length > index) {
-          const newFanSpeeds = [...fanSpeeds];
-          newFanSpeeds[index] = 0;
-          setFanSpeeds(newFanSpeeds);
-          fanRotations[index].value = withTiming(0, {
-            duration: 500,
-            easing: Easing.linear,
-          });
-        }
-      }
+      return device;
     });
-
-    setSwitchStates(newSwitchStates);
-    setCheckedStates(newCheckedStates);
-    dispatch(updateDevice({id: selectedDevice.id, switches: newSwitchStates}));
+    setDevices(updated);
   };
 
-  const handleTimerEnd = switchIndex => {
-    const newSwitchStates = [...switchStates];
-    newSwitchStates[switchIndex] = false;
-    setSwitchStates(newSwitchStates);
-
-    if (selectedDevice?.regulators.length > switchIndex) {
-      const newFanSpeeds = [...fanSpeeds];
-      newFanSpeeds[switchIndex] = 0;
-      setFanSpeeds(newFanSpeeds);
-      fanRotations[switchIndex].value = withTiming(0, {
-        duration: 500,
-        easing: Easing.linear,
-      });
-    }
-
-    dispatch(updateDevice({id: selectedDevice.id, switches: newSwitchStates}));
+  const handleEdit = (id, currentName) => {
+    setEditingId(id);
+    setEditedName(currentName);
   };
 
-  const handleScheduleTimer = (switchIndex, timeLeft) => {
-    dispatch(setTimer({deviceId: selectedDevice.id, switchIndex, timeLeft}));
+  const saveEdit = (id) => {
+    const updated = devices.map(device => {
+      if (device.id === id) {
+        return { ...device, name: editedName };
+      }
+      return device;
+    });
+    setDevices(updated);
+    setEditingId(null);
+    setEditedName('');
   };
 
-  const handleOpenModal = index => {
-    setSelectedSwitchIndex(index);
+  const openModal = (device) => {
+    setSelectedDevice(device);
     setModalVisible(true);
   };
 
-  const handleCloseModal = () => {
-    setModalVisible(false);
-  };
+  const renderItem = ({ item }) => {
+    const glowAnim = new Animated.Value(0);
 
-  const handleSelectDelay = delay => {
-    setDelayModalVisible(false);
-    if (delay) {
-      dispatch(setMainToggleTimer(delay));
-      setMainToggle(true);
-    }
-  };
+    const animateGlow = () => {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(glowAnim, { toValue: 1, duration: 800, useNativeDriver: false, easing: Easing.inOut(Easing.ease) }),
+          Animated.timing(glowAnim, { toValue: 0, duration: 800, useNativeDriver: false, easing: Easing.inOut(Easing.ease) }),
+        ])
+      ).start();
+    };
 
-  const handleToggleSwitch = index => {
-    const newSwitchStates = [...switchStates];
-    newSwitchStates[index] = !newSwitchStates[index];
-    setSwitchStates(newSwitchStates);
+    if (item.isOn) animateGlow();
 
-    if (!newSwitchStates[index]) {
-      dispatch(resetTimer({deviceId: selectedDevice.id, switchIndex: index}));
-    }
+    const glowStyle = item.isOn
+      ? {
+          shadowColor: '#00f7ff',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.9,
+          shadowRadius: 10,
+          backgroundColor: '#1f2d3a',
+          borderColor: '#00f7ff',
+        }
+      : {
+          backgroundColor: '#1c1c1c',
+          borderColor: '#333',
+        };
 
-    if (selectedDevice?.regulators.length > index && !newSwitchStates[index]) {
-      const newFanSpeeds = [...fanSpeeds];
-      newFanSpeeds[index] = 0;
-      setFanSpeeds(newFanSpeeds);
-      fanRotations[index].value = withTiming(0, {
-        duration: 500,
-        easing: Easing.linear,
-      });
-    }
-
-    dispatch(updateDevice({id: selectedDevice.id, switches: newSwitchStates}));
-  };
-
-  const handleToggleCheckbox = index => {
-    if (!mainToggle) return;
-    const newCheckedStates = [...checkedStates];
-    newCheckedStates[index] = !newCheckedStates[index];
-    setCheckedStates(newCheckedStates);
-
-    if (newCheckedStates[index]) {
-      const newSwitchStates = [...switchStates];
-      newSwitchStates[index] = true;
-      setSwitchStates(newSwitchStates);
-      dispatch(
-        updateDevice({id: selectedDevice.id, switches: newSwitchStates}),
-      );
-    }
-  };
-
-  const handleFanSpeedChange = (fanIndex, speed) => {
-    if (!switchStates[fanIndex]) return;
-    const newFanSpeeds = [...fanSpeeds];
-    newFanSpeeds[fanIndex] = speed;
-    setFanSpeeds(newFanSpeeds);
-    fanRotations[fanIndex].value = withTiming(speed * 360, {
-      duration: 1000,
-      easing: Easing.linear,
-    });
-
-    dispatch(updateDevice({id: selectedDevice.id, regulators: newFanSpeeds}));
-  };
-
-  const formatTime = seconds => {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return `${hrs.toString().padStart(2, '0')}:${mins
-      .toString()
-      .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return (
+      <Animated.View style={[styles.deviceCard, glowStyle]}>
+        <Image source={item.image} style={styles.deviceIcon} />
+        {editingId === item.id ? (
+          <TextInput
+            value={editedName}
+            onChangeText={setEditedName}
+            onSubmitEditing={() => saveEdit(item.id)}
+            style={styles.editInput}
+          />
+        ) : (
+          <Text style={styles.deviceName}>{item.name}</Text>
+        )}
+        <TouchableOpacity onPress={() => handleEdit(item.id, item.name)} style={styles.editIcon}>
+          <Feather name="edit-2" size={18} color="#bbb" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => toggleDevice(item.id)}
+          style={[styles.toggleButton, item.isOn ? styles.toggleOn : styles.toggleOff]}
+        >
+          <Text style={styles.toggleText}>{item.isOn ? 'ON' : 'OFF'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => openModal(item)} style={styles.timerButton}>
+          <MaterialIcons name="timer" size={22} color="#ccc" />
+        </TouchableOpacity>
+      </Animated.View>
+    );
   };
 
   return (
-    <ScrollView className="flex-1 p-4 mb-2">
-      <View className="flex-row justify-between items-center bg-white p-4 rounded-xl shadow-sm mb-4">
-        <Text className="text-lg font-semibold text-gray-800">
-          Main Control
-        </Text>
-        <TouchableOpacity
-          onPress={() => setDelayModalVisible(true)}
-          className="p-2 rounded-full bg-gray-100">
-          <FontAwesomeIcon
-            icon={mainToggle ? faToggleOn : faToggleOff}
-            size={30}
-            color={mainToggle ? '#84c3e0' : '#ff8625'}
-          />
-        </TouchableOpacity>
-      </View>
-
-      <DelayTimerModal
-        visible={delayModalVisible}
-        onClose={() => setDelayModalVisible(false)}
-        onSelectDelay={handleSelectDelay}
+    <View style={styles.container}>
+      <FlatList
+        data={devices}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        contentContainerStyle={styles.list}
       />
 
-      <View className="flex-row flex-wrap justify-between">
-        {selectedDevice?.switches.map((sw, idx) => (
-          <View
-            key={idx}
-            className="w-[100%] bg-white p-4 rounded-xl shadow-sm mb-4">
-            <View className="flex-row justify-between items-center">
-              <Text className="text-lg font-semibold text-gray-800">
-                {selectedDevice?.regulators.length > idx
-                  ? `Fan ${idx + 1}`
-                  : `Switch ${idx + 1}`}
-              </Text>
-              <View className="flex-row items-center">
-                <TouchableOpacity
-                  onPress={() => handleOpenModal(idx)}
-                  disabled={!switchStates[idx]}
-                  className="mr-2">
-                  <FontAwesomeIcon
-                    icon={faClock}
-                    size={20}
-                    color={switchStates[idx] ? '#4A5568' : '#ccc'}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => handleToggleCheckbox(idx)}
-                  disabled={!mainToggle}>
-                  <FontAwesomeIcon
-                    icon={checkedStates[idx] ? faCheckSquare : faSquare}
-                    size={20}
-                    color={
-                      checkedStates[idx] && mainToggle ? '#84c3e0' : '#ccc'
-                    }
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <TouchableOpacity
-              onPress={() => handleToggleSwitch(idx)}
-              className="mt-2">
-              <FontAwesomeIcon
-                icon={switchStates[idx] ? faToggleOn : faToggleOff}
-                size={30}
-                color={switchStates[idx] ? '#84c3e0' : '#ff8625'}
-              />
+      {/* Timer/Delay Modal */}
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Set Timer / Delay</Text>
+            <Text style={styles.modalSubtitle}>Device: {selectedDevice?.name}</Text>
+            {/* Timer/Delay Settings go here */}
+            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.modalClose}>
+              <Text style={styles.modalCloseText}>Close</Text>
             </TouchableOpacity>
-
-            {selectedDevice?.regulators.length > idx ? (
-              <View className="items-center">
-                <Animated.View
-                  style={[animatedFanStyles[idx]]}
-                  className="flex justify-center items-center w-32 mb-2">
-                  <FontAwesomeIcon
-                    icon={faFan}
-                    size={50}
-                    color={switchStates[idx] ? '#84c3e0' : '#ccc'}
-                  />
-                </Animated.View>
-                <Slider
-                  style={{width: '100%', height: 40}}
-                  minimumValue={0}
-                  maximumValue={6}
-                  step={1}
-                  value={fanSpeeds[idx]}
-                  onValueChange={value => handleFanSpeedChange(idx, value)}
-                  disabled={!switchStates[idx]}
-                  minimumTrackTintColor="#84c3e0"
-                  maximumTrackTintColor="#ccc"
-                />
-              </View>
-            ) : (
-              <View className="mt-4 items-center">
-                <Animated.View className="flex justify-center items-center mb-3">
-                  <FontAwesomeIcon
-                    icon={faLightbulb}
-                    size={40}
-                    color={switchStates[idx] ? '#ff8625' : '#ccc'}
-                  />
-                </Animated.View>
-              </View>
-            )}
-
-            {timers[idx] > 0 && (
-              <View className="mt-4 items-center">
-                <Text className="text-gray-800">Time Left:</Text>
-                <Text className="text-2xl font-bold text-gray-800">
-                  {formatTime(timers[idx])}
-                </Text>
-              </View>
-            )}
           </View>
-        ))}
-      </View>
-
-      <TimePickerModal
-        visible={modalVisible}
-        onClose={handleCloseModal}
-        onSchedule={timeLeft =>
-          handleScheduleTimer(selectedSwitchIndex, timeLeft)
-        }
-      />
-    </ScrollView>
+        </View>
+      </Modal>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#0f172a',
+    padding: 16,
+  },
+  list: {
+    justifyContent: 'space-between',
+  },
+  deviceCard: {
+    flex: 1,
+    margin: 8,
+    padding: 14,
+    borderRadius: 18,
+    borderWidth: 1,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  deviceIcon: {
+    width: 48,
+    height: 48,
+    marginBottom: 10,
+  },
+  deviceName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#f1f5f9',
+  },
+  editInput: {
+    fontSize: 16,
+    color: '#fff',
+    borderBottomWidth: 1,
+    borderColor: '#888',
+    width: 100,
+    textAlign: 'center',
+  },
+  editIcon: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+  },
+  toggleButton: {
+    marginTop: 14,
+    paddingVertical: 6,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+  },
+  toggleOn: {
+    backgroundColor: '#00f7ff',
+  },
+  toggleOff: {
+    backgroundColor: '#374151',
+  },
+  toggleText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  timerButton: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: '#0009',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: '#1e293b',
+    padding: 20,
+    borderRadius: 16,
+  },
+  modalTitle: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
+  modalSubtitle: {
+    color: '#ccc',
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  modalClose: {
+    backgroundColor: '#0ea5e9',
+    padding: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalCloseText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+});
