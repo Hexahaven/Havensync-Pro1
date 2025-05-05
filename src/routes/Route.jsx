@@ -30,6 +30,9 @@ const CustomHeader = ({title, showBackButton}) => {
   const mainToggleTimer = useSelector(state => state.switches.mainToggleTimer);
 
   const formatTime = seconds => {
+    if (typeof seconds !== 'number' || isNaN(seconds) || seconds < 0) {
+      return '00:00:00';
+    }
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
@@ -37,6 +40,8 @@ const CustomHeader = ({title, showBackButton}) => {
       .toString()
       .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
+
+  const safeTitle = typeof title === 'string' ? title : '';
 
   return (
     <>
@@ -48,7 +53,7 @@ const CustomHeader = ({title, showBackButton}) => {
         {showBackButton && <CustomBackButton />}
         <Animated.View entering={SlideInUp.delay(150)} className="flex-1">
           <Text className="text-white text-xl font-bold text-center">
-            {title}
+            {safeTitle}
           </Text>
           {mainToggleTimer > 0 && (
             <Animated.View entering={SlideInUp.delay(150)} className="ml-2">

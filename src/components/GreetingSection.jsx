@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
+import Video from 'react-native-video';
 
 export function GreetingSection() {
   const navigation = useNavigation();
@@ -28,9 +29,12 @@ export function GreetingSection() {
   return (
     <>
       <View className="m-3 flex-row justify-between items-center">
-        <Image
+        <Video
           source={require('../assets/videos/welcome.mp4')}
-          className="w-1/3 h-full"
+          style={{ width: 120, height: '100%' }}
+          resizeMode="cover"
+          repeat
+          muted
         />
 
         <View className="flex-row space-x-3 items-center">
