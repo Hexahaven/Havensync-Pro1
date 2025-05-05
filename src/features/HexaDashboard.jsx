@@ -1,26 +1,55 @@
-import {ScrollView} from 'react-native';
-import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-import {GreetingSection} from '../components/GreetingSection';
-import {WeatherSection} from '../components/WeatherSection';
-import SwitchSection from '../components/SwitchSection';
-import {LinearGradient} from 'react-native-linear-gradient';
+import React from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function HexaDashboard() {
+const HexaDashboard = () => {
   return (
-    <SafeAreaProvider>
-      <LinearGradient
-        colors={['#bedcea', '#ffffff']}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 1}}
-        style={{flex: 1}}>
-        <SafeAreaView className="flex-1">
-          <GreetingSection />
-          <ScrollView className="flex-1 p-6">
-            <WeatherSection />
-            <SwitchSection />
-          </ScrollView>
-        </SafeAreaView>
-      </LinearGradient>
-    </SafeAreaProvider>
+    <View style={styles.container}>
+      <View style={styles.weatherCard}>
+        <View style={styles.weatherHeader}>
+          <Ionicons name="partly-sunny-outline" size={28} color="#ffb300" />
+          <Text style={styles.tempText}>26°C</Text>
+        </View>
+        <Text style={styles.weatherSub}>Humidity: 68%</Text>
+        <Text style={styles.weatherSub}>Sunny, clear sky</Text>
+      </View>
+    </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f7f9fc',
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  weatherCard: {
+    backgroundColor: '#fff',
+    borderRadius: 28,
+    padding: 24,
+    width: '100%',
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+  weatherHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  tempText: {
+    fontSize: 28,
+    fontWeight: '600',
+    marginLeft: 10,
+  },
+  weatherSub: {
+    fontSize: 16,
+    color: '#666',
+    marginTop: 4,
+  },
+});
+
+export default HexaDashboard;
