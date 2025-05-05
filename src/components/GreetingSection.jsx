@@ -55,9 +55,9 @@ export function GreetingSection() {
         <Text className="text-3xl font-extrabold text-gray-800 font-mono">
           {getGreeting()},
         </Text>
-        <Text className="text-2xl text-[#ff8625]">
-          {profile.name || 'Guest'}
-        </Text>
+          <Text className="text-2xl text-[#ff8625]">
+            {typeof profile.name === 'string' ? profile.name : 'Guest'}
+          </Text>
       </View>
     </>
   );
