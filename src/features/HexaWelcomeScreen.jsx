@@ -47,6 +47,9 @@ export default function HexaWelcomeScreen({navigation}) {
         resizeMode="cover"
         repeat
       />
+
+      
+
       {showButton && (
         <Animated.View style={[styles.buttonContainer, {opacity: fadeAnim}]}>
           <TouchableOpacity onPress={() => navigation.navigate('HexaLoginScreen')}>
@@ -55,7 +58,7 @@ export default function HexaWelcomeScreen({navigation}) {
               start={{x: 0, y: 0}}
               end={{x: 0, y: 1}}
               style={styles.button}>
-              <Text style={styles.buttonText}>Continue</Text>
+              <Text style={styles.buttonText}>Enter Haven</Text>
               <Animated.View
                 style={[
                   styles.shimmerOverlay,
@@ -82,6 +85,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#c4d3d2',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   backgroundVideo: {
     position: 'absolute',
@@ -89,6 +94,15 @@ const styles = StyleSheet.create({
     left: 0,
     height: '100%',
     width: '100%',
+  },
+  header: {
+    fontSize: 28,
+    color: '#202020',
+    fontFamily: 'HoryzenDigital-24', // <-- Header font
+    marginBottom: 40,
+    textShadowColor: '#b0b0b0',
+    textShadowOffset: { width: 1.5, height: 1.5 },
+    textShadowRadius: 3,
   },
   buttonContainer: {
     position: 'absolute',
@@ -101,26 +115,28 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
 
-    // 3D Shadow Effects
+    // Shadow & bevel
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.6,
     shadowRadius: 10,
     elevation: 12,
 
-    // Bevel highlight
     borderTopWidth: 1,
     borderLeftWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.4)',
   },
   buttonText: {
     color: '#1e1e1e',
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: 20,
+    fontFamily: 'HoryzenMono-24', // <-- Body font
+    fontWeight: '800',
     textAlign: 'center',
+
+    // 3D Text Look
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 1.5, height: 1.5 },
+    textShadowRadius: 2,
   },
   shimmerOverlay: {
     ...StyleSheet.absoluteFillObject,
