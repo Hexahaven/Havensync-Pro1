@@ -946,7 +946,7 @@
     "android": {}
   },
   "assets": [
-    "./assets/fonts"
+    "./src/assets/fonts/"
   ],
   "project": {
     "ios": {
@@ -956,6 +956,7 @@
         "path": ".",
         "isWorkspace": false
       },
+      "automaticPodsInstallation": false,
       "assets": []
     },
     "android": {

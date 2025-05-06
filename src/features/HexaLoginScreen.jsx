@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Animated,
-  Alert,
+  ActivityIndicator,
+  KeyboardAvoidingView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -16,7 +17,7 @@ export default function HexaLoginScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [focusedInput, setFocusedInput] = useState(null);
-  const [loginStatus, setLoginStatus] = useState(null); // 'success', 'failed', or null
+  const [loginStatus, setLoginStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const [emailAnim] = useState(new Animated.Value(email ? 1 : 0));
@@ -24,7 +25,7 @@ export default function HexaLoginScreen({ navigation }) {
   const buttonColorAnim = useRef(new Animated.Value(0)).current;
   const buttonScaleAnim = useRef(new Animated.Value(1)).current;
 
-  // Reset login status when component mounts or unmounts
+ 
   useEffect(() => {
     return () => {
       setLoginStatus(null);
@@ -32,15 +33,16 @@ export default function HexaLoginScreen({ navigation }) {
     };
   }, []);
 
-  // Effect to handle the success/failure case timeout
+
   useEffect(() => {
     let timer;
+ 
     if (loginStatus === 'failed' || loginStatus === 'success') {
-      // For success, use a shorter timeout before resetting (since we navigate away)
+ 
       const timeoutDuration = loginStatus === 'success' ? 1000 : 2000;
-      
+
       timer = setTimeout(() => {
-        // Reset button animation
+  
         Animated.parallel([
           Animated.timing(buttonColorAnim, {
             toValue: 0,
@@ -88,17 +90,17 @@ export default function HexaLoginScreen({ navigation }) {
     focusedInput === input ? styles.focusedInput : styles.defaultInput;
 
   const handleLogin = () => {
-    // Instead of showing an alert for invalid email, treat as login failed
+ 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.trim() === '') {
       setIsLoading(true);
-      
-      // Show failure state immediately
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
       setLoginStatus('failed');
-      
-      // Animate button color and scale for failure
+ 
       Animated.parallel([
         Animated.timing(buttonColorAnim, {
-          toValue: 2, // 2 for failure
+          toValue: 2,
           duration: 300,
           useNativeDriver: false,
         }),
@@ -119,26 +121,22 @@ export default function HexaLoginScreen({ navigation }) {
             useNativeDriver: true,
           }),
         ]),
+  
       ]).start();
-      
+  
       return;
     }
 
     setIsLoading(true);
 
-    // For valid email/password, simulate API call with delay
+ 
     setTimeout(() => {
-      // For testing purposes, use timestamp to determine success/failure
-      const testNumber = Date.now() % 10;
-      const isSuccess = testNumber % 2 === 0;
-      
-      // Set login status based on success/failure
+      const isSuccess = Date.now() % 2 === 0;
       setLoginStatus(isSuccess ? 'success' : 'failed');
-      
-      // Animate button color and scale
+
       Animated.parallel([
         Animated.timing(buttonColorAnim, {
-          toValue: isSuccess ? 1 : 2, // 1 for success, 2 for failure
+          toValue: isSuccess ? 1 : 2,
           duration: 300,
           useNativeDriver: false,
         }),
@@ -161,7 +159,7 @@ export default function HexaLoginScreen({ navigation }) {
         ]),
       ]).start();
 
-      // If success, navigate to dashboard after a short delay
+
       if (isSuccess) {
         setTimeout(() => {
           navigation.navigate('HexaDashboard');
@@ -170,10 +168,10 @@ export default function HexaLoginScreen({ navigation }) {
     }, 1000);
   };
 
-  // Dynamic button background color based on status
+
   const buttonBackgroundColor = buttonColorAnim.interpolate({
     inputRange: [0, 1, 2],
-    outputRange: ['#2a5298', '#34c759', '#ff3b30'], // Default, Success, Failure
+    outputRange: ['#2a5298', '#34c759', '#ff3b30'],
   });
 
   const getButtonText = () => {
@@ -186,25 +184,28 @@ export default function HexaLoginScreen({ navigation }) {
   return (
     <LinearGradient colors={['#c4d3d2', '#c4d3d2']} style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.title}>Welcome Back</Text>
+        <Text style={styles.title}>Ready To Sync</Text>
 
-        {/* Email Input */}
+
         <View style={[styles.inputWrapper, getInputStyle('email')]}>
           <Animated.Text
-            style={[styles.floatingLabel, {
-              opacity: emailAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [1, 0],
-              }),
-              top: emailAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [14, -10],
-              }),
-              fontSize: emailAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [16, 12],
-              }),
-            }]}>
+            style={[
+              styles.floatingLabel,
+              {
+                opacity: emailAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [1, 0],
+                }),
+                top: emailAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [14, -10],
+                }),
+                fontSize: emailAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [16, 12],
+                }),
+              },
+            ]}>
             Email
           </Animated.Text>
           <TextInput
@@ -219,23 +220,26 @@ export default function HexaLoginScreen({ navigation }) {
           />
         </View>
 
-        {/* Password Input */}
+
         <View style={[styles.inputWrapper, getInputStyle('password')]}>
           <Animated.Text
-            style={[styles.floatingLabel, {
-              opacity: passAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [1, 0],
-              }),
-              top: passAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [14, -10],
-              }),
-              fontSize: passAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [16, 12],
-              }),
-            }]}>
+            style={[
+              styles.floatingLabel,
+              {
+                opacity: passAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [1, 0],
+                }),
+                top: passAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [14, -10],
+                }),
+                fontSize: passAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [16, 12],
+                }),
+              },
+            ]}>
             Password
           </Animated.Text>
           <TextInput
@@ -255,7 +259,7 @@ export default function HexaLoginScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => navigation.navigate('ForgotPasswordRequest')}
           disabled={isLoading}>
           <Text style={[styles.forgotPasswordText, isLoading && styles.disabledText]}>
@@ -263,19 +267,12 @@ export default function HexaLoginScreen({ navigation }) {
           </Text>
         </TouchableOpacity>
 
-        <Animated.View
-          style={{
-            transform: [{ scale: buttonScaleAnim }],
-          }}>
+        <Animated.View style={{ transform: [{ scale: buttonScaleAnim }] }}>
           <TouchableOpacity
             disabled={isLoading}
             onPress={handleLogin}
             style={{ overflow: 'hidden', borderRadius: 16 }}>
-            <Animated.View
-              style={[
-                styles.button,
-                { backgroundColor: buttonBackgroundColor }
-              ]}>
+            <Animated.View style={[styles.button, { backgroundColor: buttonBackgroundColor }]}>
               <Text style={styles.buttonText}>{getButtonText()}</Text>
               {isLoading && !loginStatus && (
                 <View style={styles.loadingIndicator} />
@@ -292,8 +289,8 @@ export default function HexaLoginScreen({ navigation }) {
 
         <Text style={[styles.switchText, isLoading && styles.disabledText]}>
           Don't have an account?{' '}
-          <Text 
-            onPress={() => !isLoading && navigation.navigate('HexaSignUpScreen')} 
+          <Text
+            onPress={() => !isLoading && navigation.navigate('HexaSignUpScreen')}
             style={{ fontWeight: '700', color: isLoading ? '#999' : '#007BFF' }}>
             Sign Up
           </Text>
@@ -304,107 +301,102 @@ export default function HexaLoginScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  container: { 
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center' 
+  },
   card: {
     width: '85%',
     padding: 28,
-    backgroundColor: 'rgba(255,255,255,0.85)',
+    backgroundColor: 'rgba(255,255,255,0.95)',
     borderRadius: 20,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
+    shadowOffset: { width: 8, height: 12 },
+    shadowOpacity: 0.25,
     shadowRadius: 16,
+    elevation: 12,
+    transform: [{ perspective: 800 }],
   },
   title: {
-    fontSize: 28,
-    color: '#333',
-    marginBottom: 30,
-    fontWeight: '700',
+    fontSize: 30,
+    fontFamily: 'HoryzenDigital-24',
+    marginBottom: 32,
     textAlign: 'center',
+    color: '#333',
   },
   inputWrapper: {
-    height: 50,
-    marginBottom: 25,
-    borderRadius: 14,
-    paddingHorizontal: 15,
-    justifyContent: 'center',
-    backgroundColor: '#ffffffdd',
+    marginBottom: 24,
+    borderBottomWidth: 1.2,
+    borderColor: '#ccc',
     position: 'relative',
   },
   defaultInput: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    shadowColor: 'transparent',
+    borderColor: '#ccc',
   },
   focusedInput: {
-    borderWidth: 1.5,
-    borderColor: '#00e6e6',
-    shadowColor: '#00e6e6',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 8,
-    elevation: 8,
+    borderColor: '#007BFF',
   },
   textInput: {
-    height: '100%',
+    height: 40,
     fontSize: 16,
-    color: '#222',
-    paddingTop: 10,
+    fontFamily: 'Conthrax-SemiBold',
+    paddingVertical: 4,
+    color: '#333',
   },
   floatingLabel: {
     position: 'absolute',
-    left: 15,
-    color: '#555',
-    backgroundColor: 'transparent',
+    left: 0,
+    color: '#666',
+    fontFamily: 'Conthrax-SemiBold',
+    fontSize: 16,
   },
   eyeIcon: {
     position: 'absolute',
-    right: 10,
-    top: 14,
+    right: 0,
+    top: 10,
   },
   forgotPasswordText: {
+    alignSelf: 'flex-end',
     color: '#007BFF',
-    textAlign: 'right',
-    marginBottom: 20,
+    marginBottom: 28,
+    fontFamily: 'Conthrax-SemiBold',
     fontSize: 14,
   },
+  disabledText: {
+    color: '#999',
+    fontFamily: 'Conthrax-SemiBold',
+  },
   button: {
-    backgroundColor: '#2a5298',
-    paddingVertical: 14,
-    borderRadius: 16,
-    alignItems: 'center',
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 16,
   },
   buttonText: {
-    color: '#fff',
     fontSize: 18,
-    fontWeight: '700',
+    fontFamily: 'Conthrax-SemiBold',
+    color: '#fff',
+    
   },
   buttonIcon: {
     marginLeft: 8,
   },
   loadingIndicator: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#fff',
-    borderTopColor: 'transparent',
-    marginLeft: 8,
-    transform: [{ rotate: '45deg' }],
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    marginLeft: 10,
   },
   switchText: {
+    marginTop: 24,
+    fontSize: 14,
     textAlign: 'center',
     color: '#333',
-    marginTop: 10,
-  },
-  disabledText: {
-    color: '#999',
+    fontFamily: 'Conthrax-SemiBold',
   },
 });
+
