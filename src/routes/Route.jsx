@@ -124,8 +124,8 @@ export default function Routes() {
         options={{
           header: () => <CustomHeader title="Reset Password" showBackButton={true} />,
         }}
-      />
-      
+ 
+ />
     </Stack.Navigator>
   );
 }
