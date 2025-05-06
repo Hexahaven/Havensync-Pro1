@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import Video from 'react-native-video';
 
-export function GreetingSection() {
+export default function GreetingSection() {
   const navigation = useNavigation();
   const profile = useSelector(state => state.profile);
 
@@ -55,9 +55,9 @@ export function GreetingSection() {
         <Text className="text-3xl font-extrabold text-gray-800 font-mono">
           {getGreeting()},
         </Text>
-          <Text className="text-2xl text-[#ff8625]">
-            {typeof profile.name === 'string' ? profile.name : 'Guest'}
-          </Text>
+        <Text className="text-2xl text-[#ff8625]">
+          {typeof profile.name === 'string' ? profile.name : 'Guest'}
+        </Text>
       </View>
     </>
   );

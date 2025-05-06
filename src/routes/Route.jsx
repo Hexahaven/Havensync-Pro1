@@ -83,27 +83,31 @@ export default function Routes() {
         gestureEnabled: true,
         gestureDirection: 'horizontal',
       }}>
+
       <Stack.Screen
-        name="Welcome"
+        name="HexaWelcomeScreen"
         component={Components.HexaWelcomeScreen}
         options={{headerShown: false}}
       />
+
       <Stack.Screen
-        name="Login"
+        name="HexaLoginScreen"
         component={Components.HexaLoginScreen}
         options={{
           header: () => <CustomHeader title="Login" showBackButton={true} />,
         }}
       />
+
       <Stack.Screen
-        name="SignUp"
+        name="HexaSignUpScreen"
         component={Components.HexaSignUpScreen}
         options={{
           header: () => <CustomHeader title="Sign Up" showBackButton={true} />,
         }}
       />
+
       <Stack.Screen
-        name="ForgotPassword"
+        name="ForgotPasswordRequest"
         component={Components.ForgotPasswordRequest}
         options={{
           header: () => (
@@ -111,21 +115,33 @@ export default function Routes() {
           ),
         }}
       />
+
       <Stack.Screen
         name="OTPVerification"
         component={Components.OTPVerification}
         options={{
-          header: () => <CustomHeader title="Verify OTP" showBackButton={true} />,
+          header: () => (
+            <CustomHeader title="Verify OTP" showBackButton={true} />
+          ),
         }}
       />
+
       <Stack.Screen
         name="ResetPassword"
         component={Components.ResetPassword}
         options={{
-          header: () => <CustomHeader title="Reset Password" showBackButton={true} />,
+          header: () => (
+            <CustomHeader title="Reset Password" showBackButton={true} />
+          ),
         }}
- 
- />
+      />
+      <Stack.Screen
+        name="HexaDashboard"
+        component={Components.HexaDashboard}
+        options={{
+          header: () => <CustomHeader title="Dashboard" showBackButton={false} />,
+        }}
+      />
     </Stack.Navigator>
   );
 }

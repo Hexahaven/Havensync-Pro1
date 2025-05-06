@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faThermometerHalf, faTint } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
-export function WeatherSection() {
+export default function WeatherSection() {
   const [location, setLocation] = useState(null);
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [weatherData, setWeatherData] = useState(null);

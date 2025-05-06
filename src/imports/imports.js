@@ -4,3 +4,4 @@ export {default as HexaSignUpScreen} from '../features/HexaSignUpScreen';
 export {default as ForgotPasswordRequest} from '../features/ForgotPasswordRequest';
 export {default as OTPVerification} from '../features/OTPVerification';
 export {default as ResetPassword} from '../features/ResetPassword';
+export {default as HexaDashboard} from '../features/HexaDashboard';
