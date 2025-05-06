@@ -47,9 +47,7 @@ export default function HexaWelcomeScreen({navigation}) {
         resizeMode="cover"
         repeat
       />
-
       
-
       {showButton && (
         <Animated.View style={[styles.buttonContainer, {opacity: fadeAnim}]}>
           <TouchableOpacity onPress={() => navigation.navigate('HexaLoginScreen')}>
@@ -101,7 +99,7 @@ const styles = StyleSheet.create({
     fontFamily: 'HoryzenDigital-24', // <-- Header font
     marginBottom: 40,
     textShadowColor: '#b0b0b0',
-    textShadowOffset: { width: 1.5, height: 1.5 },
+    textShadowOffset: {width: 1.5, height: 1.5},
     textShadowRadius: 3,
   },
   buttonContainer: {
@@ -117,7 +115,7 @@ const styles = StyleSheet.create({
 
     // Shadow & bevel
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
+    shadowOffset: {width: 0, height: 8},
     shadowOpacity: 0.6,
     shadowRadius: 10,
     elevation: 12,
@@ -135,10 +133,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
 
     textShadowColor: 'rgba(0, 0, 0, 0.4)',
-    textShadowOffset: { width: 1.5, height: 1.5 },
+    textShadowOffset: {width: 1.5, height: 1.5},
     textShadowRadius: 2,
   },
-  
   shimmerOverlay: {
     ...StyleSheet.absoluteFillObject,
   },
