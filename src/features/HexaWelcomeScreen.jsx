@@ -3,11 +3,12 @@ import {View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions} from 're
 import Video from 'react-native-video';
 import LinearGradient from 'react-native-linear-gradient';
 
-const {height} = Dimensions.get('window');
+const {height, width} = Dimensions.get('window');
 
 export default function HexaWelcomeScreen({navigation}) {
   const [showButton, setShowButton] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const shimmerAnim = useRef(new Animated.Value(-1)).current;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -17,9 +18,26 @@ export default function HexaWelcomeScreen({navigation}) {
         duration: 800,
         useNativeDriver: true,
       }).start();
+      startShimmer();
     }, 5000);
+
     return () => clearTimeout(timer);
   }, []);
+
+  const startShimmer = () => {
+    Animated.loop(
+      Animated.timing(shimmerAnim, {
+        toValue: 1,
+        duration: 2000,
+        useNativeDriver: true,
+      }),
+    ).start();
+  };
+
+  const shimmerTranslate = shimmerAnim.interpolate({
+    inputRange: [-1, 1],
+    outputRange: [-width, width],
+  });
 
   return (
     <View style={styles.container}>
@@ -30,16 +48,30 @@ export default function HexaWelcomeScreen({navigation}) {
         repeat
       />
       {showButton && (
-        <Animated.View style={{...styles.buttonContainer, opacity: fadeAnim}}>
-          <LinearGradient
-            colors={['#a3ddf5', '#84c9e8']}
-            start={{x: 0, y: 0}}
-            end={{x: 0, y: 1}}
-            style={styles.button}>
-            <TouchableOpacity onPress={() => navigation.navigate('HexaLoginScreen')}>
+        <Animated.View style={[styles.buttonContainer, {opacity: fadeAnim}]}>
+          <TouchableOpacity onPress={() => navigation.navigate('HexaLoginScreen')}>
+            <LinearGradient
+              colors={['#6ec1e4', '#3ba7cc']}
+              start={{x: 0, y: 0}}
+              end={{x: 0, y: 1}}
+              style={styles.button}>
               <Text style={styles.buttonText}>Continue</Text>
-            </TouchableOpacity>
-          </LinearGradient>
+              <Animated.View
+                style={[
+                  styles.shimmerOverlay,
+                  {
+                    transform: [{translateX: shimmerTranslate}],
+                  },
+                ]}>
+                <LinearGradient
+                  colors={['transparent', 'rgba(255,255,255,0.5)', 'transparent']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.shimmer}
+                />
+              </Animated.View>
+            </LinearGradient>
+          </TouchableOpacity>
         </Animated.View>
       )}
     </View>
@@ -47,7 +79,10 @@ export default function HexaWelcomeScreen({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1},
+  container: {
+    flex: 1,
+    backgroundColor: '#c4d3d2',
+  },
   backgroundVideo: {
     position: 'absolute',
     top: 0,
@@ -61,29 +96,37 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   button: {
-    backgroundColor: '#84c9e8',
     paddingVertical: 14,
     paddingHorizontal: 32,
     borderRadius: 16,
+    overflow: 'hidden',
 
     // 3D Shadow Effects
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 6,
+      height: 8,
     },
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
-    elevation: 10,
+    shadowOpacity: 0.6,
+    shadowRadius: 10,
+    elevation: 12,
 
-    // Light highlight for top/left to mimic bevel
+    // Bevel highlight
     borderTopWidth: 1,
     borderLeftWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.4)',
   },
   buttonText: {
-    color: '#424242',
+    color: '#1e1e1e',
     fontSize: 18,
     fontWeight: '700',
+    textAlign: 'center',
+  },
+  shimmerOverlay: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  shimmer: {
+    width: 100,
+    height: '100%',
   },
 });
