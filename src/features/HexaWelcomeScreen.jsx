@@ -30,10 +30,16 @@ export default function HexaWelcomeScreen({navigation}) {
       />
       {showButton && (
         <Animated.View style={{...styles.buttonContainer, opacity: fadeAnim}}>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HexaLoginScreen')}>
+        <LinearGradient
+          colors={['#a3ddf5', '#84c9e8']}
+          start={{x: 0, y: 0}}
+          end={{x: 0, y: 1}}
+          style={styles.button}>
+          <TouchableOpacity onPress={() => navigation.navigate('HexaLoginScreen')}>
             <Text style={styles.buttonText}>Continue</Text>
           </TouchableOpacity>
-        </Animated.View>
+        </LinearGradient>
+      </Animated.View>      
       )}
     </View>
   );
@@ -61,8 +67,13 @@ const styles = StyleSheet.create({
     elevation: 8,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.4,
     shadowRadius: 6,
+  
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundGradient: 'linear-gradient(to bottom, #a3ddf5, #84c9e8)', // for visual ref
   },
   buttonText: {
     color: '#424242',
