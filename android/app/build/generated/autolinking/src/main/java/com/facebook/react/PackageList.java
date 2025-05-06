@@ -20,6 +20,8 @@ import com.reactnativecommunity.picker.RNCPickerPackage;
 import com.bleplx.BlePlxPackage;
 // react-native-date-picker
 import com.henninghall.date_picker.DatePickerPackage;
+// react-native-fast-image
+import com.dylanvann.fastimage.FastImageViewPackage;
 // react-native-geolocation-service
 import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
 // react-native-gesture-handler
@@ -94,6 +96,7 @@ public class PackageList {
       new RNCPickerPackage(),
       new BlePlxPackage(),
       new DatePickerPackage(),
+      new FastImageViewPackage(),
       new RNFusedLocationPackage(),
       new RNGestureHandlerPackage(),
       new ImagePickerPackage(),

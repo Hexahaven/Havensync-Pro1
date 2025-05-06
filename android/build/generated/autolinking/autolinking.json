@@ -135,6 +135,30 @@
         }
       }
     },
+    "react-native-fast-image": {
+      "root": "C:\\Users\\Sathish\\Havensync-Pro1\\node_modules\\react-native-fast-image",
+      "name": "react-native-fast-image",
+      "platforms": {
+        "ios": {
+          "podspecPath": "C:\\Users\\Sathish\\Havensync-Pro1\\node_modules\\react-native-fast-image\\RNFastImage.podspec",
+          "version": "8.6.3",
+          "configurations": [],
+          "scriptPhases": []
+        },
+        "android": {
+          "sourceDir": "C:\\Users\\Sathish\\Havensync-Pro1\\node_modules\\react-native-fast-image\\android",
+          "packageImportPath": "import com.dylanvann.fastimage.FastImageViewPackage;",
+          "packageInstance": "new FastImageViewPackage()",
+          "buildTypes": [],
+          "componentDescriptors": [],
+          "cmakeListsPath": "C:/Users/Sathish/Havensync-Pro1/node_modules/react-native-fast-image/android/build/generated/source/codegen/jni/CMakeLists.txt",
+          "cxxModuleCMakeListsModuleName": null,
+          "cxxModuleCMakeListsPath": null,
+          "cxxModuleHeaderName": null,
+          "isPureCxxDependency": false
+        }
+      }
+    },
     "react-native-geolocation-service": {
       "root": "C:\\Users\\Sathish\\Havensync-Pro1\\node_modules\\react-native-geolocation-service",
       "name": "react-native-geolocation-service",

@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.hexahavensmarthomeapp-mergeDebugResources-48:/values-el/values-el.xml",
+            "outputFile": "com.hexahavensmarthomeapp-mergeDebugResources-49:/values-el/values-el.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Sathish\\.gradle\\caches\\8.10.2\\transforms\\8cdd93f6daca96b36e2f986965f59617\\transformed\\play-services-base-18.1.0\\res\\values-el\\values.xml",

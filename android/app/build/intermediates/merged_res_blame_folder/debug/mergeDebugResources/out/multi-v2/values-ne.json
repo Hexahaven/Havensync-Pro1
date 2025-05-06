@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.hexahavensmarthomeapp-mergeDebugResources-48:/values-ne/values-ne.xml",
+            "outputFile": "com.hexahavensmarthomeapp-mergeDebugResources-49:/values-ne/values-ne.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Sathish\\.gradle\\caches\\8.10.2\\transforms\\e1725c6eca62f7b272bec9fef692a344\\transformed\\react-android-0.76.6-debug\\res\\values-ne\\values-ne.xml",

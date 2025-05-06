@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
-import FastImage from 'react-native-fast-image';
 
 export default function HexaLoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -152,7 +151,7 @@ export default function HexaLoginScreen({ navigation }) {
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
 
-        {/* Login Message with GIF */}
+        {/* Login Message */}
         <Animated.View
           style={[
             styles.loginMessage,
@@ -164,19 +163,18 @@ export default function HexaLoginScreen({ navigation }) {
               ],
             },
           ]}>
-          {loginStatus === 'success' ? (
-            <FastImage
-              source={require('./assets/success.gif')} // Path to your success GIF
-              style={styles.gif}
-              resizeMode={FastImage.resizeMode.contain}
-            />
-          ) : loginStatus === 'failed' ? (
-            <FastImage
-              source={require('./assets/failed.gif')} // Path to your failed GIF
-              style={styles.gif}
-              resizeMode={FastImage.resizeMode.contain}
-            />
-          ) : null}
+          <Text
+            style={[
+              styles.loginText,
+              {
+                color: loginStatus === 'success' ? '#00bfae' : '#e74c3c',
+                textShadowColor: loginStatus === 'success' ? '#00bfae' : '#e74c3c',
+                textShadowOffset: { width: 1, height: 1 },
+                textShadowRadius: 6,
+              },
+            ]}>
+            {loginStatus === 'success' ? 'Login Success!' : 'Login Failed'}
+          </Text>
         </Animated.View>
 
         <Text style={styles.switchText}>
@@ -279,9 +277,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: 'center',
   },
-  gif: {
-    width: 100,
-    height: 100,
+  loginText: {
+    fontSize: 18,
+    fontWeight: '700',
+    letterSpacing: 1,
+    transform: [{ perspective: 1000 }, { rotateY: '5deg' }],
+    transition: 'transform 0.3s ease',
   },
   switchText: {
     textAlign: 'center',
