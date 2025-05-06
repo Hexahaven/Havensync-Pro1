@@ -129,15 +129,15 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#1e1e1e',
     fontSize: 20,
-    fontFamily: 'HoryzenMono-24', // <-- Body font
+    fontFamily: 'HoryzenDigital', // <- updated here!
     fontWeight: '800',
     textAlign: 'center',
-
-    // 3D Text Look
+    
     textShadowColor: 'rgba(0, 0, 0, 0.4)',
     textShadowOffset: { width: 1.5, height: 1.5 },
     textShadowRadius: 2,
   },
+  
   shimmerOverlay: {
     ...StyleSheet.absoluteFillObject,
   },
