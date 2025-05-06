@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function HexaLoginScreen({navigation}) {
+export default function HexaLoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -38,7 +38,7 @@ export default function HexaLoginScreen({navigation}) {
   };
 
   return (
-    <LinearGradient colors={['#1e3c72', '#2a5298']} style={styles.container}>
+    <LinearGradient colors={['#c4d3d2', '#c4d3d2']} style={styles.container}>
       <View style={styles.glassCard}>
         <Text style={styles.title}>Welcome Back</Text>
 
@@ -76,7 +76,6 @@ export default function HexaLoginScreen({navigation}) {
           <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
         </TouchableOpacity>
 
-
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
@@ -85,7 +84,7 @@ export default function HexaLoginScreen({navigation}) {
           Don't have an account?{' '}
           <Text
             onPress={() => navigation.navigate('HexaSignUpScreen')}
-            style={{fontWeight: '700'}}>
+            style={{ fontWeight: '700' }}>
             Sign Up
           </Text>
         </Text>
@@ -95,38 +94,38 @@ export default function HexaLoginScreen({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   glassCard: {
     width: '85%',
     padding: 30,
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: 'rgba(255,255,255,0.8)',  // Adjusted to provide opacity
     borderRadius: 20,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 10},
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.6,  // Increased opacity for a stronger shadow
+    shadowRadius: 15,   // Slightly reduced radius for sharper shadows
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.2)',
   },
   title: {
     fontSize: 28,
-    color: '#fff',
+    color: '#333',
     marginBottom: 30,
     textAlign: 'center',
     fontWeight: '700',
   },
   input: {
     height: 50,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: 'rgba(255,255,255,0.5)',
     borderRadius: 12,
     paddingHorizontal: 15,
-    color: '#fff',
+    color: '#333',
     marginBottom: 20,
   },
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: 'rgba(255,255,255,0.5)',  // Slight transparency for depth
     borderRadius: 12,
     marginBottom: 10,
   },
@@ -134,36 +133,36 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
     paddingHorizontal: 15,
-    color: '#fff',
+    color: '#333',
   },
   eyeIcon: {
     paddingHorizontal: 15,
   },
-  forgotText: {
-    color: '#ccc',
+  forgotPasswordText: {
+    color: '#007BFF',
     textAlign: 'right',
     marginBottom: 20,
     fontSize: 14,
   },
   button: {
-    backgroundColor: '#fff',
+    backgroundColor: '#2a5298',
     paddingVertical: 14,
     borderRadius: 16,
     alignItems: 'center',
     marginBottom: 20,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
   },
   buttonText: {
-    color: '#2a5298',
+    color: '#fff',
     fontSize: 18,
     fontWeight: '700',
   },
   switchText: {
     textAlign: 'center',
-    color: '#eee',
+    color: '#333',
     marginTop: 10,
   },
 });

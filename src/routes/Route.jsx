@@ -94,7 +94,7 @@ export default function Routes() {
         name="HexaLoginScreen"
         component={Components.HexaLoginScreen}
         options={{
-          header: () => <CustomHeader title="Login" showBackButton={true} />,
+          headerShown: false, // Disable the header for this screen
         }}
       />
 
