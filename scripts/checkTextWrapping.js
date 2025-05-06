@@ -61,4 +61,42 @@ function walkDir(dir) {
   });
 }
 
-walkDir(rootDir);
+walkDir(rootDir);console.warn` once.
+      // When we uninstall we keep the same reference and only change its
+      // internal implementation
+      const isFirstInstall = originalConsoleError == null;
+      if (isFirstInstall) {
+        originalConsoleError = console.error.bind(console);
+        originalConsoleWarn = console.warn.bind(console);
+
+        // $FlowExpectedError[cannot-write]
+        console.error = (...args) => {
+          consoleErrorImpl?.(...args);
+        };
+        // $FlowExpectedError[cannot-write]
+        console.warn = (...args) => {
+          consoleWarnImpl?.(...args);
+        };
+      }
+
+      consoleErrorImpl = registerError;
+      consoleWarnImpl = registerWarning;
+
+      if (Platform.isTesting) {
+        LogBoxData.setDisabled(true);
+      }
+
+      RCTLog.setWarningHandler((...args) => {
+        registerWarning(...args);
+      });
+    },
+
+    uninstall(): void {
+      if (!isLogBoxInstalled) {
+        return;
+      }
+
+      isLogBoxInstalled = false;
+
+      // IMPORTANT: we don't re-assign to `
+
