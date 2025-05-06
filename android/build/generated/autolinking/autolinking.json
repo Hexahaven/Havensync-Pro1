@@ -921,7 +921,9 @@
     "ios": {},
     "android": {}
   },
-  "assets": [],
+  "assets": [
+    "./assets/fonts"
+  ],
   "project": {
     "ios": {
       "sourceDir": "C:\\Users\\Sathish\\Havensync-Pro1\\ios",

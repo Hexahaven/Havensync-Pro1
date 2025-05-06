@@ -65,5 +65,6 @@ com.hexahavensmarthomeapp-debug-63 C:\Users\Sathish\Havensync-Pro1\node_modules\
 com.hexahavensmarthomeapp-debug-64 C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-safe-area-context\android\build\intermediates\packaged_res\debug\packageDebugResources
 com.hexahavensmarthomeapp-debug-65 C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-screens\android\build\intermediates\packaged_res\debug\packageDebugResources
 com.hexahavensmarthomeapp-debug-66 C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-svg\android\build\intermediates\packaged_res\debug\packageDebugResources
-com.hexahavensmarthomeapp-debug-67 C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-video\android\buildOutput_a15d4dee7fc4eda61b91308cbb6a2e72\intermediates\packaged_res\debug\packageDebugResources
-com.hexahavensmarthomeapp-debug-68 C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-wifi-reborn\android\build\intermediates\packaged_res\debug\packageDebugResources
+com.hexahavensmarthomeapp-debug-67 C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-vector-icons\android\build\intermediates\packaged_res\debug\packageDebugResources
+com.hexahavensmarthomeapp-debug-68 C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-video\android\buildOutput_a15d4dee7fc4eda61b91308cbb6a2e72\intermediates\packaged_res\debug\packageDebugResources
+com.hexahavensmarthomeapp-debug-69 C:\Users\Sathish\Havensync-Pro1\node_modules\react-native-wifi-reborn\android\build\intermediates\packaged_res\debug\packageDebugResources
