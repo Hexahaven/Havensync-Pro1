@@ -127,9 +127,10 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.4)',
   },
   buttonText: {
-    color: '#1e1e1e',
+    fontFamily: 'HoryzenDigital-24', // Ensure this matches the font file name
     fontSize: 20,
-    fontFamily: 'HoryzenDigital-24', // <- updated here!
+    color: '#1e1e1e',
+    fontStyle: 'normal',
     fontWeight: '800',
     textAlign: 'center',
 
@@ -146,3 +147,5 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 });
+
+console.log('Font applied:', styles.buttonText.fontFamily);
