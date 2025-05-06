@@ -129,10 +129,10 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#1e1e1e',
     fontSize: 20,
-    fontFamily: 'HoryzenDigital', // <- updated here!
+    fontFamily: 'HoryzenDigital-24', // <- updated here!
     fontWeight: '800',
     textAlign: 'center',
-    
+
     textShadowColor: 'rgba(0, 0, 0, 0.4)',
     textShadowOffset: { width: 1.5, height: 1.5 },
     textShadowRadius: 2,
