@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions} from 'react-native';
 import Video from 'react-native-video';
+import LinearGradient from 'react-native-linear-gradient';
 
 const {height} = Dimensions.get('window');
 
