@@ -16,6 +16,8 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		0E24CD8BFCDD4AE2AE80F326 /* HoryzenDigital-24.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB55E38CEBE645D184AF4B84 /* HoryzenDigital-24.ttf */; };
 		F33408FF1C8E4B63851E7D60 /* Conthrax-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = D5534D6AFC364FAFB00E0611 /* Conthrax-SemiBold.otf */; };
+		574034031CC94D8D82BE93B4 /* Conthrax-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6967C44F3DBB412692543443 /* Conthrax-SemiBold.otf */; };
+		8B807AD275E64EB2AAD1F95E /* HoryzenMono-24.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B58242CA36CD4A4DB5CCA96B /* HoryzenMono-24.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		BB55E38CEBE645D184AF4B84 /* HoryzenDigital-24.ttf */ = {isa = PBXFileReference; name = "HoryzenDigital-24.ttf"; path = "../src/assets/fonts/HoryzenDigital-24.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		D5534D6AFC364FAFB00E0611 /* Conthrax-SemiBold.otf */ = {isa = PBXFileReference; name = "Conthrax-SemiBold.otf"; path = "../src/assets/fonts/Conthrax-SemiBold.otf.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		6967C44F3DBB412692543443 /* Conthrax-SemiBold.otf */ = {isa = PBXFileReference; name = "Conthrax-SemiBold.otf"; path = "../src/assets/fonts/Conthrax-SemiBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B58242CA36CD4A4DB5CCA96B /* HoryzenMono-24.ttf */ = {isa = PBXFileReference; name = "HoryzenMono-24.ttf"; path = "../src/assets/fonts/HoryzenMono-24.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +164,8 @@
 			children = (
 				BB55E38CEBE645D184AF4B84 /* HoryzenDigital-24.ttf */,
 				D5534D6AFC364FAFB00E0611 /* Conthrax-SemiBold.otf */,
+				6967C44F3DBB412692543443 /* Conthrax-SemiBold.otf */,
+				B58242CA36CD4A4DB5CCA96B /* HoryzenMono-24.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -262,6 +268,8 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				0E24CD8BFCDD4AE2AE80F326 /* HoryzenDigital-24.ttf in Resources */,
 				F33408FF1C8E4B63851E7D60 /* Conthrax-SemiBold.otf in Resources */,
+				574034031CC94D8D82BE93B4 /* Conthrax-SemiBold.otf in Resources */,
+				8B807AD275E64EB2AAD1F95E /* HoryzenMono-24.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
