@@ -190,7 +190,7 @@ export default function SwitchSection() {
                       ))}
                     </ScrollView>
 
-                    {/* Scroll Controls */}
+                    {/*Scroll Controls*/}
                     <View className="flex-row justify-around mt-2 bg-[#ff8625] rounded-t-md rounded-b-xl py-2">
                       <TouchableOpacity onPress={() => scrollUp(device.id)}>
                         <FontAwesomeIcon icon={faChevronUp} size={20} color="#fff" />
