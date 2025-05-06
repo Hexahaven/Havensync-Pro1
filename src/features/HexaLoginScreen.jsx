@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Animated,
-  Easing,
+  Alert,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -16,74 +16,171 @@ export default function HexaLoginScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [focusedInput, setFocusedInput] = useState(null);
-  const [loginStatus, setLoginStatus] = useState(null); // 'success' | 'failed' | null
+  const [loginStatus, setLoginStatus] = useState(null); // 'success', 'failed', or null
+  const [isLoading, setIsLoading] = useState(false);
 
   const [emailAnim] = useState(new Animated.Value(email ? 1 : 0));
   const [passAnim] = useState(new Animated.Value(password ? 1 : 0));
+  const buttonColorAnim = useRef(new Animated.Value(0)).current;
+  const buttonScaleAnim = useRef(new Animated.Value(1)).current;
 
-  const messageOpacity = useRef(new Animated.Value(0)).current;
-  const messageTranslateY = useRef(new Animated.Value(20)).current; // Slide-in effect
-  const messageScale = useRef(new Animated.Value(0.9)).current;
+  // Reset login status when component mounts or unmounts
+  useEffect(() => {
+    return () => {
+      setLoginStatus(null);
+      setIsLoading(false);
+    };
+  }, []);
 
-  const showLoginMessage = (type) => {
-    setLoginStatus(type);
-    Animated.parallel([
-      Animated.timing(messageOpacity, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: true,
-        easing: Easing.out(Easing.ease),
-      }),
-      Animated.timing(messageTranslateY, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-        easing: Easing.out(Easing.ease),
-      }),
-      Animated.spring(messageScale, {
-        toValue: 1,
-        useNativeDriver: true,
-        friction: 5,
-      }),
-    ]).start();
-  };
+  // Effect to handle the success/failure case timeout
+  useEffect(() => {
+    let timer;
+    if (loginStatus === 'failed' || loginStatus === 'success') {
+      // For success, use a shorter timeout before resetting (since we navigate away)
+      const timeoutDuration = loginStatus === 'success' ? 1000 : 2000;
+      
+      timer = setTimeout(() => {
+        // Reset button animation
+        Animated.parallel([
+          Animated.timing(buttonColorAnim, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: false,
+          }),
+          Animated.timing(buttonScaleAnim, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true,
+          }),
+        ]).start(() => {
+          setLoginStatus(null);
+          setIsLoading(false);
+        });
+      }, timeoutDuration);
+    }
 
-  const handleFocus = (input) => {
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [loginStatus, buttonColorAnim, buttonScaleAnim]);
+
+  const handleFocus = input => {
     setFocusedInput(input);
     Animated.timing(input === 'email' ? emailAnim : passAnim, {
       toValue: 1,
       duration: 200,
       useNativeDriver: false,
-      easing: Easing.inOut(Easing.ease),
     }).start();
   };
 
-  const handleBlur = (input) => {
+  const handleBlur = input => {
     setFocusedInput(null);
     if ((input === 'email' && !email) || (input === 'password' && !password)) {
       Animated.timing(input === 'email' ? emailAnim : passAnim, {
         toValue: 0,
         duration: 200,
         useNativeDriver: false,
-        easing: Easing.inOut(Easing.ease),
       }).start();
     }
   };
 
-  const getInputStyle = (input) =>
+  const getInputStyle = input =>
     focusedInput === input ? styles.focusedInput : styles.defaultInput;
 
   const handleLogin = () => {
-    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    const validPassword = password.length >= 6;
-
-    if (!validEmail || !validPassword) {
-      showLoginMessage('failed');
+    // Instead of showing an alert for invalid email, treat as login failed
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.trim() === '') {
+      setIsLoading(true);
+      
+      // Show failure state immediately
+      setLoginStatus('failed');
+      
+      // Animate button color and scale for failure
+      Animated.parallel([
+        Animated.timing(buttonColorAnim, {
+          toValue: 2, // 2 for failure
+          duration: 300,
+          useNativeDriver: false,
+        }),
+        Animated.sequence([
+          Animated.timing(buttonScaleAnim, {
+            toValue: 0.95,
+            duration: 100,
+            useNativeDriver: true,
+          }),
+          Animated.timing(buttonScaleAnim, {
+            toValue: 1.05,
+            duration: 100,
+            useNativeDriver: true,
+          }),
+          Animated.timing(buttonScaleAnim, {
+            toValue: 1,
+            duration: 100,
+            useNativeDriver: true,
+          }),
+        ]),
+      ]).start();
+      
       return;
     }
 
-    showLoginMessage('success');
-    setTimeout(() => navigation.navigate('HexaDashboard'), 1000);
+    setIsLoading(true);
+
+    // For valid email/password, simulate API call with delay
+    setTimeout(() => {
+      // For testing purposes, use timestamp to determine success/failure
+      const testNumber = Date.now() % 10;
+      const isSuccess = testNumber % 2 === 0;
+      
+      // Set login status based on success/failure
+      setLoginStatus(isSuccess ? 'success' : 'failed');
+      
+      // Animate button color and scale
+      Animated.parallel([
+        Animated.timing(buttonColorAnim, {
+          toValue: isSuccess ? 1 : 2, // 1 for success, 2 for failure
+          duration: 300,
+          useNativeDriver: false,
+        }),
+        Animated.sequence([
+          Animated.timing(buttonScaleAnim, {
+            toValue: 0.95,
+            duration: 100,
+            useNativeDriver: true,
+          }),
+          Animated.timing(buttonScaleAnim, {
+            toValue: 1.05,
+            duration: 100,
+            useNativeDriver: true,
+          }),
+          Animated.timing(buttonScaleAnim, {
+            toValue: 1,
+            duration: 100,
+            useNativeDriver: true,
+          }),
+        ]),
+      ]).start();
+
+      // If success, navigate to dashboard after a short delay
+      if (isSuccess) {
+        setTimeout(() => {
+          navigation.navigate('HexaDashboard');
+        }, 1000);
+      }
+    }, 1000);
+  };
+
+  // Dynamic button background color based on status
+  const buttonBackgroundColor = buttonColorAnim.interpolate({
+    inputRange: [0, 1, 2],
+    outputRange: ['#2a5298', '#34c759', '#ff3b30'], // Default, Success, Failure
+  });
+
+  const getButtonText = () => {
+    if (isLoading && !loginStatus) return 'Logging in...';
+    if (loginStatus === 'success') return 'Success!';
+    if (loginStatus === 'failed') return 'Failed!';
+    return 'Login';
   };
 
   return (
@@ -91,16 +188,23 @@ export default function HexaLoginScreen({ navigation }) {
       <View style={styles.card}>
         <Text style={styles.title}>Welcome Back</Text>
 
-        {/* Email Field */}
+        {/* Email Input */}
         <View style={[styles.inputWrapper, getInputStyle('email')]}>
           <Animated.Text
-            style={[
-              styles.floatingLabel,
-              {
-                top: emailAnim.interpolate({ inputRange: [0, 1], outputRange: [14, -10] }),
-                fontSize: emailAnim.interpolate({ inputRange: [0, 1], outputRange: [16, 12] }),
-              },
-            ]}>
+            style={[styles.floatingLabel, {
+              opacity: emailAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1, 0],
+              }),
+              top: emailAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [14, -10],
+              }),
+              fontSize: emailAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [16, 12],
+              }),
+            }]}>
             Email
           </Animated.Text>
           <TextInput
@@ -111,20 +215,27 @@ export default function HexaLoginScreen({ navigation }) {
             onBlur={() => handleBlur('email')}
             autoCapitalize="none"
             keyboardType="email-address"
-            placeholder=""
+            editable={!isLoading}
           />
         </View>
 
-        {/* Password Field */}
+        {/* Password Input */}
         <View style={[styles.inputWrapper, getInputStyle('password')]}>
           <Animated.Text
-            style={[
-              styles.floatingLabel,
-              {
-                top: passAnim.interpolate({ inputRange: [0, 1], outputRange: [14, -10] }),
-                fontSize: passAnim.interpolate({ inputRange: [0, 1], outputRange: [16, 12] }),
-              },
-            ]}>
+            style={[styles.floatingLabel, {
+              opacity: passAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1, 0],
+              }),
+              top: passAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [14, -10],
+              }),
+              fontSize: passAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [16, 12],
+              }),
+            }]}>
             Password
           </Animated.Text>
           <TextInput
@@ -134,52 +245,56 @@ export default function HexaLoginScreen({ navigation }) {
             onFocus={() => handleFocus('password')}
             onBlur={() => handleBlur('password')}
             secureTextEntry={!showPassword}
-            placeholder=""
+            editable={!isLoading}
           />
           <TouchableOpacity
             style={styles.eyeIcon}
-            onPress={() => setShowPassword((prev) => !prev)}>
+            onPress={() => setShowPassword(prev => !prev)}
+            disabled={isLoading}>
             <Icon name={showPassword ? 'eye-off' : 'eye'} size={22} color="#888" />
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={() => navigation.navigate('ForgotPasswordRequest')}>
-          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-
-        {/* Login Message */}
-        <Animated.View
-          style={[
-            styles.loginMessage,
-            {
-              opacity: messageOpacity,
-              transform: [
-                { translateY: messageTranslateY },
-                { scale: messageScale },
-              ],
-            },
-          ]}>
-          <Text
-            style={[
-              styles.loginText,
-              {
-                color: loginStatus === 'success' ? '#00bfae' : '#e74c3c',
-                textShadowColor: loginStatus === 'success' ? '#00bfae' : '#e74c3c',
-                textShadowOffset: { width: 1, height: 1 },
-                textShadowRadius: 6,
-              },
-            ]}>
-            {loginStatus === 'success' ? 'Login Success!' : 'Login Failed'}
+        <TouchableOpacity 
+          onPress={() => navigation.navigate('ForgotPasswordRequest')}
+          disabled={isLoading}>
+          <Text style={[styles.forgotPasswordText, isLoading && styles.disabledText]}>
+            Forgot Password?
           </Text>
+        </TouchableOpacity>
+
+        <Animated.View
+          style={{
+            transform: [{ scale: buttonScaleAnim }],
+          }}>
+          <TouchableOpacity
+            disabled={isLoading}
+            onPress={handleLogin}
+            style={{ overflow: 'hidden', borderRadius: 16 }}>
+            <Animated.View
+              style={[
+                styles.button,
+                { backgroundColor: buttonBackgroundColor }
+              ]}>
+              <Text style={styles.buttonText}>{getButtonText()}</Text>
+              {isLoading && !loginStatus && (
+                <View style={styles.loadingIndicator} />
+              )}
+              {loginStatus === 'success' && (
+                <Icon name="checkmark-circle" size={20} color="#fff" style={styles.buttonIcon} />
+              )}
+              {loginStatus === 'failed' && (
+                <Icon name="close-circle" size={20} color="#fff" style={styles.buttonIcon} />
+              )}
+            </Animated.View>
+          </TouchableOpacity>
         </Animated.View>
 
-        <Text style={styles.switchText}>
+        <Text style={[styles.switchText, isLoading && styles.disabledText]}>
           Don't have an account?{' '}
-          <Text onPress={() => navigation.navigate('HexaSignUpScreen')} style={{ fontWeight: '700' }}>
+          <Text 
+            onPress={() => !isLoading && navigation.navigate('HexaSignUpScreen')} 
+            style={{ fontWeight: '700', color: isLoading ? '#999' : '#007BFF' }}>
             Sign Up
           </Text>
         </Text>
@@ -219,11 +334,12 @@ const styles = StyleSheet.create({
   defaultInput: {
     borderWidth: 1,
     borderColor: '#ddd',
+    shadowColor: 'transparent',
   },
   focusedInput: {
     borderWidth: 1.5,
-    borderColor: '#00bfae',
-    shadowColor: '#00bfae',
+    borderColor: '#00e6e6',
+    shadowColor: '#00e6e6',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.4,
     shadowRadius: 8,
@@ -240,7 +356,6 @@ const styles = StyleSheet.create({
     left: 15,
     color: '#555',
     backgroundColor: 'transparent',
-    transition: 'top 0.2s ease, font-size 0.2s ease',
   },
   eyeIcon: {
     position: 'absolute',
@@ -263,30 +378,33 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   buttonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '700',
   },
-  loginMessage: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    borderWidth: 1.5,
-    marginBottom: 20,
-    alignItems: 'center',
+  buttonIcon: {
+    marginLeft: 8,
   },
-  loginText: {
-    fontSize: 18,
-    fontWeight: '700',
-    letterSpacing: 1,
-    transform: [{ perspective: 1000 }, { rotateY: '5deg' }],
-    transition: 'transform 0.3s ease',
+  loadingIndicator: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#fff',
+    borderTopColor: 'transparent',
+    marginLeft: 8,
+    transform: [{ rotate: '45deg' }],
   },
   switchText: {
     textAlign: 'center',
     color: '#333',
     marginTop: 10,
+  },
+  disabledText: {
+    color: '#999',
   },
 });
