@@ -91,11 +91,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     borderRadius: 16,
     overflow: 'hidden',
-    shadowColor: '#3ba7cc',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
-    elevation: 6,
+    shadowColor: '#000', // Shadow color
+    shadowOffset: { width: 0, height: 8 }, // Shadow offset for depth
+    shadowOpacity: 0.4, // Shadow opacity
+    shadowRadius: 10, // Shadow blur radius
+    elevation: 10, // Elevation for Android
   },
   button: {
     paddingVertical: 16,

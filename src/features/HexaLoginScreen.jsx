@@ -25,7 +25,11 @@ export default function HexaLoginScreen({ navigation }) {
   const buttonColorAnim = useRef(new Animated.Value(0)).current;
   const buttonScaleAnim = useRef(new Animated.Value(1)).current;
 
- 
+  const buttonBackgroundColor = buttonColorAnim.interpolate({
+    inputRange: [0, 1, 2],
+    outputRange: ['#6ec1e4', '#34c759', '#ff3b30'], // Default: blue, Success: green, Failed: red
+  });
+
   useEffect(() => {
     return () => {
       setLoginStatus(null);
@@ -33,16 +37,13 @@ export default function HexaLoginScreen({ navigation }) {
     };
   }, []);
 
-
   useEffect(() => {
     let timer;
- 
+
     if (loginStatus === 'failed' || loginStatus === 'success') {
- 
       const timeoutDuration = loginStatus === 'success' ? 1000 : 2000;
 
       timer = setTimeout(() => {
-  
         Animated.parallel([
           Animated.timing(buttonColorAnim, {
             toValue: 0,
@@ -90,14 +91,14 @@ export default function HexaLoginScreen({ navigation }) {
     focusedInput === input ? styles.focusedInput : styles.defaultInput;
 
   const handleLogin = () => {
- 
+    
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.trim() === '') {
       setIsLoading(true);
       setTimeout(() => {
         setIsLoading(false);
       }, 1000);
       setLoginStatus('failed');
- 
+
       Animated.parallel([
         Animated.timing(buttonColorAnim, {
           toValue: 2,
@@ -121,15 +122,13 @@ export default function HexaLoginScreen({ navigation }) {
             useNativeDriver: true,
           }),
         ]),
-  
       ]).start();
-  
+
       return;
     }
 
     setIsLoading(true);
 
- 
     setTimeout(() => {
       const isSuccess = Date.now() % 2 === 0;
       setLoginStatus(isSuccess ? 'success' : 'failed');
@@ -159,7 +158,6 @@ export default function HexaLoginScreen({ navigation }) {
         ]),
       ]).start();
 
-
       if (isSuccess) {
         setTimeout(() => {
           navigation.navigate('HexaDashboard');
@@ -167,12 +165,6 @@ export default function HexaLoginScreen({ navigation }) {
       }
     }, 1000);
   };
-
-
-  const buttonBackgroundColor = buttonColorAnim.interpolate({
-    inputRange: [0, 1, 2],
-    outputRange: ['#2a5298', '#34c759', '#ff3b30'],
-  });
 
   const getButtonText = () => {
     if (isLoading && !loginStatus) return 'Logging in...';
@@ -185,7 +177,6 @@ export default function HexaLoginScreen({ navigation }) {
     <LinearGradient colors={['#c4d3d2', '#c4d3d2']} style={styles.container}>
       <View style={styles.card}>
         <Text style={styles.title}>Ready To Sync</Text>
-
 
         <View style={[styles.inputWrapper, getInputStyle('email')]}>
           <Animated.Text
@@ -219,7 +210,6 @@ export default function HexaLoginScreen({ navigation }) {
             editable={!isLoading}
           />
         </View>
-
 
         <View style={[styles.inputWrapper, getInputStyle('password')]}>
           <Animated.Text
@@ -271,8 +261,14 @@ export default function HexaLoginScreen({ navigation }) {
           <TouchableOpacity
             disabled={isLoading}
             onPress={handleLogin}
-            style={{ overflow: 'hidden', borderRadius: 16 }}>
-            <Animated.View style={[styles.button, { backgroundColor: buttonBackgroundColor }]}>
+            style={{ overflow: 'hidden', borderRadius: 16 }}
+          >
+            <Animated.View
+              style={[
+                styles.button,
+                { backgroundColor: buttonBackgroundColor }, // Use dynamic background color
+              ]}
+            >
               <Text style={styles.buttonText}>{getButtonText()}</Text>
               {isLoading && !loginStatus && (
                 <View style={styles.loadingIndicator} />
@@ -374,11 +370,24 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 20,
     borderRadius: 16,
+    backgroundColor: '#6ec1e4', // Fallback color for Android
+    shadowColor: '#000', // Shadow color
+    shadowOffset: { width: 0, height: 10 }, // Shadow offset for depth
+    shadowOpacity: 0.5, // Shadow opacity for a stronger effect
+    shadowRadius: 12, // Shadow blur radius
+    elevation: 12, // Elevation for Android
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.4)', // Light border for 3D effect
   },
   buttonText: {
     fontSize: 18,
     fontFamily: 'Kiona-Regular', // Updated font
     color: '#fff',
+    fontWeight: 'bold', // Added bold font weight for better visibility
+    textShadowColor: 'rgba(0, 0, 0, 0.3)', // Text shadow for 3D effect
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   buttonIcon: {
     marginLeft: 8,

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 const OTPVerification = ({ navigation }) => {
   const [otp, setOtp] = useState('');
@@ -21,10 +22,18 @@ const OTPVerification = ({ navigation }) => {
         onChangeText={setOtp}
       />
       <TouchableOpacity
-        style={styles.button}
+      
         onPress={() => navigation.navigate('ResetPassword')}
+        style={styles.buttonContainer}
       >
-        <Text style={styles.buttonText}>Verify OTP</Text>
+        <LinearGradient
+          colors={['#6ec1e4', '#3ba7cc']} // Gradient colors for the button
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Verify</Text>
+        </LinearGradient>
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );
@@ -35,13 +44,13 @@ export default OTPVerification;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eef5f9',
+    backgroundColor: '#c4d3d2', // Updated background color
     justifyContent: 'center',
     paddingHorizontal: 24,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
+    fontSize: 25,
+    fontFamily: 'HoryzenDigital-24', // Updated font
     color: '#222',
     textAlign: 'center',
     marginBottom: 8,
@@ -62,15 +71,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     fontSize: 16,
   },
+  buttonContainer: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    shadowColor: '#000', // Shadow color
+    shadowOffset: { width: 0, height: 8 }, // Shadow offset for depth
+    shadowOpacity: 0.4, // Shadow opacity
+    shadowRadius: 10, // Shadow blur radius
+    elevation: 10, // Elevation for Android
+  },
   button: {
-    backgroundColor: '#4a90e2',
-    borderRadius: 12,
+    backgroundColor: '#6ec1e4', // Fallback color for Android
     paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 16,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
+    fontFamily: 'HoryzenDigital-24', // Updated font
+    textShadowColor: 'rgba(0, 0, 0, 0.3)', // Text shadow for 3D effect
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
 });

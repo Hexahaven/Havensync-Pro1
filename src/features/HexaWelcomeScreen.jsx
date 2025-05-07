@@ -52,7 +52,7 @@ export default function HexaWelcomeScreen({navigation}) {
         <Animated.View style={[styles.buttonContainer, {opacity: fadeAnim}]}>
           <TouchableOpacity onPress={() => navigation.navigate('HexaLoginScreen')}>
             <LinearGradient
-              colors={['#6ec1e4', '#3ba7cc']}
+              colors={['#6ec1e4', '#3ba7cc']} // Gradient colors for the button
               start={{x: 0, y: 0}}
               end={{x: 0, y: 1}}
               style={styles.button}>
@@ -117,15 +117,15 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.4)',
   },
   buttonText: {
-    fontFamily: 'HoryzenDigital-24', // Updated to match previous adjustments
+    fontFamily: 'Horyzen Digital 24', // Example corrected name
     fontSize: 20,
     color: '#1e1e1e',
     fontStyle: 'normal',
     fontWeight: '800',
     textAlign: 'center',
-
+    
     textShadowColor: 'rgba(0, 0, 0, 0.4)',
-    textShadowOffset: {width: 1.5, height: 1.5},
+    textShadowOffset: { width: 1.5, height: 1.5 },
     textShadowRadius: 2,
   },
   shimmerOverlay: {

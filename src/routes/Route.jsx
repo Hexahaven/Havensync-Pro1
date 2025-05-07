@@ -72,73 +72,39 @@ export default function Routes() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: {
-          backgroundColor: 'transparent',
-          elevation: 0,
-          shadowOpacity: 0,
-          height: 70,
-        },
-        headerTitleAlign: 'center',
+        headerShown: false, // Disable headers globally
         animation: 'slide_from_right',
         gestureEnabled: true,
         gestureDirection: 'horizontal',
-      }}>
-
+      }}
+    >
       <Stack.Screen
         name="HexaWelcomeScreen"
         component={Components.HexaWelcomeScreen}
-        options={{headerShown: false}}
       />
-
       <Stack.Screen
         name="HexaLoginScreen"
         component={Components.HexaLoginScreen}
-        options={{
-          headerShown: false, // Disable the header for this screen
-        }}
       />
-
       <Stack.Screen
         name="HexaSignUpScreen"
         component={Components.HexaSignUpScreen}
-        options={{
-          header: () => <CustomHeader title="Sign Up" showBackButton={true} />,
-        }}
       />
-
       <Stack.Screen
         name="ForgotPasswordRequest"
         component={Components.ForgotPasswordRequest}
-        options={{
-          headerShown: false, // Disable the header
-        }}
       />
-
       <Stack.Screen
         name="OTPVerification"
         component={Components.OTPVerification}
-        options={{
-          header: () => (
-            <CustomHeader title="Verify OTP" showBackButton={true} />
-          ),
-        }}
       />
-
       <Stack.Screen
         name="ResetPassword"
         component={Components.ResetPassword}
-        options={{
-          header: () => (
-            <CustomHeader title="Reset Password" showBackButton={true} />
-          ),
-        }}
       />
       <Stack.Screen
         name="HexaDashboard"
         component={Components.HexaDashboard}
-        options={{
-          header: () => <CustomHeader title="Dashboard" showBackButton={false} />,
-        }}
       />
     </Stack.Navigator>
   );
