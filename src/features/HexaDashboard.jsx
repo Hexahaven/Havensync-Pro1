@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { ScrollView, View, Text, RefreshControl } from 'react-native';
+import { ScrollView, View, Text, RefreshControl, StyleSheet, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import GreetingSection from '../components/GreetingSection';
 import WeatherSection from '../components/WeatherSection';
@@ -20,33 +20,38 @@ export default function HexaDashboard() {
 
   return (
     <LinearGradient
-      colors={['#bedcea', '#ffffff']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={{ flex: 1 }}
+      colors={['#c4d3d2', '#c4d3d2']} // Updated background color
+      style={styles.container}
     >
-      <SafeAreaView className="flex-1">
+      <SafeAreaView style={styles.safeArea}>
         <ScrollView
-          contentContainerStyle={{ paddingBottom: 40 }}
+          contentContainerStyle={styles.scrollViewContent}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         >
+          {/* Logo Section */}
+          <View style={styles.logoContainer}>
+            <Image
+              source={require('../assets/images/logo.png')} // Path to the logo
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </View>
+
           {/* Header / Greeting */}
-          <View className="p-6 pb-2">
+          <View style={styles.section}>
             <GreetingSection />
           </View>
 
           {/* Weather + Status */}
-          <View className="px-6">
+          <View style={styles.section}>
             <WeatherSection />
           </View>
 
           {/* Switches (Smart Controls) */}
-          <View className="mt-4 px-6">
-            <Text className="text-xl font-semibold text-gray-700 mb-4">
-              Smart Controls
-            </Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Smart Controls</Text>
             <SwitchSection />
           </View>
         </ScrollView>
@@ -54,3 +59,42 @@ export default function HexaDashboard() {
     </LinearGradient>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  safeArea: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    paddingBottom: 40,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  logo: {
+    width: 150, // Adjust the width of the logo
+    height: 150, // Adjust the height of the logo
+  },
+  section: {
+    marginHorizontal: 16,
+    marginVertical: 12,
+    padding: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Premium card-like background
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 6, // Shadow for Android
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#333',
+    marginBottom: 12,
+  },
+});

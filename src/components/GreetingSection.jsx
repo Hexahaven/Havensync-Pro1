@@ -30,7 +30,7 @@ export default function GreetingSection() {
     <>
       <View className="m-3 flex-row justify-between items-center">
         <Video
-          source={require('../assets/videos/welcome.mp4')}
+          source={require('../assets/images/logo.png')}
           style={{ width: 120, height: '100%' }}
           resizeMode="cover"
           repeat
