@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
   Image,
   Switch,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -20,7 +20,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const FAN_SPEEDS = ['Off', 'Low', 'Medium', 'High'];
 
-const TimePickerModal = ({visible, onClose, onSchedule}) => {
+const TimePickerModal = ({ visible, onClose, onSchedule }) => {
   const [time, setTime] = useState('');
 
   const handleSubmit = () => {
@@ -58,112 +58,79 @@ const TimePickerModal = ({visible, onClose, onSchedule}) => {
   );
 };
 
-const DeviceCard = ({device, onUpdate}) => {
+const DeviceCard = ({ device, onUpdate }) => {
   const [showTimerModal, setShowTimerModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [localName, setLocalName] = useState(device.name);
+  const [localName, setLocalName] = useState(device.name || '');
+  const glow = useSharedValue(device.connected ? 1 : 0);
 
-  const fanRotation = useSharedValue(0);
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{rotate: `${fanRotation.value}deg`}],
+    shadowOpacity: withTiming(glow.value, { duration: 500 }),
+    shadowColor: device.connected ? 'green' : 'gray',
+    shadowRadius: glow.value ? 8 : 0,
   }));
 
-  const handleSpeedChange = value => {
-    const index = FAN_SPEEDS.indexOf(value);
-    fanRotation.value = withTiming(index * 180, {duration: 500});
-    onUpdate({...device, fanSpeed: value});
+  const toggleSwitch = () => {
+    onUpdate({ ...device, isOn: !device.isOn });
   };
 
-  const togglePower = () => {
-    onUpdate({...device, isOn: !device.isOn});
+  const handleSpeedChange = (value) => {
+    onUpdate({ ...device, fanSpeed: value });
   };
 
-  const scheduleTimer = seconds => {
-    onUpdate({...device, timer: seconds});
+  const handleSchedule = (seconds) => {
+    // Replace this with actual timer logic
+    console.log(`${device.name} scheduled for ${seconds} seconds`);
   };
 
-  const toggleConnection = () => {
-    onUpdate({...device, isConnected: !device.isConnected});
-  };
-
-  const saveEdit = () => {
-    onUpdate({...device, name: localName});
+  const handleEditSave = () => {
+    onUpdate({ ...device, name: localName });
     setIsEditing(false);
   };
 
   return (
-    <View
-      style={[
-        styles.deviceCard,
-        {backgroundColor: device.isConnected ? '#e0f7fa' : '#f8d7da'},
-      ]}>
-      <TouchableOpacity onLongPress={toggleConnection}>
-        <Animated.View style={[styles.iconContainer, animatedStyle]}>
-          <Icon
-            name={device.icon || 'fan'}
-            size={40}
-            color={device.isConnected ? '#00796b' : '#aaa'}
-          />
-        </Animated.View>
+    <Animated.View style={[styles.card, animatedStyle]}>
+      <TouchableOpacity onLongPress={() => setIsEditing(true)} style={styles.topRow}>
+        <Icon name={device.icon || 'power-socket'} size={28} color="#444" />
+        <Text style={styles.status}>
+          {device.connected ? 'Active' : 'Inactive'}
+        </Text>
       </TouchableOpacity>
 
       {isEditing ? (
         <TextInput
-          style={styles.nameInput}
           value={localName}
           onChangeText={setLocalName}
-          onBlur={saveEdit}
-          onSubmitEditing={saveEdit}
+          style={styles.nameInput}
+          onSubmitEditing={handleEditSave}
         />
       ) : (
-        <TouchableOpacity onPress={() => setIsEditing(true)}>
-          <Text style={styles.deviceName}>{device.name}</Text>
-        </TouchableOpacity>
+        <Text style={styles.deviceName}>{device.name}</Text>
       )}
 
-      <Text style={styles.statusText}>
-        Status:{' '}
-        <Text style={{fontWeight: 'bold'}}>
-          {device.isConnected ? 'Active' : 'Inactive'}
-        </Text>
-      </Text>
+      <Switch value={device.isOn} onValueChange={toggleSwitch} />
 
-      <View style={styles.controlsRow}>
-        <Text>Power</Text>
-        <Switch
-          value={device.isOn}
-          onValueChange={togglePower}
-          thumbColor={device.isConnected ? '#4caf50' : '#ccc'}
-          trackColor={{false: '#ddd', true: '#a5d6a7'}}
-        />
-      </View>
-
-      <View style={styles.pickerRow}>
-        <Text>Speed</Text>
-        <Picker
-          selectedValue={device.fanSpeed}
-          style={styles.picker}
-          onValueChange={handleSpeedChange}>
-          {FAN_SPEEDS.map(speed => (
-            <Picker.Item key={speed} label={speed} value={speed} />
-          ))}
-        </Picker>
-      </View>
+      <Picker
+        selectedValue={device.fanSpeed}
+        onValueChange={handleSpeedChange}
+        style={styles.picker}>
+        {FAN_SPEEDS.map((speed) => (
+          <Picker.Item label={speed} value={speed} key={speed} />
+        ))}
+      </Picker>
 
       <TouchableOpacity
-        style={styles.scheduleButton}
-        onPress={() => setShowTimerModal(true)}>
-        <Text style={styles.scheduleText}>
-          Schedule Timer ({device.timer || 'None'}s)
-        </Text>
+        onPress={() => setShowTimerModal(true)}
+        style={styles.timerButton}>
+        <Text style={styles.buttonText}>Set Timer</Text>
       </TouchableOpacity>
 
       <TimePickerModal
         visible={showTimerModal}
         onClose={() => setShowTimerModal(false)}
-        onSchedule={scheduleTimer}
+        onSchedule={handleSchedule}
       />
-    </View>
+    </Animated.View>
   );
 };
 
@@ -173,166 +140,112 @@ const HexaDevices = () => {
       id: 1,
       name: 'Living Room Fan',
       icon: 'fan',
-      isConnected: true,
       isOn: false,
       fanSpeed: 'Off',
-      timer: 0,
+      connected: true,
     },
     {
       id: 2,
       name: 'Bedroom Light',
-      icon: 'lightbulb-on',
-      isConnected: false,
-      isOn: false,
-      fanSpeed: 'Off',
-      timer: 0,
-    },
-    {
-      id: 3,
-      name: 'Hall Fan',
-      icon: 'fan',
-      isConnected: true,
+      icon: 'lightbulb',
       isOn: true,
-      fanSpeed: 'Medium',
-      timer: 20,
+      fanSpeed: 'Low',
+      connected: false,
     },
-    {
-      id: 4,
-      name: 'Kitchen Switch',
-      icon: 'light-switch',
-      isConnected: true,
-      isOn: false,
-      fanSpeed: 'Off',
-      timer: 0,
-    },
-    {
-      id: 5,
-      name: 'Bathroom Light',
-      icon: 'lightbulb-on-outline',
-      isConnected: false,
-      isOn: false,
-      fanSpeed: 'Off',
-      timer: 0,
-    },
+    // Add 3 more if needed
   ]);
 
-  const updateDevice = updatedDevice => {
-    setDevices(prev =>
-      prev.map(dev => (dev.id === updatedDevice.id ? updatedDevice : dev)),
+  const handleUpdateDevice = (updatedDevice) => {
+    setDevices((prev) =>
+      prev.map((d) => (d.id === updatedDevice.id ? updatedDevice : d))
     );
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.heading}>Devices</Text>
-      {devices.map(device => (
+      {devices.map((device) => (
         <DeviceCard
           key={device.id}
           device={device}
-          onUpdate={updateDevice}
+          onUpdate={handleUpdateDevice}
         />
       ))}
     </ScrollView>
   );
 };
 
-export default HexaDevices;
-
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    paddingBottom: 50,
   },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  deviceCard: {
+  card: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 16,
     padding: 16,
     marginBottom: 16,
-    borderRadius: 16,
-    elevation: 3,
+    elevation: 4,
   },
-  iconContainer: {
-    alignSelf: 'center',
-    marginBottom: 10,
-  },
-  deviceName: {
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 6,
-  },
-  statusText: {
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  controlsRow: {
+  topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
   },
-  pickerRow: {
-    marginBottom: 10,
+  deviceName: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginVertical: 8,
+  },
+  nameInput: {
+    borderBottomWidth: 1,
+    padding: 4,
+  },
+  status: {
+    fontSize: 12,
+    color: '#888',
   },
   picker: {
+    height: 40,
     width: '100%',
+    marginVertical: 8,
   },
-  scheduleButton: {
+  timerButton: {
+    backgroundColor: '#3b82f6',
+    padding: 8,
+    borderRadius: 8,
     alignItems: 'center',
-    marginTop: 10,
-  },
-  scheduleText: {
-    color: '#007aff',
-    fontWeight: 'bold',
+    marginTop: 8,
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: '#00000099',
     justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.4)',
   },
   modalContent: {
     backgroundColor: '#fff',
+    marginHorizontal: 30,
+    borderRadius: 12,
     padding: 20,
-    borderRadius: 16,
-    width: '80%',
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
   },
   input: {
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 12,
-    padding: 10,
-    marginBottom: 10,
+    borderBottomWidth: 1,
+    marginBottom: 12,
   },
   modalButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   setButton: {
-    backgroundColor: '#007aff',
+    backgroundColor: '#10b981',
     padding: 10,
-    borderRadius: 12,
+    borderRadius: 8,
   },
   cancelButton: {
-    backgroundColor: '#aaa',
+    backgroundColor: '#ef4444',
     padding: 10,
-    borderRadius: 12,
+    borderRadius: 8,
   },
   buttonText: {
     color: '#fff',
   },
-  nameInput: {
-    fontSize: 18,
-    borderBottomColor: '#999',
-    borderBottomWidth: 1,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
 });
+
+export default HexaDevices;
