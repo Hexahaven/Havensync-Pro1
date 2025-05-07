@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
   textInput: {
     height: 40,
     fontSize: 16,
-    fontFamily: 'HoryzenMono-24',
+    fontFamily: 'Conthrax-SemiBold', // Updated font
     paddingVertical: 4,
     color: '#333',
   },
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     color: '#666',
-    fontFamily: 'HoryzenMono-24',
+    fontFamily: 'Conthrax-SemiBold', // Updated font
     fontSize: 16,
   },
   eyeIcon: {
@@ -360,12 +360,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     color: '#007BFF',
     marginBottom: 28,
-    fontFamily: 'HoryzenMono-24',
+    fontFamily: 'Conthrax-SemiBold', // Updated font
     fontSize: 14,
   },
   disabledText: {
     color: '#999',
-    fontFamily: 'HoryzenMono-24',
+    fontFamily: 'Conthrax-SemiBold', // Updated font
   },
   button: {
     flexDirection: 'row',
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    fontFamily: 'HoryzenMono-24',
+    fontFamily: 'Conthrax-SemiBold', // Updated font
     color: '#fff',
   },
   buttonIcon: {
@@ -395,7 +395,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     color: '#333',
-    fontFamily: 'HoryzenMono-24',
+    fontFamily: 'Conthrax-SemiBold', // Updated font
   },
 });
 

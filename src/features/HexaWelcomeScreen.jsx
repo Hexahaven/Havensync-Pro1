@@ -93,15 +93,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
-  header: {
-    fontSize: 28,
-    color: '#202020',
-    fontFamily: 'HoryzenDigital-24', // <-- Header font
-    marginBottom: 40,
-    textShadowColor: '#b0b0b0',
-    textShadowOffset: {width: 1.5, height: 1.5},
-    textShadowRadius: 3,
-  },
+ 
   buttonContainer: {
     position: 'absolute',
     bottom: height * 0.12,
@@ -125,7 +117,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.4)',
   },
   buttonText: {
-    fontFamily: 'HoryzenDigital-24', // Ensure this matches the font file name
+    fontFamily: 'HoryzenDigital-24', // Updated to match previous adjustments
     fontSize: 20,
     color: '#1e1e1e',
     fontStyle: 'normal',
