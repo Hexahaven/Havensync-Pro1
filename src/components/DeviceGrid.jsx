@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Switch, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Switch } from 'react-native';
 import { useSelector } from 'react-redux';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -13,7 +13,7 @@ export default function DeviceGrid() {
       <Text style={[styles.deviceName, darkMode && styles.textDark]} numberOfLines={1}>
         {item.name || 'Unnamed'}
       </Text>
-      <Switch value={item.isOn} disabled /> {/* Replace this with dispatch for toggle if needed */}
+      <Switch value={item.isOn} disabled />
     </View>
   );
 
@@ -40,6 +40,7 @@ export default function DeviceGrid() {
 const styles = StyleSheet.create({
   container: {
     marginTop: 20,
+    paddingHorizontal: 16,
   },
   title: {
     fontSize: 18,
@@ -53,30 +54,23 @@ const styles = StyleSheet.create({
   noDevices: {
     fontSize: 16,
     textAlign: 'center',
-    marginTop: 20,
-    color: '#888',
-  },
-  grid: {
-    gap: 12,
+    marginTop: 40,
   },
   card: {
-    flex: 1,
-    marginBottom: 16,
+    backgroundColor: '#f9f9f9',
     padding: 16,
-    backgroundColor: '#f2f2f2',
     borderRadius: 16,
+    marginBottom: 16,
+    width: '48%',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    minHeight: 130,
   },
   cardDark: {
-    backgroundColor: '#1f1f1f',
+    backgroundColor: '#1e1e1e',
   },
   deviceName: {
-    marginTop: 10,
-    fontSize: 16,
+    marginTop: 8,
+    fontSize: 14,
     fontWeight: '500',
-    textAlign: 'center',
     color: '#333',
   },
 });
