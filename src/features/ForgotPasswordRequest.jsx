@@ -1,27 +1,42 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ForgotPasswordRequest = ({ navigation }) => {
   const [email, setEmail] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Reset Your Password</Text>
-      <Text style={styles.subtitle}>Enter your registered email to receive an OTP</Text>
-      <TextInput
-        placeholder="Email Address"
-        placeholderTextColor="#aaa"
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('OTPVerification')}
-      >
-        <Text style={styles.buttonText}>Send OTP</Text>
-      </TouchableOpacity>
-    </View>
+    <LinearGradient colors={['#c4d3d2', '#e0e7e9']} style={styles.container}>
+      <View style={styles.card}>
+        <Text style={styles.title}>Reclaim Entry</Text>
+        <Text style={styles.subtitle}>Enter your registered email to receive an OTP</Text>
+        <View style={[styles.inputWrapper, isFocused && styles.focusedInput]}>
+          <TextInput
+            placeholder="Email Address"
+            placeholderTextColor="#aaa"
+            style={styles.textInput}
+            value={email}
+            onChangeText={setEmail}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+          />
+        </View>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => navigation.navigate('OTPVerification')}
+        >
+          <LinearGradient
+            colors={['#6ec1e4', '#3ba7cc']} // Gradient colors for the button
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Send OTP</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+    </LinearGradient>
   );
 };
 
@@ -30,42 +45,63 @@ export default ForgotPasswordRequest;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0f172a',
-    padding: 24,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  card: {
+    width: '85%',
+    padding: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 8, height: 12 },
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
+    elevation: 12,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#fff',
+    fontSize: 22,
+    fontFamily: 'HoryzenDigital-24', // Updated font
+    color: '#333',
     marginBottom: 12,
+    textAlign: 'center',
   },
   subtitle: {
-    color: '#94a3b8',
+    color: '#555',
     marginBottom: 32,
     fontSize: 14,
+    textAlign: 'center',
   },
-  input: {
-    backgroundColor: '#1e293b',
-    padding: 16,
-    borderRadius: 12,
-    color: '#fff',
+  inputWrapper: {
     marginBottom: 24,
-    fontSize: 16,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 5,
+    borderBottomWidth: 1.2,
+    borderColor: '#ccc',
+    position: 'relative',
   },
-  button: {
-    backgroundColor: '#38bdf8',
-    padding: 16,
+  focusedInput: {
+    borderColor: '#007BFF', // Highlighted border color when focused
+  },
+  textInput: {
+    height: 40,
+    fontSize: 16,
+    fontFamily: 'Kiona-Regular', // Match the font style from the login page
+    paddingVertical: 4,
+    color: '#333',
+  },
+  buttonContainer: {
     borderRadius: 16,
-    alignItems: 'center',
-    shadowColor: '#38bdf8',
+    overflow: 'hidden',
+    shadowColor: '#3ba7cc',
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.4,
     shadowRadius: 10,
     elevation: 6,
+  },
+  button: {
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 16,
+    alignItems: 'center',
   },
   buttonText: {
     color: '#fff',

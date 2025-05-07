@@ -110,9 +110,7 @@ export default function Routes() {
         name="ForgotPasswordRequest"
         component={Components.ForgotPasswordRequest}
         options={{
-          header: () => (
-            <CustomHeader title="Forgot Password" showBackButton={true} />
-          ),
+          headerShown: false, // Disable the header
         }}
       />
 
