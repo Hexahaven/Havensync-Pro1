@@ -1,29 +1,26 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
-  Button,
   StyleSheet,
   ScrollView,
-  Modal,
   TextInput,
+  Modal,
+  TouchableOpacity,
+  Image,
+  Switch,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const FAN_SPEEDS = {
-  Off: 0,
-  Low: 1,
-  Medium: 2,
-  High: 3,
-};
+const FAN_SPEEDS = ['Off', 'Low', 'Medium', 'High'];
 
-// Simple Timer Modal Implementation
-const TimePickerModal = ({visible, onClose, onSchedule}) => {
+const TimePickerModal = ({ visible, onClose, onSchedule }) => {
   const [time, setTime] = useState('');
 
   const handleSubmit = () => {
@@ -47,9 +44,13 @@ const TimePickerModal = ({visible, onClose, onSchedule}) => {
             onChangeText={setTime}
             placeholder="E.g. 10"
           />
-          <View style={{flexDirection: 'row', gap: 10}}>
-            <Button title="Set Timer" onPress={handleSubmit} />
-            <Button title="Cancel" onPress={onClose} />
+          <View style={styles.modalButtons}>
+            <TouchableOpacity onPress={handleSubmit} style={styles.setButton}>
+              <Text style={styles.buttonText}>Set</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onClose} style={styles.cancelButton}>
+              <Text style={styles.buttonText}>Cancel</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -57,175 +58,193 @@ const TimePickerModal = ({visible, onClose, onSchedule}) => {
   );
 };
 
-const HexaDevices = () => {
-  const [selectedFan, setSelectedFan] = useState(0);
-  const [fanSpeeds, setFanSpeeds] = useState(Array(5).fill(FAN_SPEEDS.Off));
-  const [timers, setTimers] = useState(Array(5).fill(0));
-  const [modalVisible, setModalVisible] = useState(false);
-  const fanRotations = Array(5)
-    .fill()
-    .map(() => useSharedValue(0));
+const DeviceCard = ({ device, onUpdate }) => {
+  const [showTimerModal, setShowTimerModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [localName, setLocalName] = useState(device.name || '');
+  const glow = useSharedValue(device.connected ? 1 : 0);
 
-  const animatedFanStyles = fanRotations.map(rotation =>
-    useAnimatedStyle(() => ({
-      transform: [{rotate: `${rotation.value}deg`}],
-    }))
-  );
+  const animatedStyle = useAnimatedStyle(() => ({
+    shadowOpacity: withTiming(glow.value, { duration: 500 }),
+    shadowColor: device.connected ? 'green' : 'gray',
+    shadowRadius: glow.value ? 8 : 0,
+  }));
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFanSpeeds(currentSpeeds => {
-        return currentSpeeds.map((speed, index) => {
-          if (timers[index] > 0) {
-            setTimers(currentTimers => {
-              const newTimers = [...currentTimers];
-              newTimers[index] -= 1;
-              return newTimers;
-            });
-            return speed;
-          } else if (timers[index] === 0 && speed !== FAN_SPEEDS.Off) {
-            const newSpeeds = [...currentSpeeds];
-            newSpeeds[index] = FAN_SPEEDS.Off;
-            return newSpeeds[index];
-          }
-          return speed;
-        });
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [timers]);
-
-  useEffect(() => {
-    fanSpeeds.forEach((speed, index) => {
-      const rotationSpeed = speed * 5;
-      if (rotationSpeed === 0) {
-        fanRotations[index].value = withTiming(0, {duration: 500});
-      } else {
-        const interval = setInterval(() => {
-          fanRotations[index].value = withTiming(
-            fanRotations[index].value + rotationSpeed,
-            {duration: 100}
-          );
-        }, 100);
-        return () => clearInterval(interval);
-      }
-    });
-  }, [fanSpeeds]);
-
-  const setFanSpeed = speed => {
-    const newSpeeds = [...fanSpeeds];
-    newSpeeds[selectedFan] = speed;
-    setFanSpeeds(newSpeeds);
+  const toggleSwitch = () => {
+    onUpdate({ ...device, isOn: !device.isOn });
   };
 
-  const setTimer = seconds => {
-    const newTimers = [...timers];
-    newTimers[selectedFan] = seconds;
-    setTimers(newTimers);
+  const handleSpeedChange = (value) => {
+    onUpdate({ ...device, fanSpeed: value });
+  };
+
+  const handleSchedule = (seconds) => {
+    // Replace this with actual timer logic
+    console.log(`${device.name} scheduled for ${seconds} seconds`);
+  };
+
+  const handleEditSave = () => {
+    onUpdate({ ...device, name: localName });
+    setIsEditing(false);
+  };
+
+  return (
+    <Animated.View style={[styles.card, animatedStyle]}>
+      <TouchableOpacity onLongPress={() => setIsEditing(true)} style={styles.topRow}>
+        <Icon name={device.icon || 'power-socket'} size={28} color="#444" />
+        <Text style={styles.status}>
+          {device.connected ? 'Active' : 'Inactive'}
+        </Text>
+      </TouchableOpacity>
+
+      {isEditing ? (
+        <TextInput
+          value={localName}
+          onChangeText={setLocalName}
+          style={styles.nameInput}
+          onSubmitEditing={handleEditSave}
+        />
+      ) : (
+        <Text style={styles.deviceName}>{device.name}</Text>
+      )}
+
+      <Switch value={device.isOn} onValueChange={toggleSwitch} />
+
+      <Picker
+        selectedValue={device.fanSpeed}
+        onValueChange={handleSpeedChange}
+        style={styles.picker}>
+        {FAN_SPEEDS.map((speed) => (
+          <Picker.Item label={speed} value={speed} key={speed} />
+        ))}
+      </Picker>
+
+      <TouchableOpacity
+        onPress={() => setShowTimerModal(true)}
+        style={styles.timerButton}>
+        <Text style={styles.buttonText}>Set Timer</Text>
+      </TouchableOpacity>
+
+      <TimePickerModal
+        visible={showTimerModal}
+        onClose={() => setShowTimerModal(false)}
+        onSchedule={handleSchedule}
+      />
+    </Animated.View>
+  );
+};
+
+const HexaDevices = () => {
+  const [devices, setDevices] = useState([
+    {
+      id: 1,
+      name: 'Living Room Fan',
+      icon: 'fan',
+      isOn: false,
+      fanSpeed: 'Off',
+      connected: true,
+    },
+    {
+      id: 2,
+      name: 'Bedroom Light',
+      icon: 'lightbulb',
+      isOn: true,
+      fanSpeed: 'Low',
+      connected: false,
+    },
+    // Add 3 more if needed
+  ]);
+
+  const handleUpdateDevice = (updatedDevice) => {
+    setDevices((prev) =>
+      prev.map((d) => (d.id === updatedDevice.id ? updatedDevice : d))
+    );
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Fan Control Panel</Text>
-
-      {/* Fan Rotation Display */}
-      <Animated.View style={[styles.fanVisual, animatedFanStyles[selectedFan]]}>
-        <Text style={styles.fanLabel}>Fan {selectedFan + 1}</Text>
-      </Animated.View>
-
-      <Picker
-        selectedValue={selectedFan}
-        onValueChange={itemValue => setSelectedFan(itemValue)}
-        style={styles.picker}>
-        {[...Array(5).keys()].map(i => (
-          <Picker.Item key={i} label={`Fan ${i + 1}`} value={i} />
-        ))}
-      </Picker>
-
-      <Text style={styles.label}>
-        Speed: {Object.keys(FAN_SPEEDS)[fanSpeeds[selectedFan]]}
-      </Text>
-      <Text style={styles.label}>
-        Timer: {timers[selectedFan]} seconds
-      </Text>
-
-      <View style={styles.buttonRow}>
-        {Object.keys(FAN_SPEEDS).map(speed => (
-          <Button
-            key={speed}
-            title={speed}
-            onPress={() => setFanSpeed(FAN_SPEEDS[speed])}
-          />
-        ))}
-      </View>
-
-      <Button title="Set Timer" onPress={() => setModalVisible(true)} />
-
-      <TimePickerModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSchedule={time => setTimer(time)}
-      />
+      {devices.map((device) => (
+        <DeviceCard
+          key={device.id}
+          device={device}
+          onUpdate={handleUpdateDevice}
+        />
+      ))}
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    paddingBottom: 40,
-    backgroundColor: '#f8f9fa',
+    padding: 16,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  card: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 16,
+    padding: 16,
     marginBottom: 16,
+    elevation: 4,
   },
-  label: {
+  topRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  deviceName: {
     fontSize: 16,
+    fontWeight: '600',
     marginVertical: 8,
   },
+  nameInput: {
+    borderBottomWidth: 1,
+    padding: 4,
+  },
+  status: {
+    fontSize: 12,
+    color: '#888',
+  },
   picker: {
-    marginBottom: 20,
+    height: 40,
+    width: '100%',
+    marginVertical: 8,
   },
-  buttonRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  fanVisual: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#ddd',
-    justifyContent: 'center',
+  timerButton: {
+    backgroundColor: '#3b82f6',
+    padding: 8,
+    borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 20,
-    alignSelf: 'center',
-  },
-  fanLabel: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    marginTop: 8,
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: '#000000aa',
     justifyContent: 'center',
-    padding: 20,
+    backgroundColor: 'rgba(0,0,0,0.4)',
   },
   modalContent: {
     backgroundColor: '#fff',
-    borderRadius: 8,
+    marginHorizontal: 30,
+    borderRadius: 12,
     padding: 20,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#999',
-    borderRadius: 4,
+    borderBottomWidth: 1,
+    marginBottom: 12,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  setButton: {
+    backgroundColor: '#10b981',
     padding: 10,
-    marginBottom: 16,
+    borderRadius: 8,
+  },
+  cancelButton: {
+    backgroundColor: '#ef4444',
+    padding: 10,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: '#fff',
   },
 });
 
