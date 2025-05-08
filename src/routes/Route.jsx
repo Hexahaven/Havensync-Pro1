@@ -134,12 +134,12 @@ export default function Routes() {
         }}
       />
       <Stack.Screen
-        name="HexaDashboard"
-        component={Components.HexaDashboard}
-        options={{
-          header: () => <CustomHeader title="Dashboard" showBackButton={false} />,
-        }}
-      />
+  name="HexaDashboard"
+  component={Components.HexaDashboard}
+  options={{
+    header: () => <CustomHeader title="Dashboard" showBackButton={false} />,
+  }}
+/>
     </Stack.Navigator>
   );
 }
