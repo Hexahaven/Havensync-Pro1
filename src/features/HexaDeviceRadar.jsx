@@ -1,4 +1,4 @@
-// src/featurimport React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,8 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faWifi, faPlug } from '@fortawesome/free-solid-svg-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { addDevice } from '../redux/slices/switchSlice'; // ✅ Ensure path is correct
 
 const { width } = Dimensions.get('window');
 const RADIUS = width * 0.6;
@@ -26,6 +28,7 @@ export default function HexaDeviceRadar() {
   const [foundDevices, setFoundDevices] = useState([]);
   const [scanning, setScanning] = useState(true);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const pulseAnim = new Animated.Value(0);
 
   useEffect(() => {
@@ -71,8 +74,16 @@ export default function HexaDeviceRadar() {
     }),
   };
 
-  const handleConnect = device => {
-    // In real app, trigger backend connection here
+  const handleConnect = (device) => {
+    dispatch(
+      addDevice({
+        name: device.name,
+        icon: 'fan', // Change this based on device type if needed
+        isOn: false,
+        isConnected: true,
+        switches: [false, false, false], // for 3-channel switch
+      })
+    );
     navigation.navigate('HexaDashboard');
   };
 
@@ -89,13 +100,14 @@ export default function HexaDeviceRadar() {
       {!scanning && (
         <FlatList
           data={foundDevices}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           style={{ marginTop: 30, width: '100%' }}
           contentContainerStyle={{ paddingHorizontal: 20 }}
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.deviceItem}
-              onPress={() => handleConnect(item)}>
+              onPress={() => handleConnect(item)}
+            >
               <FontAwesomeIcon icon={faPlug} size={20} color="#333" />
               <Text style={styles.deviceName}>{item.name}</Text>
               <Text style={styles.connectText}>Tap to connect</Text>
