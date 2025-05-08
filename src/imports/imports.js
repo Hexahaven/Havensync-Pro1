@@ -8,3 +8,4 @@ export { default as HexaDashboard } from '../features/HexaDashboard';
 export { default as TopSection } from '../components/TopSection';
 export { default as DeviceGrid } from '../components/DeviceGrid';
 export { default as RecentActivity } from '../components/RecentActivity';
+export {default as HexaDeviceRadar} from '../features/HexaDeviceRadar';

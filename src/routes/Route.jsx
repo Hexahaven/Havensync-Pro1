@@ -73,35 +73,67 @@ export default function Routes() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false, // Disable headers globally
+        headerStyle: {
+          backgroundColor: 'transparent',
+          elevation: 0,
+          shadowOpacity: 0,
+          height: 70,
+        },
+        headerTitleAlign: 'center',
         animation: 'slide_from_right',
         gestureEnabled: true,
         gestureDirection: 'horizontal',
-      }}
-    >
+      }}>
       <Stack.Screen
         name="HexaWelcomeScreen"
         component={Components.HexaWelcomeScreen}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="HexaLoginScreen"
         component={Components.HexaLoginScreen}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="HexaSignUpScreen"
         component={Components.HexaSignUpScreen}
+        options={{
+          header: () => <CustomHeader title="Sign Up" showBackButton={true} />,
+        }}
       />
       <Stack.Screen
         name="ForgotPasswordRequest"
         component={Components.ForgotPasswordRequest}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="OTPVerification"
         component={Components.OTPVerification}
+        options={{
+          header: () => (
+            <CustomHeader title="Verify OTP" showBackButton={true} />
+          ),
+        }}
       />
       <Stack.Screen
         name="ResetPassword"
         component={Components.ResetPassword}
+        options={{
+          header: () => (
+            <CustomHeader title="Reset Password" showBackButton={true} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="DeviceDetectorLoader"
+        component={DeviceDetectorLoader}
+        options={{
+          header: () => <CustomHeader title="Device Detector" showBackButton={true} />,
+        }}
       />
       <Stack.Screen
         name="HexaDashboard"
@@ -111,10 +143,10 @@ export default function Routes() {
         }}
       />
       <Stack.Screen
-        name="DeviceDetectorLoader"
-        component={DeviceDetectorLoader}
+        name="HexaDeviceRadar"
+        component={Components.HexaDeviceRadar}
         options={{
-          header: () => <CustomHeader title="Device Detector" showBackButton={true} />,
+          header: () => <CustomHeader title="Add Devices" showBackButton={true} />,
         }}
       />
     </Stack.Navigator>
