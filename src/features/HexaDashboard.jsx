@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { LinearGradient } from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient';
 import TopSection from '../components/TopSection';
 import DeviceGrid from '../components/DeviceGrid';
 import RecentActivity from '../components/RecentActivity';
