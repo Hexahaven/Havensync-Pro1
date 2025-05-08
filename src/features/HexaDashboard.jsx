@@ -31,7 +31,7 @@ export default function HexaDashboard() {
             style={styles.avatar}
           />
           <View style={styles.greetingBlock}>
-            <Text style={styles.greetingText}>Hello,</Text>
+            <Text style={styles.greetingText}>Good Morning,</Text>
             <Text style={styles.usernameText}>{profile.name || 'Guest'}</Text>
           </View>
         </View>
@@ -56,7 +56,7 @@ export default function HexaDashboard() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => navigation.navigate('DeviceRadar')}
+          onPress={() => navigation.navigate('HexaDeviceRadar')}
         >
           <FontAwesomeIcon icon={faPlus} size={24} color="#fff" />
         </TouchableOpacity>
