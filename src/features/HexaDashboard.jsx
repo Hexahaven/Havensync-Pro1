@@ -2,95 +2,135 @@ import React from 'react';
 import {
   View,
   Text,
+  SafeAreaView,
+  ScrollView,
   Image,
   TouchableOpacity,
-  ScrollView,
   StyleSheet,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { useSelector } from 'react-redux';
+import TopSection from '../components/TopSection';
+import DeviceGrid from '../components/DeviceGrid';
+import RecentActivity from '../components/RecentActivity';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faHome, faBell, faPlus, faPlug } from '@fortawesome/free-solid-svg-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function HexaDashboard() {
+  const profile = useSelector(state => state.profile);
+  const darkMode = useSelector(state => state.profile.darkMode);
   const navigation = useNavigation();
-  const user = useSelector(state => state.profile);
 
   return (
-    <View style={styles.container}>
-      {/* Top Greeting and Profile */}
-      <View style={styles.topRow}>
-        <Image source={{ uri: user.avatar }} style={styles.avatar} />
-        <View style={styles.greeting}>
-          <Text style={styles.hello}>Hello, {user.name}</Text>
-          <Text style={styles.devices}>12 devices on</Text>
+    <SafeAreaView style={[styles.container, darkMode && styles.darkBackground]}>
+      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+        {/* Top Section */}
+        <View style={styles.topRow}>
+          <Image
+            source={{ uri: profile.avatar }}
+            style={styles.avatar}
+          />
+          <View style={styles.greetingBlock}>
+            <Text style={styles.greetingText}>Hello,</Text>
+            <Text style={styles.usernameText}>{profile.name || 'Guest'}</Text>
+          </View>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+
+        {/* Weather and Greeting */}
+        <TopSection username={profile.name || 'Guest'} />
+
+        {/* Devices */}
+        <DeviceGrid />
+
+        {/* Recent Activity */}
+        <RecentActivity />
+      </ScrollView>
+
+      {/* Bottom Nav Bar */}
+      <View style={styles.bottomNav}>
+        <TouchableOpacity>
+          <FontAwesomeIcon icon={faHome} size={20} color="#555" />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <FontAwesomeIcon icon={faPlug} size={20} color="#555" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => navigation.navigate('DeviceRadar')}
+        >
+          <FontAwesomeIcon icon={faPlus} size={24} color="#fff" />
+        </TouchableOpacity>
+        <TouchableOpacity>
           <FontAwesomeIcon icon={faBell} size={20} color="#555" />
         </TouchableOpacity>
       </View>
-
-      {/* Weather */}
-      <LinearGradient colors={['#72c6ef', '#004e92']} style={styles.weatherCard}>
-        <Text style={styles.weatherTitle}>Little Rain</Text>
-        <Text style={styles.weatherDesc}>Lowering temp below 18°C cut cost by 58%</Text>
-        <Text style={styles.weatherTemp}>18°C</Text>
-      </LinearGradient>
-
-      {/* Room Tabs */}
-      <View style={styles.tabContainer}>
-        <TouchableOpacity style={styles.tabActive}>
-          <Text style={styles.tabTextActive}>Living Room</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tabInactive}>
-          <Text style={styles.tabText}>Kitchen</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tabInactive}>
-          <Text style={styles.tabText}>Bedroom</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Devices */}
-      <ScrollView contentContainerStyle={styles.deviceGrid}>
-        {/* Add Device Card */}
-        <TouchableOpacity style={styles.addCard} onPress={() => navigation.navigate('DeviceRadar')}>
-          <Icon name="add-circle" size={40} color="#007aff" />
-          <Text style={styles.addText}>Add Device</Text>
-        </TouchableOpacity>
-
-        {/* Example Devices (static until backend or state added) */}
-        <View style={[styles.deviceCard, { backgroundColor: '#fff' }]}>
-          <Icon name="bulb" size={24} color="#333" />
-          <Text style={styles.deviceName}>Smart Lamp</Text>
-          <Text style={styles.deviceCount}>3 devices</Text>
-          <Text style={styles.wifi}>Wi-Fi</Text>
-        </View>
-
-        <View style={[styles.deviceCard, { backgroundColor: '#f1f1f1' }]}>
-          <Icon name="tv" size={24} color="#333" />
-          <Text style={styles.deviceName}>Smart TV</Text>
-          <Text style={styles.deviceCount}>2 devices</Text>
-          <Text style={styles.wifi}>Wi-Fi</Text>
-        </View>
-      </ScrollView>
-
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity>
-          <Icon name="home-outline" size={24} color="#333" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon name="grid-outline" size={24} color="#333" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('DeviceRadar')}>
-          <Icon name="add-circle" size={48} color="#007aff" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon name="notifications-outline" size={24} color="#333" />
-        </TouchableOpacity>
-      </View>
-    </View>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f7fb',
+  },
+  darkBackground: {
+    backgroundColor: '#121212',
+  },
+  scrollContainer: {
+    padding: 16,
+    paddingBottom: 100,
+  },
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 12,
+    borderWidth: 2,
+    borderColor: '#d1d1d1',
+  },
+  greetingBlock: {
+    flexDirection: 'column',
+  },
+  greetingText: {
+    fontSize: 16,
+    color: '#888',
+  },
+  usernameText: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#333',
+  },
+  bottomNav: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 70,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#e1e1e1',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  addButton: {
+    width: 52,
+    height: 52,
+    backgroundColor: '#84c9e8',
+    borderRadius: 26,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.5,
+  },
+});
