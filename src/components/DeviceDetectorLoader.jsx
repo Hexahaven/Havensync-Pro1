@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { View } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -7,100 +7,102 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import Svg, { Circle, Defs, LinearGradient, Stop, G } from 'react-native-svg';
+import Icon from 'react-native-vector-icons/Ionicons';
+import DeviceDetectorLoader from '../components/DeviceDetectorLoader'; // Import the loader
 
-export default function DeviceDetectorLoader() {
+export default function DeviceRadar() {
   const rotate = useSharedValue(0);
-  const pulse = useSharedValue(0.7);
+  
 
-  useEffect(() => {
-    rotate.value = withRepeat(
-      withTiming(360, { duration: 2500, easing: Easing.linear }),
-      -1,
-      false
-    );
 
-    pulse.value = withRepeat(
-      withTiming(1, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
-      -1,
-      true
-    );
-  }, []);
 
-  const rotatingStyle = useAnimatedStyle(() => ({
+
+  // Rotate animation for the radar
+  rotate.value = withRepeat(
+    withTiming(360, { duration: 3000, easing: Easing.linear }),
+    -1,
+    false
+  );
+
+  const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${rotate.value}deg` }],
   }));
 
-  const pulsingStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: pulse.value }],
-  }));
+
 
   return (
-    <View className="flex items-center justify-center h-44 w-44 relative">
-      {/* Radar Base */}
-      <Svg width="150" height="150" viewBox="0 0 100 100">
-        <Defs>
-          <LinearGradient id="circleGradient" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0%" stopColor="#ff8625" stopOpacity="0.4" />
-            <Stop offset="100%" stopColor="#84c3e0" stopOpacity="0.2" />
-          </LinearGradient>
-        </Defs>
-        {[20, 30, 40].map(r => (
-          <Circle
-            key={r}
-            cx="50"
-            cy="50"
-            r={r}
-            stroke="url(#circleGradient)"
-            strokeWidth="2"
-            fill="transparent"
-          />
-        ))}
-      </Svg>
+    <View style={styles.container}>
+      <Text style={styles.title}>Add New Device</Text>
+      <Text style={styles.subtitle}>Searching Device...</Text>
 
-      {/* Rotating Sweep */}
-      <Animated.View
-        style={[
-          rotatingStyle,
-          {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-          },
-        ]}>
-        <Svg width="150" height="150" viewBox="0 0 100 100">
-          <Defs>
-            <LinearGradient id="sweep" x1="0" y1="0" x2="1" y2="1">
-              <Stop offset="0%" stopColor="#84c3e0" stopOpacity="0.7" />
-              <Stop offset="100%" stopColor="#84c3e0" stopOpacity="0" />
-            </LinearGradient>
-          </Defs>
-          <G origin="50,50">
-            <Circle
-              cx="50"
-              cy="50"
-              r="40"
-              fill="url(#sweep)"
-              rotation="45"
-              opacity={0.5}
-            />
-          </G>
-        </Svg>
-      </Animated.View>
+      {/* Radar Container */}
+      <View style={styles.radarContainer}>
+        <Animated.View style={[styles.radarCircle, animatedStyle]}>
+          <Icon name="bluetooth" size={40} color="#ff8625" />
+        </Animated.View>
 
-      {/* Pulsing Dot */}
-      <Animated.View
-        style={[
-          pulsingStyle,
-          {
-            position: 'absolute',
-            width: 14,
-            height: 14,
-            backgroundColor: '#ff8625',
-            borderRadius: 7,
-          },
-        ]}
-      />
+        {/* Device Detector Loader */}
+        <DeviceDetectorLoader />
+
+        {/* Detected Devices */}
+        <View style={[styles.device, { top: 50, left: 100 }]}>
+          <Icon name="bulb" size={24} color="#fff" />
+          <Text style={styles.deviceText}>Lamp 32-12k</Text>
+        </View>
+        <View style={[styles.device, { top: 150, right: 80 }]}>
+          <Icon name="tv" size={24} color="#fff" />
+          <Text style={styles.deviceText}>PS8</Text>
+        </View>
+        <View style={[styles.device, { bottom: 50, left: 120 }]}>
+          <Icon name="desktop" size={24} color="#fff" />
+          <Text style={styles.deviceText}>TV Samsung</Text>
+        </View>
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#1e1e2f',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#aaa',
+    marginBottom: 20,
+  },
+  radarContainer: {
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    backgroundColor: '#2a2a3d',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  radarCircle: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    borderWidth: 2,
+    borderColor: '#84c3e0',
+    position: 'absolute',
+  },
+  device: {
+    position: 'absolute',
+    alignItems: 'center',
+  },
+  deviceText: {
+    color: '#fff',
+    marginTop: 5,
+  },
+});

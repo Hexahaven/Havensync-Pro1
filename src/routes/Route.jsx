@@ -8,6 +8,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import * as Components from '../imports/imports';
 import Animated, {SlideInUp} from 'react-native-reanimated';
 import {useSelector} from 'react-redux';
+import DeviceDetectorLoader from '../components/DeviceDetectorLoader';
 
 const Stack = createNativeStackNavigator();
 
@@ -107,6 +108,13 @@ export default function Routes() {
         component={Components.HexaDashboard}
         options={{
           header: () => <CustomHeader title="Dashboard" showBackButton={false} />,
+        }}
+      />
+      <Stack.Screen
+        name="DeviceDetectorLoader"
+        component={DeviceDetectorLoader}
+        options={{
+          header: () => <CustomHeader title="Device Detector" showBackButton={true} />,
         }}
       />
     </Stack.Navigator>

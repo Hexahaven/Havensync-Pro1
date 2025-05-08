@@ -1,10 +1,14 @@
-/** @type {import('tailwindcss').Config} */
+// tailwind.config.js
 module.exports = {
-  content: ["./App.{js,jsx,ts,tsx}", "./src/**/*.{js,jsx,ts,tsx}"],
-  presets: [require("nativewind/preset")],
+  content: [
+    './src/**/*.{js,jsx,ts,tsx}', // Your app's source files
+    './node_modules/nativewind/dist/**/*.js',  // Add this to include NativeWind's classes
+  ],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('nativewind'),
+  ],
 }
 

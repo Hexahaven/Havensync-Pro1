@@ -1,96 +1,67 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faCog } from '@fortawesome/free-solid-svg-icons';
+import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function GreetingSection() {
-  const navigation = useNavigation();
-  const profile = useSelector(state => state.profile) || { name: 'Guest', avatar: '' };
-
-  // Debugging logs
-  console.log('Profile:', profile);
-  console.log('Navigation:', navigation);
-
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour >= 5 && hour < 12) return 'Good Morning';
-    if (hour >= 12 && hour < 17) return 'Good Noon';
-    if (hour >= 17 && hour < 20) return 'Good Evening';
-    return 'Good Night';
-  };
-
-  console.log('Greeting:', getGreeting()); // Debugging greeting
-
-  const handleEditProfile = () => {
-    navigation.navigate('HexaEditProfile', { title: 'Edit Profile' });
-  };
-
-  const handleOpenSettings = () => {
-    navigation.navigate('Settings');
-  };
+  const userName = 'Sarah Angelita'; // Replace with dynamic user data if available
+  const avatarUri = 'https://via.placeholder.com/48'; // Replace with user's avatar URL
 
   return (
-    <>
-      <View style={styles.header}>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity onPress={handleOpenSettings}>
-            <FontAwesomeIcon icon={faCog} size={22} color="#555" />
-          </TouchableOpacity>
+    <View style={styles.container}>
+      <View style={styles.row}>
+        {/* Avatar */}
+        <Image source={{uri: avatarUri}} style={styles.avatar} />
 
-          <TouchableOpacity onPress={handleEditProfile}>
-            <Image
-              source={{ uri: profile.avatar || 'https://via.placeholder.com/48' }}
-              style={styles.avatar}
-            />
-          </TouchableOpacity>
+        {/* Greeting Text */}
+        <View style={styles.textContainer}>
+          <Text style={styles.greetingText}>Good Morning</Text>
+          <Text style={styles.nameText}>{userName}</Text>
         </View>
-      </View>
 
-      <View style={styles.greetingContainer}>
-        <Text style={styles.greetingText}>
-          {getGreeting()},
-        </Text>
-        <Text style={styles.nameText}>
-          {typeof profile.name === 'string' ? profile.name : 'Guest'}
-        </Text>
+        {/* Notification Icon */}
+        <TouchableOpacity style={styles.notificationButton}>
+          <Icon name="notifications-outline" size={24} color="#333" />
+        </TouchableOpacity>
       </View>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    margin: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  container: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: '#fff',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    elevation: 4,
   },
-  headerIcons: {
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   avatar: {
     width: 48,
     height: 48,
     borderRadius: 24,
     borderWidth: 2,
-    borderColor: '#ccc',
-    marginLeft: 12,
+    borderColor: '#ddd',
   },
-  greetingContainer: {
-    marginHorizontal: 16,
-    marginTop: 0,
-    marginBottom: 32,
+  textContainer: {
+    flex: 1,
+    marginLeft: 10,
   },
   greetingText: {
-    fontSize: 24,
+    fontSize: 14,
+    color: '#888',
+  },
+  nameText: {
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
   },
-  nameText: {
-    fontSize: 20,
-    color: '#ff8625',
+  notificationButton: {
+    padding: 5,
   },
 });

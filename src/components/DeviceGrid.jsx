@@ -1,76 +1,87 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, Switch } from 'react-native';
-import { useSelector } from 'react-redux';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {View, Text, StyleSheet, Switch, TouchableOpacity} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function DeviceGrid() {
-  const devices = useSelector(state => state.switches.activeDevices);
-  const darkMode = useSelector(state => state.profile.darkMode);
-
-  const renderItem = ({ item }) => (
-    <View style={[styles.card, darkMode && styles.cardDark]}>
-      <MaterialCommunityIcons name={item.icon || 'power-socket'} size={32} color={darkMode ? '#fff' : '#333'} />
-      <Text style={[styles.deviceName, darkMode && styles.textDark]} numberOfLines={1}>
-        {item.name || 'Unnamed'}
-      </Text>
-      <Switch value={item.isOn} disabled />
-    </View>
-  );
-
+const DeviceSection = ({devices, onAddDevice}) => {
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, darkMode && styles.textDark]}>My Devices</Text>
-      {devices.length === 0 ? (
-        <Text style={[styles.noDevices, darkMode && styles.textDark]}>No devices added yet.</Text>
-      ) : (
-        <FlatList
-          data={devices}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          numColumns={2}
-          contentContainerStyle={styles.grid}
-          columnWrapperStyle={{ justifyContent: 'space-between' }}
-          showsVerticalScrollIndicator={false}
-        />
-      )}
+      <View style={styles.header}>
+        <Text style={styles.title}>My Device</Text>
+        <TouchableOpacity style={styles.addButton} onPress={onAddDevice}>
+          <Icon name="add-circle-outline" size={24} color="#fff" />
+          <Text style={styles.addText}>Add Device</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.grid}>
+        {devices.map(device => (
+          <View key={device.id} style={styles.card}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.deviceName}>{device.name}</Text>
+              <Switch value={device.isOn} />
+            </View>
+            <Text style={styles.deviceLocation}>{device.location}</Text>
+          </View>
+        ))}
+      </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   title: {
     fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 12,
-    color: '#333',
+    fontWeight: 'bold',
   },
-  textDark: {
-    color: '#ffffff',
+  addButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#3ba7cc',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 20,
   },
-  noDevices: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 40,
+  addText: {
+    color: '#fff',
+    marginLeft: 5,
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
   card: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#fff',
+    borderRadius: 12,
     padding: 16,
-    borderRadius: 16,
-    marginBottom: 16,
     width: '48%',
+    marginBottom: 16,
+    elevation: 4,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
-  cardDark: {
-    backgroundColor: '#1e1e1e',
-  },
+  
   deviceName: {
-    marginTop: 8,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  deviceLocation: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#333',
+    color: '#888',
+    marginTop: 8,
+
   },
 });
+
+export default DeviceSection;
