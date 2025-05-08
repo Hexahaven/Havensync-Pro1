@@ -31,39 +31,36 @@ export default function HexaDashboard() {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         >
-<<<<<<< HEAD
-          {/* Logo Section */}
-          <View style={styles.logoContainer}>
-            <Image
-              source={require('../assets/images/logo.png')} // Path to the logo
-              style={styles.logo}
-              resizeMode="contain"
-            />
-          </View>
+{/* Logo Section */}
+<View style={styles.logoContainer}>
+  <Image
+    source={require('../assets/images/logo.png')} // Path to the logo
+    style={styles.logo}
+    resizeMode="contain"
+  />
+</View>
 
-          {/* Header / Greeting */}
-          <View style={styles.section}>
-            <GreetingSection />
-          </View>
+{/* Header / Greeting */}
+<View style={styles.section}>
+  <GreetingSection />
+</View>
 
-          {/* Weather + Status */}
-          <View style={styles.section}>
-            <WeatherSection />
-          </View>
+{/* Weather + Status */}
+<View style={styles.section}>
+  <WeatherSection />
+</View>
 
-          {/* Switches (Smart Controls) */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Smart Controls</Text>
-            <SwitchSection />
-          </View>
-=======
->>>>>>> 3ab14b8dde56c58b8cede02da9748f3bce5fe0c8
+{/* Switches (Smart Controls) */}
+<View style={styles.section}>
+  <Text style={styles.sectionTitle}>Smart Controls</Text>
+  <SwitchSection />
+</View>
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
   );
 }
-<<<<<<< HEAD
+
 
 const styles = StyleSheet.create({
   container: {
@@ -103,5 +100,4 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
 });
-=======
->>>>>>> 3ab14b8dde56c58b8cede02da9748f3bce5fe0c8
+

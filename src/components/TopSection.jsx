@@ -13,7 +13,7 @@ import Geolocation from '@react-native-community/geolocation';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faThermometerHalf, faTint, faEdit, faCheck } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import { LinearGradient } from 'expo-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default function TopSection({ username = 'Guest' }) {
   const [location, setLocation] = useState(null);
@@ -74,14 +74,18 @@ export default function TopSection({ username = 'Guest' }) {
 
   return (
     <LinearGradient
-      colors={['#667eea', '#764ba2']}
-      className="rounded-2xl mb-5 p-5"
+      colors={['#6ec1e4', '#3ba7cc']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
       style={{
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.25,
         shadowRadius: 10,
         elevation: 5,
+        borderRadius: 15,
+        padding: 20,
+        marginBottom: 20,
       }}
     >
       <View className="mb-4 flex-row justify-between items-center">
