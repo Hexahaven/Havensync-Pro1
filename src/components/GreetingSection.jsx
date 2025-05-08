@@ -1,14 +1,17 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-import Video from 'react-native-video';
 
 export default function GreetingSection() {
   const navigation = useNavigation();
-  const profile = useSelector(state => state.profile);
+  const profile = useSelector(state => state.profile) || { name: 'Guest', avatar: '' };
+
+  // Debugging logs
+  console.log('Profile:', profile);
+  console.log('Navigation:', navigation);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -18,47 +21,76 @@ export default function GreetingSection() {
     return 'Good Night';
   };
 
+  console.log('Greeting:', getGreeting()); // Debugging greeting
+
   const handleEditProfile = () => {
     navigation.navigate('HexaEditProfile', { title: 'Edit Profile' });
   };
 
   const handleOpenSettings = () => {
-    navigation.navigate('HexaSettings', { title: 'Settings' });
+    navigation.navigate('Settings');
   };
 
   return (
     <>
-      <View className="m-3 flex-row justify-between items-center">
-        <Video
-          source={require('../assets/images/logo.png')}
-          style={{ width: 120, height: '100%' }}
-          resizeMode="cover"
-          repeat
-          muted
-        />
-
-        <View className="flex-row space-x-3 items-center">
+      <View style={styles.header}>
+        <View style={styles.headerIcons}>
           <TouchableOpacity onPress={handleOpenSettings}>
             <FontAwesomeIcon icon={faCog} size={22} color="#555" />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={handleEditProfile}>
             <Image
-              source={{ uri: profile.avatar }}
-              className="w-12 h-12 rounded-full border-2 border-gray-300"
+              source={{ uri: profile.avatar || 'https://via.placeholder.com/48' }}
+              style={styles.avatar}
             />
           </TouchableOpacity>
         </View>
       </View>
 
-      <View className="m-4 mt-0 mb-8">
-        <Text className="text-3xl font-extrabold text-gray-800 font-mono">
+      <View style={styles.greetingContainer}>
+        <Text style={styles.greetingText}>
           {getGreeting()},
         </Text>
-        <Text className="text-2xl text-[#ff8625]">
+        <Text style={styles.nameText}>
           {typeof profile.name === 'string' ? profile.name : 'Guest'}
         </Text>
       </View>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    margin: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    borderWidth: 2,
+    borderColor: '#ccc',
+    marginLeft: 12,
+  },
+  greetingContainer: {
+    marginHorizontal: 16,
+    marginTop: 0,
+    marginBottom: 32,
+  },
+  greetingText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  nameText: {
+    fontSize: 20,
+    color: '#ff8625',
+  },
+});

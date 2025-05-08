@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from 'react';
 import { ScrollView, View, Text, RefreshControl, StyleSheet, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import GreetingSection from '../components/GreetingSection';
-import WeatherSection from '../components/WeatherSection';
-import SwitchSection from '../components/SwitchSection';
 import LinearGradient from 'react-native-linear-gradient';
+import TopSection from '../components/TopSection';
+
+<TopSection username="Alex" />
+
 
 export default function HexaDashboard() {
   const [refreshing, setRefreshing] = useState(false);
@@ -30,6 +31,7 @@ export default function HexaDashboard() {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         >
+<<<<<<< HEAD
           {/* Logo Section */}
           <View style={styles.logoContainer}>
             <Image
@@ -54,11 +56,14 @@ export default function HexaDashboard() {
             <Text style={styles.sectionTitle}>Smart Controls</Text>
             <SwitchSection />
           </View>
+=======
+>>>>>>> 3ab14b8dde56c58b8cede02da9748f3bce5fe0c8
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
   );
 }
+<<<<<<< HEAD
 
 const styles = StyleSheet.create({
   container: {
@@ -98,3 +103,5 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
 });
+=======
+>>>>>>> 3ab14b8dde56c58b8cede02da9748f3bce5fe0c8
