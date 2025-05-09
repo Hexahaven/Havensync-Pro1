@@ -9,10 +9,8 @@ import {
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import TopSection from '../components/TopSection';
-import DeviceGrid from '../components/DeviceGrid';
-import RecentActivity from '../components/RecentActivity';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome, faPlug, faBell, faPlus, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faPlus, faBell } from '@fortawesome/free-solid-svg-icons';
 import { useNavigation } from '@react-navigation/native';
 
 export default function HexaDashboard() {
@@ -22,37 +20,29 @@ export default function HexaDashboard() {
 
   return (
     <SafeAreaView style={[styles.container, darkMode && styles.dark]}>
-      {/* Header with Greeting and Profile Icon */}
+      {/* Greeting Header */}
       <View style={styles.headerRow}>
         <Text style={[styles.greetingText, darkMode && styles.greetingDark]}>
           Hello, {userName}
         </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
-          <FontAwesomeIcon icon={faUser} size={24} color={darkMode ? '#fff' : '#000'} />
-        </TouchableOpacity>
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll}>
-        {/* Remove greeting from TopSection if duplicated */}
         <TopSection />
-        <DeviceGrid />
-        <RecentActivity />
       </ScrollView>
 
-      {/* Bottom Navigation */}
+      {/* Bottom Navigation Bar */}
       <View style={[styles.bottomNav, darkMode && styles.bottomNavDark]}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('HexaDashboard')}>
           <FontAwesomeIcon icon={faHome} size={20} color="#555" />
         </TouchableOpacity>
-        <TouchableOpacity>
-          <FontAwesomeIcon icon={faPlug} size={20} color="#555" />
-        </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => navigation.navigate('HexaDeviceRadar')}
-        >
+          onPress={() => navigation.navigate('HexaDeviceRadar')}>
           <FontAwesomeIcon icon={faPlus} size={24} color="#fff" />
         </TouchableOpacity>
+
         <TouchableOpacity>
           <FontAwesomeIcon icon={faBell} size={20} color="#555" />
         </TouchableOpacity>
@@ -84,7 +74,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   scroll: {
-    padding: 16,
+    paddingHorizontal: 16,
     paddingBottom: 100,
   },
   bottomNav: {
