@@ -39,7 +39,7 @@ export default function HexaDashboard() {
                 style={styles.avatar}
               />
               <View style={styles.greetingBlock}>
-                <Text style={styles.greetingText}>Good Morning,</Text>
+                <Text style={styles.greetingText}>Hello,</Text>
                 <Text style={styles.usernameText}>{profile.name || 'Guest'}</Text>
               </View>
             </View>
