@@ -1,23 +1,3 @@
-import React, { useCallback } from 'react';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  StyleSheet,
-  Switch,
-  TouchableOpacity,
-  ScrollView,
-  Alert,
-  Platform,
-  Linking,
-  Image,
-} from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import { toggleDarkMode } from '../redux/slices/profileSlice';
-import { logoutUser } from '../redux/slices/authSlice';
-import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-
 import React, { useCallback, useState } from 'react';
 import {
   SafeAreaView,
@@ -42,17 +22,16 @@ const HexaSettings = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [dropdownContent, setDropdownContent] = useState('');
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  // Mock device data: In a real app, fetch from backend
+  const [devices, setDevices] = useState([
+    { id: '1', name: 'Smart Light', emails: ['user1@example.com'] },
+    { id: '2', name: 'Thermostat', emails: ['user2@example.com', 'user3@example.com'] },
+  ]);
 
-  const showDropdown = (content) => {
-    setDropdownContent(content);
-    setDropdownVisible(true);
-  };
-
-  const hideDropdown = () => {
-    setDropdownVisible(false);
-    setDropdownContent('');
+  const toggleDropdown = (key) => {
+    console.log('Toggling dropdown:', key, 'Current active:', activeDropdown);
+    setActiveDropdown(activeDropdown === key ? null : key);
   };
 
   const handleToggleDarkMode = useCallback(() => {
@@ -60,24 +39,27 @@ const HexaSettings = () => {
   }, [dispatch]);
 
   const handleAboutPress = useCallback(() => {
-    showDropdown('HavenSync Home Automation App\nVersion 1.0.0\n© 2024 HavenSync Inc.');
+    toggleDropdown('about');
   }, []);
 
   const handleFeedbackPress = useCallback(() => {
     const email = 'support@havensync.com';
     const subject = 'HavenSync Feedback';
-
     Linking.openURL(`mailto:${email}?subject=${encodeURIComponent(subject)}`).catch(() => {
-      showDropdown('Unable to open email client. Please contact us at support@havensync.com');
+      toggleDropdown('feedback');
     });
   }, []);
 
+  const handleDevicesPress = useCallback(() => {
+    toggleDropdown('devices');
+  }, []);
+
   const handleIntegrationPress = useCallback((service) => {
-    showDropdown(`Configure your ${service} integration here.`);
+    toggleDropdown(`integration-${service}`);
   }, []);
 
   const handleLogoutPress = useCallback(() => {
-    showDropdown('Are you sure you want to logout? Confirm in the dropdown.');
+    toggleDropdown('logout');
   }, []);
 
   const confirmLogout = () => {
@@ -86,9 +68,14 @@ const HexaSettings = () => {
       index: 0,
       routes: [{ name: 'HexaLoginScreen' }],
     });
-    hideDropdown();
+    setActiveDropdown(null);
   };
 
+  const handleManageDeviceEmails = useCallback((deviceId) => {
+    // Placeholder: Navigate to email management screen for the device
+    // navigation.navigate('ManageDeviceEmailsScreen', { deviceId });
+    toggleDropdown('devices');
+  }, []);
 
   return (
     <SafeAreaView style={[styles.container, darkMode && styles.darkContainer]}>
@@ -108,6 +95,7 @@ const HexaSettings = () => {
             onPress={handleToggleDarkMode}
             accessibilityLabel="Toggle Dark Mode"
             accessibilityRole="switch"
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
             <View style={styles.optionContent}>
               <Image
@@ -132,56 +120,172 @@ const HexaSettings = () => {
           <Text style={[styles.sectionTitle, darkMode && styles.darkSectionTitle]}>
             General
           </Text>
-          <TouchableOpacity
-            style={styles.optionRow}
-            onPress={handleAboutPress}
-            accessibilityLabel="About HavenSync"
-            accessibilityRole="button"
-          >
-            <View style={styles.optionContent}>
-              <Image
-                source={require('../assets/gif/information.gif')}
-                style={styles.aboutIcon}
+          <View>
+            <TouchableOpacity
+              style={styles.optionRow}
+              onPress={handleAboutPress}
+              accessibilityLabel="About HavenSync"
+              accessibilityRole="button"
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <View style={styles.optionContent}>
+                <Image
+                  source={require('../assets/gif/information.gif')}
+                  style={styles.aboutIcon}
+                />
+                <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
+                  About
+                </Text>
+              </View>
+              <Icon
+                name={activeDropdown === 'about' ? 'expand-less' : 'expand-more'}
+                size={24}
+                color={darkMode ? '#fff' : '#333'}
               />
-              <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
-                About
-              </Text>
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+            {activeDropdown === 'about' && (
+              <View style={[styles.dropdownContent, darkMode && styles.darkDropdownContent]}>
+                <Text style={[styles.dropdownText, darkMode && styles.textWhite]}>
+                  HavenSync Home Automation App
+                  {'\n'}Version 1.0.0
+                  {'\n'}© 2024 HavenSync Inc.
+                </Text>
+              </View>
+            )}
+          </View>
 
-          <TouchableOpacity
-            style={styles.optionRow}
-            onPress={handleFeedbackPress}
-            accessibilityLabel="Send Feedback"
-            accessibilityRole="button"
-          >
-            <View style={styles.optionContent}>
-              <Image
-                source={require('../assets/gif/feedback.gif')}
-                style={styles.feedbackIcon}
+          <View>
+            <TouchableOpacity
+              style={styles.optionRow}
+              onPress={handleFeedbackPress}
+              accessibilityLabel="Send Feedback"
+              accessibilityRole="button"
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <View style={styles.optionContent}>
+                <Image
+                  source={require('../assets/gif/feedback.gif')}
+                  style={styles.feedbackIcon}
+                />
+                <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
+                  Feedback
+                </Text>
+              </View>
+              <Icon
+                name={activeDropdown === 'feedback' ? 'expand-less' : 'expand-more'}
+                size={24}
+                color={darkMode ? '#fff' : '#333'}
               />
-              <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
-                Feedback
-              </Text>
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+            {activeDropdown === 'feedback' && (
+              <View style={[styles.dropdownContent, darkMode && styles.darkDropdownContent]}>
+                <Text style={[styles.dropdownText, darkMode && styles.textWhite]}>
+                  Unable to open email client. Please contact us at support@havensync.com
+                </Text>
+              </View>
+            )}
+          </View>
 
-          <TouchableOpacity
-            style={styles.optionRow}
-            onPress={handleLogoutPress}
-            accessibilityLabel="Logout"
-            accessibilityRole="button"
-          >
-            <View style={styles.optionContent}>
-              <Image
-                source={require('../assets/gif/logout.gif')}
-                style={styles.logoutIcon}
+          <View>
+            <TouchableOpacity
+              style={styles.optionRow}
+              onPress={handleDevicesPress}
+              accessibilityLabel="Manage Devices"
+              accessibilityRole="button"
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <View style={styles.optionContent}>
+                <Image
+                  source={require('../assets/gif/devices.gif')}
+                  style={styles.devicesIcon}
+                />
+                <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
+                  Manage Devices
+                </Text>
+              </View>
+              <Icon
+                name={activeDropdown === 'devices' ? 'expand-less' : 'expand-more'}
+                size={24}
+                color={darkMode ? '#fff' : '#333'}
               />
-              <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
-                Logout
-              </Text>
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+            {activeDropdown === 'devices' && (
+              <View style={[styles.dropdownContent, darkMode && styles.darkDropdownContent]}>
+                <Text style={[styles.dropdownText, darkMode && styles.textWhite]}>
+                  Assign email IDs to manage devices:
+                </Text>
+                {devices.map((device) => (
+                  <View key={device.id} style={styles.deviceRow}>
+                    <View>
+                      <Text style={[styles.dropdownText, darkMode && styles.textWhite]}>
+                        {device.name}
+                      </Text>
+                      <Text style={[styles.emailText, darkMode && styles.textWhite]}>
+                        Emails: {device.emails.length}/5 ({device.emails.join(', ') || 'None'})
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      style={styles.manageEmailsButton}
+                      onPress={() => handleManageDeviceEmails(device.id)}
+                      accessibilityLabel={`Manage emails for ${device.name}`}
+                      accessibilityRole="button"
+                      disabled={device.emails.length >= 5}
+                    >
+                      <Text style={styles.buttonText}>
+                        {device.emails.length >= 5 ? 'Max Reached' : 'Manage Emails'}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+
+          <View>
+            <TouchableOpacity
+              style={styles.optionRow}
+              onPress={handleLogoutPress}
+              accessibilityLabel="Logout"
+              accessibilityRole="button"
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <View style={styles.optionContent}>
+                <Image
+                  source={require('../assets/gif/logout.gif')}
+                  style={styles.logoutIcon}
+                />
+                <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
+                  Logout
+                </Text>
+              </View>
+              <Icon
+                name={activeDropdown === 'logout' ? 'expand-less' : 'expand-more'}
+                size={24}
+                color={darkMode ? '#fff' : '#333'}
+              />
+            </TouchableOpacity>
+            {activeDropdown === 'logout' && (
+              <View style={[styles.dropdownContent, darkMode && styles.darkDropdownContent]}>
+                <Text style={[styles.dropdownText, darkMode && styles.textWhite]}>
+                  Are you sure you want to logout?
+                </Text>
+                <View style={styles.dropdownButtonContainer}>
+                  <TouchableOpacity
+                    style={[styles.dropdownButton, styles.confirmButton]}
+                    onPress={confirmLogout}
+                  >
+                    <Text style={styles.buttonText}>Confirm</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.dropdownButton, styles.cancelButton]}
+                    onPress={() => toggleDropdown('logout')}
+                  >
+                    <Text style={styles.buttonText}>Cancel</Text>
+                  </Text>
+                </View>
+              </View>
+            )}
+          </View>
         </View>
 
         <View style={[styles.section, darkMode && styles.darkSection]}>
@@ -192,42 +296,51 @@ const HexaSettings = () => {
             { name: 'Amazon Alexa', icon: 'alexa' },
             { name: 'Google Home', icon: 'home' },
           ].map((integration) => (
-            <TouchableOpacity
-              key={integration.name}
-              style={styles.optionRow}
-              onPress={() => handleIntegrationPress(integration.name)}
-              accessibilityLabel={`Configure ${integration.name}`}
-              accessibilityRole="button"
-            >
-              <View style={styles.optionContent}>
-                {integration.name === 'Amazon Alexa' ? (
-                  <Image
-                    source={require('../assets/images/alexa.png')}
-                    style={styles.integrationIcon}
-                  />
-                ) : integration.name === 'Google Home' ? (
-                  <Image
-                    source={require('../assets/images/google.png')}
-                    style={styles.integrationIcon}
-                  />
-                ) : (
-                  <Icon
-                    name={integration.icon}
-                    size={24}
-                    color={darkMode ? '#fff' : '#333'}
-                    style={styles.optionIcon}
-                  />
-                )}
-                <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
-                  {integration.name}
-                </Text>
-              </View>
-              <Icon
-                name="chevron-right"
-                size={24}
-                color={darkMode ? '#fff' : '#333'}
-              />
-            </TouchableOpacity>
+            <View key={integration.name}>
+              <TouchableOpacity
+                style={styles.optionRow}
+                onPress={() => handleIntegrationPress(integration.name)}
+                accessibilityLabel={`Configure ${integration.name}`}
+                accessibilityRole="button"
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <View style={styles.optionContent}>
+                  {integration.name === 'Amazon Alexa' ? (
+                    <Image
+                      source={require('../assets/images/alexa.png')}
+                      style={styles.integrationIcon}
+                    />
+                  ) : integration.name === 'Google Home' ? (
+                    <Image
+                      source={require('../assets/images/google.png')}
+                      style={styles.integrationIcon}
+                    />
+                  ) : (
+                    <Icon
+                      name={integration.icon}
+                      size={24}
+                      color={darkMode ? '#fff' : '#333'}
+                      style={styles.optionIcon}
+                    />
+                  )}
+                  <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
+                    {integration.name}
+                  </Text>
+                </View>
+                <Icon
+                  name={activeDropdown === `integration-${integration.name}` ? 'expand-less' : 'expand-more'}
+                  size={24}
+                  color={darkMode ? '#fff' : '#333'}
+                />
+              </TouchableOpacity>
+              {activeDropdown === `integration-${integration.name}` && (
+                <View style={[styles.dropdownContent, darkMode && styles.darkDropdownContent]}>
+                  <Text style={[styles.dropdownText, darkMode && styles.textWhite]}>
+                    Configure your {integration.name} integration here.
+                  </Text>
+                </View>
+              )}
+            </View>
           ))}
         </View>
       </ScrollView>
@@ -292,6 +405,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+    zIndex: 1,
   },
   optionContent: {
     flexDirection: 'row',
@@ -329,10 +443,75 @@ const styles = StyleSheet.create({
     height: 32,
     marginRight: 12,
   },
+  devicesIcon: {
+    width: 32,
+    height: 32,
+    marginRight: 12,
+  },
   integrationIcon: {
     width: 24,
     height: 24,
     marginRight: 12,
+  },
+  dropdownContent: {
+    backgroundColor: '#f9f9f9',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    marginTop: 0,
+  },
+  darkDropdownContent: {
+    backgroundColor: '#2a2a2a',
+    borderBottomColor: '#444',
+  },
+  dropdownText: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#333',
+  },
+  subHeader: {
+    fontWeight: '600',
+    marginTop: 8,
+  },
+  emailText: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 4,
+  },
+  dropdownButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 16,
+  },
+  dropdownButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    flex: 0.45,
+    alignItems: 'center',
+  },
+  confirmButton: {
+    backgroundColor: '#e74c3c',
+  },
+  cancelButton: {
+    backgroundColor: '#3498db',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  deviceRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  manageEmailsButton: {
+    backgroundColor: '#3498db',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    alignItems: 'center',
   },
 });
 
