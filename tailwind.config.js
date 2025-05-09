@@ -1,13 +1,19 @@
-// tailwind.config.js
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './src/**/*.{js,jsx,ts,tsx}', // Your app's source files
-    './node_modules/nativewind/dist/**/*.js',  // Add this to include NativeWind's classes
+    "./App.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./components/**/*.{js,jsx,ts,tsx}",
+    "./screens/**/*.{js,jsx,ts,tsx}",
   ],
+  presets: [require("nativewind/preset")], // ✅ Add this line
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: "#6366F1",
+        secondary: "#A5B4FC",
+      },
+    },
   },
-  plugins: [
-    require('nativewind'),
-  ],
-}
+  plugins: [],
+};

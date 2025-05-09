@@ -12,7 +12,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faThermometerHalf, faTint, faEdit, faCheck } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
-
 export default function TopSection({ username = 'Guest' }) {
   const [location, setLocation] = useState(null);
   const [weatherData, setWeatherData] = useState(null);

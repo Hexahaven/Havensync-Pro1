@@ -12,7 +12,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function HexaSignUpScreen({ navigation }) {
+  export default function HexaSignUpScreen({ navigation }){
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

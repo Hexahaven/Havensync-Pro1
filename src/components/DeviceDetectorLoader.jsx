@@ -8,7 +8,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/Ionicons';
-import DeviceDetectorLoader from '../components/DeviceDetectorLoader'; // Import the loader
+
 
 export default function DeviceRadar() {
   const rotate = useSharedValue(0);

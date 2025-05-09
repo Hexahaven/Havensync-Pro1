@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, Text, StyleSheet, Switch, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, Switch, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const DeviceSection = ({devices, onAddDevice}) => {
+const DeviceSection = ({ devices = [], onAddDevice }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -12,16 +12,21 @@ const DeviceSection = ({devices, onAddDevice}) => {
           <Text style={styles.addText}>Add Device</Text>
         </TouchableOpacity>
       </View>
+
       <View style={styles.grid}>
-        {devices.map(device => (
-          <View key={device.id} style={styles.card}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.deviceName}>{device.name}</Text>
-              <Switch value={device.isOn} />
+        {devices.length === 0 ? (
+          <Text style={styles.noDeviceText}>No devices found.</Text>
+        ) : (
+          devices.map(device => (
+            <View key={device.id} style={styles.card}>
+              <View style={styles.cardHeader}>
+                <Text style={styles.deviceName}>{device.name}</Text>
+                <Switch value={device.isOn} />
+              </View>
+              <Text style={styles.deviceLocation}>{device.location}</Text>
             </View>
-            <Text style={styles.deviceLocation}>{device.location}</Text>
-          </View>
-        ))}
+          ))
+        )}
       </View>
     </View>
   );
@@ -71,7 +76,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  
   deviceName: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -80,7 +84,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#888',
     marginTop: 8,
-
+  },
+  noDeviceText: {
+    fontSize: 16,
+    color: '#aaa',
+    fontStyle: 'italic',
+    textAlign: 'center',
+    width: '100%',
+    marginTop: 20,
   },
 });
 

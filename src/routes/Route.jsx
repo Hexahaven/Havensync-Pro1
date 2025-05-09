@@ -100,7 +100,7 @@ export default function Routes() {
         name="HexaSignUpScreen"
         component={Components.HexaSignUpScreen}
         options={{
-          header: () => <CustomHeader title="Sign Up" showBackButton={true} />,
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -114,39 +114,35 @@ export default function Routes() {
         name="OTPVerification"
         component={Components.OTPVerification}
         options={{
-          header: () => (
-            <CustomHeader title="Verify OTP" showBackButton={true} />
-          ),
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="ResetPassword"
         component={Components.ResetPassword}
         options={{
-          header: () => (
-            <CustomHeader title="Reset Password" showBackButton={true} />
-          ),
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="DeviceDetectorLoader"
         component={DeviceDetectorLoader}
         options={{
-          header: () => <CustomHeader title="Device Detector" showBackButton={true} />,
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="HexaDashboard"
         component={Components.HexaDashboard}
         options={{
-          header: () => <CustomHeader title="Dashboard" showBackButton={false} />,
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="HexaDeviceRadar"
         component={Components.HexaDeviceRadar}
         options={{
-          header: () => <CustomHeader title="Add Devices" showBackButton={true} />,
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
