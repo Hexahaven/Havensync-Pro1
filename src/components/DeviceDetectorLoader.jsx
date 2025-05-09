@@ -9,14 +9,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-
 export default function DeviceRadar() {
   const rotate = useSharedValue(0);
   
-
-
-
-
   // Rotate animation for the radar
   rotate.value = withRepeat(
     withTiming(360, { duration: 3000, easing: Easing.linear }),
@@ -28,33 +23,37 @@ export default function DeviceRadar() {
     transform: [{ rotate: `${rotate.value}deg` }],
   }));
 
-
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Add New Device</Text>
       <Text style={styles.subtitle}>Searching Device...</Text>
-
+      
       {/* Radar Container */}
       <View style={styles.radarContainer}>
-        <Animated.View style={[styles.radarCircle, animatedStyle]}>
-          <Icon name="bluetooth" size={40} color="#ff8625" />
-        </Animated.View>
-
+        <View style={[styles.radarCircle, { width: 300, height: 300, borderRadius: 150 }]} />
+        <View style={[styles.radarCircle, { width: 240, height: 240, borderRadius: 120 }]} />
+        <View style={[styles.radarCircle, { width: 180, height: 180, borderRadius: 90 }]} />
+        <View style={[styles.radarCircle, { width: 120, height: 120, borderRadius: 60 }]} />
+        
         {/* Device Detector Loader */}
-        <DeviceDetectorLoader />
-
+        <Animated.View style={[{ position: 'absolute', width: '100%', height: '100%' }, animatedStyle]}>
+          <View style={{ width: '50%', height: 2, backgroundColor: '#4CD964', position: 'absolute', right: '50%', top: '50%' }} />
+          <View style={{ width: 15, height: 15, borderRadius: 7.5, backgroundColor: '#4CD964', position: 'absolute', right: '50%', top: '50%', marginTop: -7.5 }} />
+        </Animated.View>
+        
         {/* Detected Devices */}
-        <View style={[styles.device, { top: 50, left: 100 }]}>
-          <Icon name="bulb" size={24} color="#fff" />
+        <View style={[styles.device, { top: '25%', right: '20%' }]}>
+          <Icon name="bulb-outline" size={24} color="#4CD964" />
           <Text style={styles.deviceText}>Lamp 32-12k</Text>
         </View>
-        <View style={[styles.device, { top: 150, right: 80 }]}>
-          <Icon name="tv" size={24} color="#fff" />
+        
+        <View style={[styles.device, { bottom: '30%', left: '25%' }]}>
+          <Icon name="game-controller-outline" size={24} color="#4CD964" />
           <Text style={styles.deviceText}>PS8</Text>
         </View>
-        <View style={[styles.device, { bottom: 50, left: 120 }]}>
-          <Icon name="desktop" size={24} color="#fff" />
+        
+        <View style={[styles.device, { top: '60%', right: '30%' }]}>
+          <Icon name="tv-outline" size={24} color="#4CD964" />
           <Text style={styles.deviceText}>TV Samsung</Text>
         </View>
       </View>
@@ -90,9 +89,6 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   radarCircle: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
     borderWidth: 2,
     borderColor: '#84c3e0',
     position: 'absolute',

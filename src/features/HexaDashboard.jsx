@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   View,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Switch,
+  Animated,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -28,6 +29,7 @@ export default function HexaDashboard() {
   const devices = useSelector(state => state.switches.activeDevices);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const [activeTab, setActiveTab] = useState('home');
 
   const openDrawer = () => {
     navigation.dispatch(DrawerActions.toggleDrawer());
@@ -100,20 +102,51 @@ export default function HexaDashboard() {
         )}
       </ScrollView>
 
-      {/* Bottom Navigation */}
-      <View style={[styles.bottomNav, darkMode && styles.bottomNavDark]}>
-        <TouchableOpacity>
-          <FontAwesomeIcon icon={faHome} size={22} color="#555" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => navigation.navigate('HexaDeviceRadar')}
-        >
-          <FontAwesomeIcon icon={faPlus} size={24} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <FontAwesomeIcon icon={faBell} size={22} color="#555" />
-        </TouchableOpacity>
+      {/* Modern 3D Bottom Navigation */}
+      <View style={[styles.bottomNavContainer, darkMode && styles.bottomNavContainerDark]}>
+        <View style={[styles.bottomNav, darkMode && styles.bottomNavDark]}>
+          <TouchableOpacity
+            style={[styles.navButton, activeTab === 'home' && styles.activeNavButton]}
+            onPress={() => setActiveTab('home')}
+          >
+            <View style={styles.iconContainer}>
+              <FontAwesomeIcon 
+                icon={faHome} 
+                size={22} 
+                color={activeTab === 'home' ? '#4caf50' : darkMode ? '#aaa' : '#555'} 
+              />
+            </View>
+            {activeTab === 'home' && (
+              <Text style={styles.navLabel}>Home</Text>
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.addButtonContainer}
+            onPress={() => navigation.navigate('HexaDeviceRadar')}
+          >
+            <View style={styles.addButtonShadow} />
+            <View style={styles.addButton}>
+              <FontAwesomeIcon icon={faPlus} size={24} color="#fff" />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.navButton, activeTab === 'notifications' && styles.activeNavButton]}
+            onPress={() => setActiveTab('notifications')}
+          >
+            <View style={styles.iconContainer}>
+              <FontAwesomeIcon 
+                icon={faBell} 
+                size={22} 
+                color={activeTab === 'notifications' ? '#4caf50' : darkMode ? '#aaa' : '#555'} 
+              />
+            </View>
+            {activeTab === 'notifications' && (
+              <Text style={styles.navLabel}>Alerts</Text>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -122,7 +155,7 @@ export default function HexaDashboard() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fb',
+    backgroundColor: '#c4d3d2',
   },
   dark: {
     backgroundColor: '#121212',
@@ -159,7 +192,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
-    width: '47%',
+    width: '60%',
     borderRadius: 18,
     padding: 16,
     marginBottom: 16,
@@ -175,49 +208,101 @@ const styles = StyleSheet.create({
     marginTop: 8,
     color: '#333',
   },
-  bottomNav: {
+  
+  // Bottom navigation container with 3D effect
+  bottomNavContainer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: 70,
-    backgroundColor: '#84c9e8',  // Gradient added here for modern touch
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
+    height: 80,
+    paddingBottom: 10,
+    alignItems: 'center',
+  },
+  bottomNavContainerDark: {
+    backgroundColor: 'transparent',
+  },
+  bottomNav: {
+    width: '90%',
+    height: 65,
+    backgroundColor: '#fff',
+    borderRadius: 30,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    borderRadius: 15, // Adding rounded corners for elegance
+    paddingHorizontal: 15,
     shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.2,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: -4 }, // Shadow to add 3D effect
-    elevation: 6, // Elevation for Android shadow
+    shadowRadius: 15,
+    elevation: 12,
+    position: 'relative',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.8)',
   },
   bottomNavDark: {
-    backgroundColor: '#1a1a1a',
-    borderTopColor: '#444',
+    backgroundColor: '#222',
+    borderColor: 'rgba(50, 50, 50, 0.8)',
   },
   navButton: {
-    padding: 10,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+  },
+  activeNavButton: {
+    backgroundColor: 'rgba(76, 175, 80, 0.15)',
+  },
+  iconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  navLabel: {
+    marginLeft: 6,
+    color: '#4caf50',
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  
+  // Add button with 3D effect
+  addButtonContainer: {
+    position: 'relative',
+    width: 60,
+    height: 60,
+    marginBottom: 30,
+  },
+  addButtonShadow: {
+    position: 'absolute',
+    width: 60,
+    height: 60,
     borderRadius: 30,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)', // Subtle background color for buttons
-    transition: 'background-color 0.3s ease', // Smooth transition for hover effect
+    backgroundColor: 'rgba(76, 175, 80, 0.3)',
+    top: 5,
+    left: 0,
+    shadowColor: '#4caf50',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
+    elevation: 8,
   },
   addButton: {
-    width: 52,
-    height: 52,
+    position: 'absolute',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: '#4caf50',
-    borderRadius: 26,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 6, // More shadow for the center button to make it pop
-    shadowColor: '#4caf50',
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 8 },
+    top: 0,
+    left: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 16,
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.8)',
   },
 });
