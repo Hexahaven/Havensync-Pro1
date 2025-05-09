@@ -5,27 +5,41 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  Text,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import TopSection from '../components/TopSection';
 import DeviceGrid from '../components/DeviceGrid';
 import RecentActivity from '../components/RecentActivity';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome, faPlug, faBell, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faPlug, faBell, faPlus, faUser } from '@fortawesome/free-solid-svg-icons';
 import { useNavigation } from '@react-navigation/native';
 
 export default function HexaDashboard() {
   const darkMode = useSelector(state => state.profile.darkMode);
+  const userName = useSelector(state => state.profile.name) || 'User';
   const navigation = useNavigation();
 
   return (
     <SafeAreaView style={[styles.container, darkMode && styles.dark]}>
+      {/* Header with Greeting and Profile Icon */}
+      <View style={styles.headerRow}>
+        <Text style={[styles.greetingText, darkMode && styles.greetingDark]}>
+          Hello, {userName}
+        </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
+          <FontAwesomeIcon icon={faUser} size={24} color={darkMode ? '#fff' : '#000'} />
+        </TouchableOpacity>
+      </View>
+
       <ScrollView contentContainerStyle={styles.scroll}>
+        {/* Remove greeting from TopSection if duplicated */}
         <TopSection />
         <DeviceGrid />
         <RecentActivity />
       </ScrollView>
 
+      {/* Bottom Navigation */}
       <View style={[styles.bottomNav, darkMode && styles.bottomNavDark]}>
         <TouchableOpacity>
           <FontAwesomeIcon icon={faHome} size={20} color="#555" />
@@ -54,6 +68,20 @@ const styles = StyleSheet.create({
   },
   dark: {
     backgroundColor: '#121212',
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+  },
+  greetingText: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#333',
+  },
+  greetingDark: {
+    color: '#fff',
   },
   scroll: {
     padding: 16,
