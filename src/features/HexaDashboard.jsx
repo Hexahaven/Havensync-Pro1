@@ -5,56 +5,114 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  Image,
+  ScrollView,
+  Switch,
 } from 'react-native';
-import { useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { DrawerActions } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import {
+  faHome,
+  faPlus,
+  faBell,
+  faUser,
+  faBars,
+} from '@fortawesome/free-solid-svg-icons';
+import { useNavigation, DrawerActions } from '@react-navigation/native';
 import TopSection from '../components/TopSection';
+import { updateDevice } from '../redux/slices/switchSlice';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function HexaDashboard() {
   const userName = useSelector(state => state.profile.name) || 'User';
   const darkMode = useSelector(state => state.profile.darkMode);
+  const devices = useSelector(state => state.switches.activeDevices);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const openDrawer = () => {
     navigation.dispatch(DrawerActions.toggleDrawer());
+  };
+
+  const togglePower = (device) => {
+    dispatch(
+      updateDevice({
+        id: device.id,
+        switches: device.switches.map((s, i) => (i === 0 ? !s : s)),
+      })
+    );
   };
 
   return (
     <SafeAreaView style={[styles.container, darkMode && styles.dark]}>
       <View style={styles.headerRow}>
         <TouchableOpacity onPress={openDrawer}>
-          <Text style={[styles.icon, darkMode && styles.iconDark]}>☰</Text>
+          <FontAwesomeIcon icon={faBars} size={22} color={darkMode ? '#fff' : '#000'} />
         </TouchableOpacity>
         <Text style={[styles.greeting, darkMode && styles.greetingDark]}>
           Hello, {userName}
         </Text>
         <TouchableOpacity onPress={() => navigation.navigate('HexaEditProfile')}>
-          {/* Replace FontAwesomeIcon with Image for profile */}
-          <Image
-            source={require('../assets/profile.gif')}
-            style={[styles.profileIcon, darkMode && styles.profileIconDark]}
-          />
+          <FontAwesomeIcon icon={faUser} size={22} color={darkMode ? '#fff' : '#000'} />
         </TouchableOpacity>
       </View>
 
-      <View style={styles.content}>
+      <ScrollView
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 80 }}
+        showsVerticalScrollIndicator={false}
+      >
         <TopSection />
-      </View>
 
+        {/* Device Section (small tiles) */}
+        {devices.length > 0 && (
+          <>
+            <Text style={[styles.sectionTitle, darkMode && styles.textWhite]}>
+              Active Devices
+            </Text>
+            <View style={styles.deviceGrid}>
+              {devices.map(device => {
+                const isOn = device.switches[0];
+                return (
+                  <TouchableOpacity
+                    key={device.id}
+                    style={[styles.card, isOn && styles.cardActive]}
+                    activeOpacity={0.8}
+                    onPress={() => togglePower(device)}
+                  >
+                    <MaterialCommunityIcons
+                      name={device.icon || 'power-socket'}
+                      size={30}
+                      color={isOn ? '#fff' : '#333'}
+                    />
+                    <Text style={[styles.name, isOn && styles.textWhite]}>
+                      {device.name}
+                    </Text>
+                    <Switch
+                      value={isOn}
+                      disabled
+                      trackColor={{ false: '#999', true: '#fff' }}
+                      thumbColor={isOn ? '#4caf50' : '#ccc'}
+                    />
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </>
+        )}
+      </ScrollView>
+
+      {/* Bottom Navigation */}
       <View style={[styles.bottomNav, darkMode && styles.bottomNavDark]}>
         <TouchableOpacity>
-          <Text style={styles.icon}>🏠</Text>
+          <FontAwesomeIcon icon={faHome} size={22} color="#555" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => navigation.navigate('HexaDeviceRadar')}
         >
-          <Text style={styles.addButtonText}>+</Text>
+          <FontAwesomeIcon icon={faPlus} size={24} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Text style={styles.icon}>🔔</Text>
+          <FontAwesomeIcon icon={faBell} size={22} color="#555" />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -68,9 +126,6 @@ const styles = StyleSheet.create({
   },
   dark: {
     backgroundColor: '#121212',
-  },
-  content: {
-    paddingHorizontal: 16,
   },
   headerRow: {
     flexDirection: 'row',
@@ -86,21 +141,39 @@ const styles = StyleSheet.create({
   greetingDark: {
     color: '#fff',
   },
-  profileIcon: {
-    width: 30,
-    height: 30,
-    borderRadius: 15, // to make the image circular
-  },
-  profileIconDark: {
-    borderColor: '#fff',
-    borderWidth: 2, // Optional, to give it a border in dark mode
-  },
-  icon: {
-    fontSize: 22,
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 12,
+    marginTop: 6,
     color: '#333',
   },
-  iconDark: {
+  textWhite: {
     color: '#fff',
+  },
+  deviceGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    justifyContent: 'space-between',
+  },
+  card: {
+    backgroundColor: '#fff',
+    width: '47%',
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 16,
+    elevation: 3,
+    alignItems: 'center',
+  },
+  cardActive: {
+    backgroundColor: '#84c9e8',
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginTop: 8,
+    color: '#333',
   },
   bottomNav: {
     position: 'absolute',
@@ -129,10 +202,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
     elevation: 4,
-  },
-  addButtonText: {
-    fontSize: 30,
-    color: '#fff',
-    fontWeight: 'bold',
   },
 });
