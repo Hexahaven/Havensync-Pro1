@@ -45,7 +45,7 @@ const HexaSettings = () => {
   }, []);
 
   const handleDevicesPress = useCallback(() => {
-    navigation.navigate('ManageDevice');
+    navigation.navigate('ManageDeviceEmailsScreen');
   }, [navigation]);
 
   const handleIntegrationPress = useCallback((service) => {
@@ -72,7 +72,22 @@ const HexaSettings = () => {
         showsVerticalScrollIndicator={false}
         accessibilityLabel="Settings Scroll View"
       >
-        <Text style={[styles.title, darkMode && styles.textWhite]}>Settings</Text>
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            accessibilityLabel="Go Back"
+            accessibilityRole="button"
+          >
+            <Icon
+              name="arrow-back"
+              size={24}
+              color={darkMode ? '#fff' : '#333'}
+            />
+          </TouchableOpacity>
+          <Text style={[styles.title, darkMode && styles.textWhite]}>
+            Settings
+          </Text>
+        </View>
 
         <View style={[styles.section, darkMode && styles.darkSection]}>
           <Text style={[styles.sectionTitle, darkMode && styles.darkSectionTitle]}>
@@ -318,11 +333,16 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingBottom: 32,
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
   title: {
     fontSize: 28,
     fontWeight: '700',
     color: '#333',
-    marginBottom: 24,
+    marginLeft: 16,
   },
   section: {
     marginBottom: 24,
