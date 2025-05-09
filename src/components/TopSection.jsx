@@ -176,6 +176,13 @@ const styles = StyleSheet.create({
     height: 150,
     justifyContent: 'center',
     backgroundColor: '#ddd',
+    // Android Shadow
+    elevation: 10,
+    // iOS Shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 5, height: 5 },
+    shadowOpacity: 20,
+    shadowRadius: 20,
   },
   weatherDetails: {
     flexDirection: 'row',
