@@ -14,6 +14,14 @@ import { faThermometerHalf, faTint } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
+const weatherGifs = {
+  sunny: require('../assets/weather/sunny.gif'),
+  rain: require('../assets/weather/rain.gif'),
+  storm: require('../assets/weather/storm.gif'),
+  cloudy: require('../assets/weather/cloudy.gif'),
+  wind: require('../assets/weather/wind.gif'),
+};
+
 const getWeatherGif = (main, isNight) => {
   const gifs = {
     Clear: isNight ? 'sunny' : 'sunny',
@@ -26,7 +34,7 @@ const getWeatherGif = (main, isNight) => {
   };
 
   const selected = gifs[main] || 'cloudy';
-  return require(`../assets/weather/${selected}.gif`);
+  return weatherGifs[selected];
 };
 
 export default function TopSection() {
