@@ -117,11 +117,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
         <TouchableOpacity style={styles.buttonContainer} onPress={handleSignUp}>
           <LinearGradient
-            colors={['#6ec1e4', '#3ba7cc']} // Gradient colors for the button
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.button}
-          >
+  colors={['#00C9FF', '#92FE9D']} // Updated to match Login screen
+  start={{ x: 0, y: 0 }}
+  end={{ x: 1, y: 1 }}
+  style={styles.button}
+>
+
             <Text style={styles.buttonText}>Sign Up</Text>
           </LinearGradient>
         </TouchableOpacity>
@@ -194,22 +195,38 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     borderRadius: 16,
-    marginBottom: 20,
+    marginBottom: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 20 },
+    shadowOpacity: 80,
     shadowRadius: 6,
   },
-  button: {
-    paddingVertical: 14,
-    borderRadius: 16,
-    alignItems: 'center',
-  },
+ button: {
+  paddingVertical: 18, // Increase the vertical padding
+  paddingHorizontal: 30, // Horizontal padding
+  borderRadius: 16, // Rounded corners for the button
+  alignItems: 'center',
+  justifyContent: 'center',
+  // For iOS shadow
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 10 }, // Shadow position
+  shadowOpacity: 0.25, // Shadow intensity
+  shadowRadius: 8, // Shadow spread
+  // For Android elevation
+  elevation: 5, // Elevation to give depth effect
+},
+
   buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '700',
-  },
+  color: '#fff',
+  fontSize: 20,
+  fontWeight: '700',
+  textShadowColor: 'rgba(0, 0, 0, 0.3)',  // Shadow color
+  textShadowOffset: { width: 1, height: 2 }, // Shadow position
+  textShadowRadius: 5,                     // Shadow blur radius
+  textStrokeWidth: 5,                      // Stroke width (simulated effect)
+  textStrokeColor: '#000',              // Stroke color
+},
+
   switchText: {
     textAlign: 'center',
     color: '#333',

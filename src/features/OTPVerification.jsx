@@ -27,11 +27,12 @@ const OTPVerification = ({ navigation }) => {
         style={styles.buttonContainer}
       >
         <LinearGradient
-          colors={['#6ec1e4', '#3ba7cc']} // Gradient colors for the button
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.button}
-        >
+  colors={['#00C9FF', '#92FE9D']} // Updated to match Login screen
+  start={{ x: 0, y: 0 }}
+  end={{ x: 1, y: 1 }}
+  style={styles.button}
+>
+
           <Text style={styles.buttonText}>Verify</Text>
         </LinearGradient>
       </TouchableOpacity>

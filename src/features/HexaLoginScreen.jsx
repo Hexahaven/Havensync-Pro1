@@ -6,8 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   Animated,
-  ActivityIndicator,
-  KeyboardAvoidingView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -27,7 +25,7 @@ export default function HexaLoginScreen({ navigation }) {
 
   const buttonBackgroundColor = buttonColorAnim.interpolate({
     inputRange: [0, 1, 2],
-    outputRange: ['#6ec1e4', '#34c759', '#ff3b30'], // Default: blue, Success: green, Failed: red
+    outputRange: ['#6ec1e4', '#34c759', '#ff3b30'],
   });
 
   useEffect(() => {
@@ -39,10 +37,8 @@ export default function HexaLoginScreen({ navigation }) {
 
   useEffect(() => {
     let timer;
-
     if (loginStatus === 'failed' || loginStatus === 'success') {
       const timeoutDuration = loginStatus === 'success' ? 1000 : 2000;
-
       timer = setTimeout(() => {
         Animated.parallel([
           Animated.timing(buttonColorAnim, {
@@ -61,7 +57,6 @@ export default function HexaLoginScreen({ navigation }) {
         });
       }, timeoutDuration);
     }
-
     return () => {
       if (timer) clearTimeout(timer);
     };
@@ -91,14 +86,12 @@ export default function HexaLoginScreen({ navigation }) {
     focusedInput === input ? styles.focusedInput : styles.defaultInput;
 
   const handleLogin = () => {
-    
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.trim() === '') {
       setIsLoading(true);
       setTimeout(() => {
         setIsLoading(false);
       }, 1000);
       setLoginStatus('failed');
-
       Animated.parallel([
         Animated.timing(buttonColorAnim, {
           toValue: 2,
@@ -123,16 +116,13 @@ export default function HexaLoginScreen({ navigation }) {
           }),
         ]),
       ]).start();
-
       return;
     }
 
     setIsLoading(true);
-
     setTimeout(() => {
       const isSuccess = Date.now() % 2 === 0;
       setLoginStatus(isSuccess ? 'success' : 'failed');
-
       Animated.parallel([
         Animated.timing(buttonColorAnim, {
           toValue: isSuccess ? 1 : 2,
@@ -157,7 +147,6 @@ export default function HexaLoginScreen({ navigation }) {
           }),
         ]),
       ]).start();
-
       if (isSuccess) {
         setTimeout(() => {
           navigation.navigate('HexaDashboard');
@@ -167,9 +156,9 @@ export default function HexaLoginScreen({ navigation }) {
   };
 
   const getButtonText = () => {
-    if (isLoading && !loginStatus) return 'Logging in...';
-    if (loginStatus === 'success') return 'Success!';
-    if (loginStatus === 'failed') return 'Failed!';
+    if (isLoading && !loginStatus) return 'Syncing...';
+    if (loginStatus === 'success') return 'Welcome!';
+    if (loginStatus === 'failed') return 'Retry';
     return 'Login';
   };
 
@@ -261,25 +250,22 @@ export default function HexaLoginScreen({ navigation }) {
           <TouchableOpacity
             disabled={isLoading}
             onPress={handleLogin}
-            style={{ overflow: 'hidden', borderRadius: 16 }}
+            style={{ overflow: 'hidden', borderRadius: 20 }}
           >
-            <Animated.View
-              style={[
-                styles.button,
-                { backgroundColor: buttonBackgroundColor }, // Use dynamic background color
-              ]}
+            <LinearGradient
+              colors={['#00C9FF', '#92FE9D']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.gradientButton}
             >
               <Text style={styles.buttonText}>{getButtonText()}</Text>
-              {isLoading && !loginStatus && (
-                <View style={styles.loadingIndicator} />
-              )}
               {loginStatus === 'success' && (
                 <Icon name="checkmark-circle" size={20} color="#fff" style={styles.buttonIcon} />
               )}
               {loginStatus === 'failed' && (
                 <Icon name="close-circle" size={20} color="#fff" style={styles.buttonIcon} />
               )}
-            </Animated.View>
+            </LinearGradient>
           </TouchableOpacity>
         </Animated.View>
 
@@ -307,16 +293,11 @@ const styles = StyleSheet.create({
     padding: 28,
     backgroundColor: 'rgba(255,255,255,0.95)',
     borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 8, height: 12 },
-    shadowOpacity: 0.25,
-    shadowRadius: 16,
     elevation: 12,
-    transform: [{ perspective: 800 }],
   },
   title: {
     fontSize: 25,
-    fontFamily: 'HoryzenDigital-24', // Updated font
+    fontFamily: 'HoryzenDigital-24',
     marginBottom: 32,
     textAlign: 'center',
     color: '#333',
@@ -327,16 +308,12 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     position: 'relative',
   },
-  defaultInput: {
-    borderColor: '#ccc',
-  },
-  focusedInput: {
-    borderColor: '#007BFF',
-  },
+  defaultInput: { borderColor: '#ccc' },
+  focusedInput: { borderColor: '#007BFF' },
   textInput: {
     height: 40,
     fontSize: 16,
-    fontFamily: 'Kiona-Regular', // Updated font
+    fontFamily: 'Kiona-Regular',
     paddingVertical: 4,
     color: '#333',
   },
@@ -344,8 +321,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     color: '#666',
-    fontFamily: 'Kiona-Regular', // Updated font
-    fontSize: 16,
+    fontFamily: 'Kiona-Regular',
   },
   eyeIcon: {
     position: 'absolute',
@@ -356,55 +332,42 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     color: '#007BFF',
     marginBottom: 28,
-    fontFamily: 'Kiona-Regular', // Updated font
+    fontFamily: 'Kiona-Regular',
     fontSize: 14,
   },
   disabledText: {
     color: '#999',
-    fontFamily: 'Kiona-Regular', // Updated font
+    fontFamily: 'Kiona-Regular',
   },
-  button: {
+  gradientButton: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 16,
-    backgroundColor: '#6ec1e4', // Fallback color for Android
-    shadowColor: '#000', // Shadow color
-    shadowOffset: { width: 0, height: 10 }, // Shadow offset for depth
-    shadowOpacity: 0.5, // Shadow opacity for a stronger effect
-    shadowRadius: 12, // Shadow blur radius
-    elevation: 12, // Elevation for Android
-    borderTopWidth: 1,
-    borderLeftWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.4)', // Light border for 3D effect
+    borderRadius: 20,
+    shadowColor: '#00c9ff',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.6,
+    shadowRadius: 20,
+    elevation: 15,
   },
   buttonText: {
     fontSize: 18,
-    fontFamily: 'Kiona-Regular', // Updated font
+    fontFamily: 'Kiona-Regular',
     color: '#fff',
-    fontWeight: 'bold', // Added bold font weight for better visibility
-    textShadowColor: 'rgba(0, 0, 0, 0.3)', // Text shadow for 3D effect
+    fontWeight: 'bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    textShadowRadius: 3,
   },
   buttonIcon: {
     marginLeft: 8,
-  },
-  loadingIndicator: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: '#fff',
-    marginLeft: 10,
   },
   switchText: {
     marginTop: 24,
     fontSize: 14,
     textAlign: 'center',
     color: '#333',
-    fontFamily: 'Kiona-Regular', // Updated font
+    fontFamily: 'Kiona-Regular',
   },
 });
-
