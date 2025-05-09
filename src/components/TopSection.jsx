@@ -7,12 +7,14 @@ import {
   PermissionsAndroid,
   ActivityIndicator,
   Button,
+  TouchableOpacity,
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faThermometerHalf, faTint } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 const weatherGifs = {
   sunny: require('../assets/weather/sunny.gif'),
@@ -24,7 +26,7 @@ const weatherGifs = {
 
 const getWeatherGif = (main, isNight) => {
   const gifs = {
-    Clear: isNight ? 'sunny' : 'sunny',
+    Clear: 'sunny',
     Rain: 'rain',
     Thunderstorm: 'storm',
     Drizzle: 'rain',
@@ -42,6 +44,8 @@ export default function TopSection() {
   const [loading, setLoading] = useState(true);
   const [permissionGranted, setPermissionGranted] = useState(false);
   const darkMode = useSelector(state => state.profile.darkMode);
+  const profile = useSelector(state => state.profile);
+  const navigation = useNavigation();
 
   useEffect(() => {
     requestLocationPermission();
@@ -54,8 +58,6 @@ export default function TopSection() {
         {
           title: 'Location Permission',
           message: 'This app needs access to your location to provide weather updates.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
           buttonPositive: 'OK',
         },
       );
@@ -101,56 +103,94 @@ export default function TopSection() {
     }
   };
 
-  if (!permissionGranted) {
-    return (
-      <View style={[styles.container, darkMode && styles.dark]}>
-        <Button title="Allow Location Permission" onPress={requestLocationPermission} />
-      </View>
-    );
-  }
-
-  if (loading || !weatherData) {
-    return (
-      <View style={[styles.container, darkMode && styles.dark]}>
-        <ActivityIndicator size="small" color={darkMode ? '#fff' : '#333'} />
-        <Text style={[styles.text, darkMode && styles.textDark]}>
-          Fetching weather...
-        </Text>
-      </View>
-    );
-  }
-
-  const mainCondition = weatherData.weather[0].main;
+  const mainCondition = weatherData?.weather?.[0]?.main;
   const currentHour = new Date().getHours();
   const isNight = currentHour < 6 || currentHour >= 18;
   const gifSource = getWeatherGif(mainCondition, isNight);
 
   return (
-    <View style={[styles.container, darkMode && styles.dark]}>
-      <View style={styles.left}>
-        <View style={styles.row}>
-          <FontAwesomeIcon icon={faThermometerHalf} size={18} color="#ff8625" />
-          <Text style={[styles.text, darkMode && styles.textDark]}>
-            {weatherData.main.temp}°C
+    <View style={styles.wrapper}>
+      {/* Greeting Row */}
+      <TouchableOpacity
+        style={styles.greetingRow}
+        onPress={() => navigation.navigate('HexaEditProfile')}>
+        <Image
+          source={{ uri: profile.avatar }}
+          style={styles.avatar}
+        />
+        <View>
+          <Text style={[styles.hello, darkMode && styles.textDark]}>Hello,</Text>
+          <Text style={[styles.name, darkMode && styles.textDark]}>
+            {profile.name || 'Guest'} 👋
           </Text>
         </View>
-        <View style={styles.row}>
-          <FontAwesomeIcon icon={faTint} size={18} color="#4db8ff" />
-          <Text style={[styles.text, darkMode && styles.textDark]}>
-            {weatherData.main.humidity}%
-          </Text>
-        </View>
+      </TouchableOpacity>
+
+      {/* Weather Card */}
+      <View style={[styles.container, darkMode && styles.dark]}>
+        {(!permissionGranted || loading || !weatherData) ? (
+          <View style={styles.loadingBlock}>
+            {loading ? (
+              <>
+                <ActivityIndicator size="small" color={darkMode ? '#fff' : '#333'} />
+                <Text style={[styles.text, darkMode && styles.textDark]}>
+                  Fetching weather...
+                </Text>
+              </>
+            ) : (
+              <Button title="Allow Location Permission" onPress={requestLocationPermission} />
+            )}
+          </View>
+        ) : (
+          <>
+            <View style={styles.left}>
+              <View style={styles.row}>
+                <FontAwesomeIcon icon={faThermometerHalf} size={18} color="#ff8625" />
+                <Text style={[styles.text, darkMode && styles.textDark]}>
+                  {weatherData.main.temp}°C
+                </Text>
+              </View>
+              <View style={styles.row}>
+                <FontAwesomeIcon icon={faTint} size={18} color="#4db8ff" />
+                <Text style={[styles.text, darkMode && styles.textDark]}>
+                  {weatherData.main.humidity}%
+                </Text>
+              </View>
+            </View>
+            <Image source={gifSource} style={styles.weatherGif} resizeMode="contain" />
+          </>
+        )}
       </View>
-      <Image
-        source={gifSource}
-        style={styles.weatherGif}
-        resizeMode="contain"
-      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    marginBottom: 16,
+  },
+  greetingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    marginRight: 12,
+    borderWidth: 2,
+    borderColor: '#ccc',
+  },
+  hello: {
+    fontSize: 14,
+    color: '#666',
+  },
+  name: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#000',
+  },
   container: {
     backgroundColor: '#ffffff',
     borderRadius: 16,
@@ -159,7 +199,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     elevation: 2,
-    marginBottom: 16,
   },
   dark: {
     backgroundColor: '#1e1e1e',
@@ -185,5 +224,10 @@ const styles = StyleSheet.create({
   weatherGif: {
     width: 60,
     height: 60,
+  },
+  loadingBlock: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
 });
