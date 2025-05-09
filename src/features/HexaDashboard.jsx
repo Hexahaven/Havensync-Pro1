@@ -8,8 +8,9 @@ import {
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome, faPlus, faBell, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faPlus, faBell, faUser, faBars } from '@fortawesome/free-solid-svg-icons';
 import { useNavigation } from '@react-navigation/native';
+import { DrawerActions } from '@react-navigation/native';
 import TopSection from '../components/TopSection';
 
 export default function HexaDashboard() {
@@ -17,9 +18,16 @@ export default function HexaDashboard() {
   const darkMode = useSelector(state => state.profile.darkMode);
   const navigation = useNavigation();
 
+  const openDrawer = () => {
+    navigation.dispatch(DrawerActions.toggleDrawer());
+  };
+
   return (
     <SafeAreaView style={[styles.container, darkMode && styles.dark]}>
       <View style={styles.headerRow}>
+        <TouchableOpacity onPress={openDrawer}>
+          <FontAwesomeIcon icon={faBars} size={22} color={darkMode ? '#fff' : '#000'} />
+        </TouchableOpacity>
         <Text style={[styles.greeting, darkMode && styles.greetingDark]}>
           Hello, {userName}
         </Text>
@@ -65,7 +73,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
+    padding: 30,
   },
   greeting: {
     fontSize: 20,
