@@ -10,9 +10,11 @@ import {
   Modal,
   TextInput,
   Button,
+  Dimensions,
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
+import Video from 'react-native-video';
 
 const weatherGifs = {
   sunny: require('../assets/weather/sunny.gif'),
@@ -23,8 +25,17 @@ const weatherGifs = {
   night: require('../assets/weather/night.gif'),
 };
 
-const getWeatherGif = (main) => {
-  const gifs = {
+const weatherVideos = {
+  sunny: require('../assets/videos/sunny.mp4'),
+  rain: require('../assets/videos/rain.mp4'),
+  storm: require('../assets/videos/cloudy.mp4'),
+  cloudy: require('../assets/videos/cloudy.mp4'),
+  wind: require('../assets/videos/cloudy.mp4'),
+  night: require('../assets/videos/night.mp4'),
+};
+
+const getWeatherKey = (main) => {
+  const mapping = {
     Clear: 'sunny',
     Rain: 'rain',
     Thunderstorm: 'storm',
@@ -35,8 +46,7 @@ const getWeatherGif = (main) => {
     Night: 'night',
   };
 
-  const selected = gifs[main] || 'cloudy';
-  return weatherGifs[selected];
+  return mapping[main] || 'cloudy';
 };
 
 export default function TopSection() {
@@ -119,11 +129,22 @@ export default function TopSection() {
     );
   }
 
-  const gifSource = getWeatherGif(weatherData.weather[0].main);
+  const weatherKey = getWeatherKey(weatherData.weather[0].main);
+  const gifSource = weatherGifs[weatherKey];
+  const videoSource = weatherVideos[weatherKey];
 
   return (
     <View style={styles.weatherCardContainer}>
       <TouchableOpacity onPress={() => setIsModalVisible(true)} style={styles.weatherCard}>
+        <Video
+          source={videoSource}
+          style={StyleSheet.absoluteFill}
+          muted
+          repeat
+          resizeMode="cover"
+          rate={1.0}
+          ignoreSilentSwitch="obey"
+        />
         <Image source={gifSource} style={styles.weatherIcon} resizeMode="contain" />
 
         <View style={styles.weatherDetails}>
@@ -163,41 +184,35 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   weatherCard: {
-    backgroundColor: '#fff',
-    borderRadius: 24,
-    paddingVertical: 24,
-    paddingHorizontal: 10,
-    flexDirection: 'row',
-    alignItems: 'Right',
-    position: 'Center',
-    elevation: 10,
+    borderRadius: 20,
+    overflow: 'hidden',
     width: '100%',
-    borderWidth: 2,
-    borderColor: '#fff',
+    height: 180,
+    justifyContent: 'center',
+    backgroundColor: '#ddd',
   },
   weatherIcon: {
-    width: 130,
-    height: 150,
+    width: 100,
+    height: 100,
     position: 'absolute',
-    top: -60,
-    left: -40,
-    zIndex: 20,
+    top: -20,
+    left: -20,
+    zIndex: 10,
   },
   weatherDetails: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    flex: 1,
-    marginLeft: 100,
+    paddingHorizontal: 20,
+    alignItems: 'center',
   },
   tempText: {
-    fontSize: 20,
-    color: '#000',
+    fontSize: 22,
+    color: '#fff',
     fontWeight: '600',
   },
   humidityText: {
-    fontSize: 20
-    ,
-    color: '#666',
+    fontSize: 18,
+    color: '#eee',
   },
   conditionDetails: {
     alignItems: 'flex-end',
@@ -205,11 +220,11 @@ const styles = StyleSheet.create({
   conditionText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#222',
+    color: '#fff',
   },
   cityText: {
     fontSize: 14,
-    color: '#888',
+    color: '#ccc',
   },
   modalContainer: {
     flex: 1,
