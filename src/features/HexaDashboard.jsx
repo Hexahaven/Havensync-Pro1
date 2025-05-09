@@ -18,7 +18,7 @@ import {
   faUser,
   faBars,
 } from '@fortawesome/free-solid-svg-icons';
-import { useNavigation, DrawerActions } from '@react-navigation/native';
+import { useNavigation /*, DrawerActions*/ } from '@react-navigation/native'; // Removed DrawerActions import
 import TopSection from '../components/TopSection';
 import { updateDevice } from '../redux/slices/switchSlice';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -31,9 +31,10 @@ export default function HexaDashboard() {
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState('home');
 
-  const openDrawer = () => {
-    navigation.dispatch(DrawerActions.toggleDrawer());
-  };
+  // Removed openDrawer function as drawer navigation is not set up
+  // const openDrawer = () => {
+  //   navigation.dispatch(DrawerActions.toggleDrawer());
+  // };
 
   const togglePower = (device) => {
     dispatch(
@@ -47,7 +48,7 @@ export default function HexaDashboard() {
   return (
     <SafeAreaView style={[styles.container, darkMode && styles.dark]}>
       <View style={styles.headerRow}>
-        <TouchableOpacity onPress={openDrawer}>
+        <TouchableOpacity onPress={() => navigation.navigate('HexaSettings')}>
           <FontAwesomeIcon icon={faBars} size={22} color={darkMode ? '#fff' : '#000'} />
         </TouchableOpacity>
         <Text style={[styles.greeting, darkMode && styles.greetingDark]}>
@@ -90,7 +91,7 @@ export default function HexaDashboard() {
                     </Text>
                     <Switch
                       value={isOn}
-                      disabled
+                      onValueChange={() => togglePower(device)}
                       trackColor={{ false: '#999', true: '#fff' }}
                       thumbColor={isOn ? '#4caf50' : '#ccc'}
                     />

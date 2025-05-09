@@ -55,8 +55,8 @@
 30    for React Native Apps.
 31    -->
 32    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-32-->[com.facebook.react:react-android:0.76.6] C:\Users\Sathish\.gradle\caches\8.10.2\transforms\e1725c6eca62f7b272bec9fef692a344\transformed\react-android-0.76.6-debug\AndroidManifest.xml:16:5-78
-32-->[com.facebook.react:react-android:0.76.6] C:\Users\Sathish\.gradle\caches\8.10.2\transforms\e1725c6eca62f7b272bec9fef692a344\transformed\react-android-0.76.6-debug\AndroidManifest.xml:16:22-75
+32-->[com.facebook.react:react-android:0.76.9] C:\Users\Sathish\.gradle\caches\8.10.2\transforms\be3c0409c813af948e7d6f3a3cf4a838\transformed\react-android-0.76.9-debug\AndroidManifest.xml:16:5-78
+32-->[com.facebook.react:react-android:0.76.9] C:\Users\Sathish\.gradle\caches\8.10.2\transforms\be3c0409c813af948e7d6f3a3cf4a838\transformed\react-android-0.76.9-debug\AndroidManifest.xml:16:22-75
 33
 34    <permission
 34-->[androidx.core:core:1.13.1] C:\Users\Sathish\.gradle\caches\8.10.2\transforms\68f4795e116e40cd25a5d63e0c2c845a\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
@@ -143,11 +143,11 @@
 77        </provider>
 78
 79        <activity
-79-->[com.facebook.react:react-android:0.76.6] C:\Users\Sathish\.gradle\caches\8.10.2\transforms\e1725c6eca62f7b272bec9fef692a344\transformed\react-android-0.76.6-debug\AndroidManifest.xml:19:9-21:40
+79-->[com.facebook.react:react-android:0.76.9] C:\Users\Sathish\.gradle\caches\8.10.2\transforms\be3c0409c813af948e7d6f3a3cf4a838\transformed\react-android-0.76.9-debug\AndroidManifest.xml:19:9-21:40
 80            android:name="com.facebook.react.devsupport.DevSettingsActivity"
-80-->[com.facebook.react:react-android:0.76.6] C:\Users\Sathish\.gradle\caches\8.10.2\transforms\e1725c6eca62f7b272bec9fef692a344\transformed\react-android-0.76.6-debug\AndroidManifest.xml:20:13-77
+80-->[com.facebook.react:react-android:0.76.9] C:\Users\Sathish\.gradle\caches\8.10.2\transforms\be3c0409c813af948e7d6f3a3cf4a838\transformed\react-android-0.76.9-debug\AndroidManifest.xml:20:13-77
 81            android:exported="false" />
-81-->[com.facebook.react:react-android:0.76.6] C:\Users\Sathish\.gradle\caches\8.10.2\transforms\e1725c6eca62f7b272bec9fef692a344\transformed\react-android-0.76.6-debug\AndroidManifest.xml:21:13-37
+81-->[com.facebook.react:react-android:0.76.9] C:\Users\Sathish\.gradle\caches\8.10.2\transforms\be3c0409c813af948e7d6f3a3cf4a838\transformed\react-android-0.76.9-debug\AndroidManifest.xml:21:13-37
 82
 83        <meta-data
 83-->[com.github.bumptech.glide:okhttp3-integration:4.12.0] C:\Users\Sathish\.gradle\caches\8.10.2\transforms\78fa16ea28c2c4fe0597914185982b3d\transformed\okhttp3-integration-4.12.0\AndroidManifest.xml:11:9-13:43

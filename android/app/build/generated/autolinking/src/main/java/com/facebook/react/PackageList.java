@@ -10,12 +10,16 @@ import com.facebook.react.shell.MainReactPackage;
 import java.util.Arrays;
 import java.util.ArrayList;
 
+// @react-native-community/blur
+import com.reactnativecommunity.blurview.BlurViewPackage;
 // @react-native-community/geolocation
 import com.reactnativecommunity.geolocation.GeolocationPackage;
 // @react-native-community/slider
 import com.reactnativecommunity.slider.ReactSliderPackage;
 // @react-native-picker/picker
 import com.reactnativecommunity.picker.RNCPickerPackage;
+// react-native-ble-manager
+import it.innove.BleManagerPackage;
 // react-native-ble-plx
 import com.bleplx.BlePlxPackage;
 // react-native-date-picker
@@ -91,9 +95,11 @@ public class PackageList {
   public ArrayList<ReactPackage> getPackages() {
     return new ArrayList<>(Arrays.<ReactPackage>asList(
       new MainReactPackage(mConfig),
+      new BlurViewPackage(),
       new GeolocationPackage(),
       new ReactSliderPackage(),
       new RNCPickerPackage(),
+      new BleManagerPackage(),
       new BlePlxPackage(),
       new DatePickerPackage(),
       new FastImageViewPackage(),

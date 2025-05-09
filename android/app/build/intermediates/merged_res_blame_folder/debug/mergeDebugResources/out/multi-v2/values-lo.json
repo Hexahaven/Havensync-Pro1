@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.hexahavensmarthomeapp-mergeDebugResources-49:/values-lo/values-lo.xml",
+            "outputFile": "com.hexahavensmarthomeapp-mergeDebugResources-50:/values-lo/values-lo.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Sathish\\.gradle\\caches\\8.10.2\\transforms\\bca43fdc337efde2062b0069df450cab\\transformed\\play-services-basement-18.1.0\\res\\values-lo\\values.xml",
@@ -57,6 +57,23 @@
                     }
                 },
                 {
+                    "source": "C:\\Users\\Sathish\\.gradle\\caches\\8.10.2\\transforms\\be3c0409c813af948e7d6f3a3cf4a838\\transformed\\react-android-0.76.9-debug\\res\\values-lo\\values-lo.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "55,131,201,283,350,417,488",
+                        "endColumns": "75,69,81,66,66,70,70",
+                        "endOffsets": "126,196,278,345,412,483,554"
+                    },
+                    "to": {
+                        "startLines": "61,151,152,154,173,209,210",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "4645,12337,12407,12548,13983,16814,16885",
+                        "endColumns": "75,69,81,66,66,70,70",
+                        "endOffsets": "4716,12402,12484,12610,14045,16880,16951"
+                    }
+                },
+                {
                     "source": "C:\\Users\\Sathish\\.gradle\\caches\\8.10.2\\transforms\\8cdd93f6daca96b36e2f986965f59617\\transformed\\play-services-base-18.1.0\\res\\values-lo\\values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
@@ -71,23 +88,6 @@
                         "startOffsets": "4721,4829,4999,5129,5236,5388,5513,5621,5869,6021,6126,6292,6421,6592,6753,6821,6890",
                         "endColumns": "107,169,129,106,151,124,107,115,151,104,165,128,170,160,67,68,84",
                         "endOffsets": "4824,4994,5124,5231,5383,5508,5616,5732,6016,6121,6287,6416,6587,6748,6816,6885,6970"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Sathish\\.gradle\\caches\\8.10.2\\transforms\\e1725c6eca62f7b272bec9fef692a344\\transformed\\react-android-0.76.6-debug\\res\\values-lo\\values-lo.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "55,131,201,283,350,417,488",
-                        "endColumns": "75,69,81,66,66,70,70",
-                        "endOffsets": "126,196,278,345,412,483,554"
-                    },
-                    "to": {
-                        "startLines": "61,151,152,154,173,209,210",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "4645,12337,12407,12548,13983,16814,16885",
-                        "endColumns": "75,69,81,66,66,70,70",
-                        "endOffsets": "4716,12402,12484,12610,14045,16880,16951"
                     }
                 },
                 {

@@ -1,4 +1,7 @@
 {
   "name": "HexaHavenSmartHomeApp",
-  "displayName": "HexaHavenSmartHomeApp"
+  "displayName": "HexaHavenSmartHomeApp",
+  "plugins": [
+    "expo-font"
+  ]
 }

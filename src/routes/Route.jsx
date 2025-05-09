@@ -6,6 +6,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronLeft} from '@fortawesome/free-solid-svg-icons';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Components from '../imports/imports';
+import HexaSettings from '../features/HexaSettings';
 import Animated, {SlideInUp} from 'react-native-reanimated';
 import {useSelector} from 'react-redux';
 import DeviceDetectorLoader from '../components/DeviceDetectorLoader';
@@ -141,6 +142,13 @@ export default function Routes() {
       <Stack.Screen
         name="HexaDeviceRadar"
         component={Components.HexaDeviceRadar}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="HexaSettings"
+        component={HexaSettings}
         options={{
           headerShown: false,
         }}

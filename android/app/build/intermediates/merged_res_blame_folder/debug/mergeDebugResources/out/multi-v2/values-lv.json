@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.hexahavensmarthomeapp-mergeDebugResources-49:/values-lv/values-lv.xml",
+            "outputFile": "com.hexahavensmarthomeapp-mergeDebugResources-50:/values-lv/values-lv.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Sathish\\.gradle\\caches\\8.10.2\\transforms\\d695aa439ccbb127d45b1a43171f757a\\transformed\\media3-ui-1.4.1\\res\\values-lv\\values-lv.xml",
@@ -93,7 +93,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Sathish\\.gradle\\caches\\8.10.2\\transforms\\e1725c6eca62f7b272bec9fef692a344\\transformed\\react-android-0.76.6-debug\\res\\values-lv\\values-lv.xml",
+                    "source": "C:\\Users\\Sathish\\.gradle\\caches\\8.10.2\\transforms\\be3c0409c813af948e7d6f3a3cf4a838\\transformed\\react-android-0.76.9-debug\\res\\values-lv\\values-lv.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",

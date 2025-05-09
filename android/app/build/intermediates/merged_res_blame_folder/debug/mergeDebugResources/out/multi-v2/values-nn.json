@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.hexahavensmarthomeapp-mergeDebugResources-49:/values-nn/values-nn.xml",
+            "outputFile": "com.hexahavensmarthomeapp-mergeDebugResources-50:/values-nn/values-nn.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Sathish\\Havensync-Pro1\\node_modules\\react-native-date-picker\\android\\build\\intermediates\\packaged_res\\debug\\packageDebugResources\\values-nn\\values-nn.xml",
