@@ -12,7 +12,10 @@ import {
   Button,
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faThermometerHalf, faTint } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 const weatherGifs = {
   sunny: require('../assets/weather/sunny.gif'),
@@ -23,7 +26,7 @@ const weatherGifs = {
   night: require('../assets/weather/night.gif'),
 };
 
-const getWeatherGif = (main) => {
+const getWeatherGif = (main, isNight) => {
   const gifs = {
     Clear: 'sunny',
     Rain: 'rain',
@@ -34,16 +37,16 @@ const getWeatherGif = (main) => {
     Wind: 'wind',
     Night: 'night',
   };
-
-  const selected = gifs[main] || 'cloudy';
-  return weatherGifs[selected];
+  return weatherGifs[gifs[main] || 'cloudy'];
 };
 
 export default function TopSection() {
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [permissionGranted, setPermissionGranted] = useState(false);
+  const [location, setLocation] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [manualLocation, setManualLocation] = useState('');
+  const darkMode = useSelector(state => state.profile.darkMode);
 
   useEffect(() => {
     requestLocationPermission();
@@ -55,26 +58,15 @@ export default function TopSection() {
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
           title: 'Location Permission',
-          message: 'This app needs access to your location to provide weather updates.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
+          message: 'We need location to show weather info.',
           buttonPositive: 'OK',
-        },
+        }
       );
-
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        Geolocation.getCurrentPosition(
-          position => {
-            const { latitude, longitude } = position.coords;
-            fetchWeatherDataByCoords(latitude, longitude);
-          },
-          error => {
-            console.error(error);
-            setLoading(false);
-          },
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 1000 },
-        );
+        setPermissionGranted(true);
+        getCurrentLocation();
       } else {
+        setPermissionGranted(false);
         setLoading(false);
       }
     } catch (err) {
@@ -83,7 +75,21 @@ export default function TopSection() {
     }
   };
 
-  const fetchWeatherDataByCoords = async (lat, lon) => {
+  const getCurrentLocation = () => {
+    Geolocation.getCurrentPosition(
+      pos => {
+        const { latitude, longitude } = pos.coords;
+        fetchWeatherData(latitude, longitude);
+      },
+      error => {
+        console.error(error);
+        setLoading(false);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 1000 }
+    );
+  };
+
+  const fetchWeatherData = async (lat, lon) => {
     try {
       const API_KEY = '60d3edac42903c48e11867d5b0e797f8';
       const res = await axios.get(
@@ -97,59 +103,76 @@ export default function TopSection() {
     }
   };
 
-  const fetchWeatherDataByCity = async (city) => {
+  const fetchWeatherByLocation = async () => {
     try {
       const API_KEY = '60d3edac42903c48e11867d5b0e797f8';
       const res = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
+        `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${API_KEY}`
       );
       setWeatherData(res.data);
       setIsModalVisible(false);
     } catch (err) {
-      console.error('City fetch error:', err);
+      console.error('Manual location error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (loading || !weatherData) {
+  const isNight = new Date().getHours() < 6 || new Date().getHours() >= 18;
+
+  if (!permissionGranted) {
     return (
-      <View style={styles.weatherCardContainer}>
-        <ActivityIndicator size="small" color="#333" />
-        <Text>Fetching weather...</Text>
+      <View style={[styles.container, darkMode && styles.dark]}>
+        <TouchableOpacity onPress={requestLocationPermission}>
+          <Text style={styles.text}>Tap to enable location permission</Text>
+        </TouchableOpacity>
       </View>
     );
   }
 
-  const gifSource = getWeatherGif(weatherData.weather[0].main);
+  if (loading || !weatherData) {
+    return (
+      <View style={[styles.container, darkMode && styles.dark]}>
+        <ActivityIndicator size="small" color={darkMode ? '#fff' : '#000'} />
+        <Text style={styles.text}>Loading weather...</Text>
+      </View>
+    );
+  }
+
+  const gifSource = getWeatherGif(weatherData.weather[0].main, isNight);
 
   return (
-    <View style={styles.weatherCardContainer}>
-      <TouchableOpacity onPress={() => setIsModalVisible(true)} style={styles.weatherCard}>
-        <Image source={gifSource} style={styles.weatherIcon} resizeMode="contain" />
-
-        <View style={styles.weatherDetails}>
-          <View>
-            <Text style={styles.tempText}>{weatherData.main.temp}°C</Text>
-            <Text style={styles.humidityText}>{weatherData.main.humidity}%</Text>
+    <View style={[styles.container, darkMode && styles.dark]}>
+      <TouchableOpacity onPress={() => setIsModalVisible(true)} style={styles.card}>
+        <View style={styles.left}>
+          <View style={styles.row}>
+            <FontAwesomeIcon icon={faThermometerHalf} color="#ff8625" size={18} />
+            <Text style={[styles.text, darkMode && styles.textDark]}>
+              {weatherData.main.temp}°C
+            </Text>
           </View>
-          <View style={styles.conditionDetails}>
-            <Text style={styles.conditionText}>{weatherData.weather[0].main}</Text>
-            <Text style={styles.cityText}>{weatherData.name}</Text>
+          <View style={styles.row}>
+            <FontAwesomeIcon icon={faTint} color="#4db8ff" size={18} />
+            <Text style={[styles.text, darkMode && styles.textDark]}>
+              {weatherData.main.humidity}%
+            </Text>
           </View>
         </View>
+        <Image source={gifSource} style={styles.gif} resizeMode="contain" />
       </TouchableOpacity>
 
-      <Modal visible={isModalVisible} transparent animationType="slide">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text>Enter City Name:</Text>
+      <Modal visible={isModalVisible} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <Text style={styles.modalTitle}>Enter City Name</Text>
             <TextInput
+              placeholder="e.g. Chennai"
               style={styles.input}
-              placeholder="e.g., Thanjavur"
-              value={manualLocation}
-              onChangeText={setManualLocation}
+              value={location}
+              onChangeText={setLocation}
             />
-            <Button title="Submit" onPress={() => fetchWeatherDataByCity(manualLocation)} />
-            <Button title="Cancel" onPress={() => setIsModalVisible(false)} color="red" />
+            <Button title="Fetch Weather" onPress={fetchWeatherByLocation} />
+            <Button title="Cancel" onPress={() => setIsModalVisible(false)} />
           </View>
         </View>
       </Modal>
@@ -158,76 +181,61 @@ export default function TopSection() {
 }
 
 const styles = StyleSheet.create({
-  weatherCardContainer: {
-    alignItems: 'center',
+  container: {
     marginBottom: 16,
   },
-  weatherCard: {
+  card: {
     backgroundColor: '#fff',
-    borderRadius: 24,
-    paddingVertical: 24,
-    paddingHorizontal: 10,
+    borderRadius: 20,
+    padding: 16,
     flexDirection: 'row',
-    alignItems: 'Right',
-    position: 'Center',
-    elevation: 10,
-    width: '100%',
-    borderWidth: 2,
-    borderColor: '#fff',
-  },
-  weatherIcon: {
-    width: 130,
-    height: 150,
-    position: 'absolute',
-    top: -60,
-    left: -40,
-    zIndex: 20,
-  },
-  weatherDetails: {
-    flexDirection: 'row',
+    alignItems: 'center',
+    elevation: 5,
     justifyContent: 'space-between',
+  },
+  dark: {
+    backgroundColor: '#1a1a1a',
+  },
+  left: {
+    gap: 12,
+  },
+  row: {
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 16,
+    color: '#333',
+  },
+  textDark: {
+    color: '#fff',
+  },
+  gif: {
+    width: 80,
+    height: 80,
+  },
+  modalOverlay: {
     flex: 1,
-    marginLeft: 100,
-  },
-  tempText: {
-    fontSize: 20,
-    color: '#000',
-    fontWeight: '600',
-  },
-  humidityText: {
-    fontSize: 20
-    ,
-    color: '#666',
-  },
-  conditionDetails: {
-    alignItems: 'flex-end',
-  },
-  conditionText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#222',
-  },
-  cityText: {
-    fontSize: 14,
-    color: '#888',
-  },
-  modalContainer: {
-    flex: 1,
+    backgroundColor: '#000000aa',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  modalContent: {
+  modalBox: {
     backgroundColor: '#fff',
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 16,
     width: '80%',
+  },
+  modalTitle: {
+    fontSize: 18,
+    marginBottom: 10,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#999',
+    borderRadius: 10,
     padding: 10,
-    borderRadius: 8,
-    marginVertical: 30,
+    marginBottom: 10,
   },
 });
