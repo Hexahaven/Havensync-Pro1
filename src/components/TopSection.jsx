@@ -6,6 +6,7 @@ import {
   Image,
   PermissionsAndroid,
   ActivityIndicator,
+  Button,
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -31,6 +32,7 @@ const getWeatherGif = (main, isNight) => {
 export default function TopSection() {
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [permissionGranted, setPermissionGranted] = useState(false);
   const darkMode = useSelector(state => state.profile.darkMode);
 
   useEffect(() => {
@@ -40,21 +42,41 @@ export default function TopSection() {
   const requestLocationPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Location Permission',
+          message: 'This app needs access to your location to provide weather updates.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
       );
+
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        Geolocation.getCurrentPosition(
-          pos => {
-            const { latitude, longitude } = pos.coords;
-            fetchWeatherData(latitude, longitude);
-          },
-          err => console.warn(err),
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 1000 }
-        );
+        setPermissionGranted(true);
+        getCurrentLocation();
+      } else {
+        setPermissionGranted(false);
+        setLoading(false);
       }
     } catch (err) {
       console.warn(err);
+      setLoading(false);
     }
+  };
+
+  const getCurrentLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        const { latitude, longitude } = position.coords;
+        fetchWeatherData(latitude, longitude);
+      },
+      error => {
+        console.error(error);
+        setLoading(false);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 1000 },
+    );
   };
 
   const fetchWeatherData = async (lat, lon) => {
@@ -71,6 +93,14 @@ export default function TopSection() {
     }
   };
 
+  if (!permissionGranted) {
+    return (
+      <View style={[styles.container, darkMode && styles.dark]}>
+        <Button title="Allow Location Permission" onPress={requestLocationPermission} />
+      </View>
+    );
+  }
+
   if (loading || !weatherData) {
     return (
       <View style={[styles.container, darkMode && styles.dark]}>
@@ -85,7 +115,6 @@ export default function TopSection() {
   const mainCondition = weatherData.weather[0].main;
   const currentHour = new Date().getHours();
   const isNight = currentHour < 6 || currentHour >= 18;
-
   const gifSource = getWeatherGif(mainCondition, isNight);
 
   return (
