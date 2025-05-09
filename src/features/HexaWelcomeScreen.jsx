@@ -1,157 +1,42 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Animated,
-  Dimensions,
-  PanResponder,
-  Vibration,
-} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions} from 'react-native';
 import Video from 'react-native-video';
 import LinearGradient from 'react-native-linear-gradient';
 
 const {height, width} = Dimensions.get('window');
 
 export default function HexaWelcomeScreen({navigation}) {
-  // State for the circular indicator
-  const [progress, setProgress] = useState(0);
-  const [showEntry, setShowEntry] = useState(false);
+  const [showButton, setShowButton] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.8)).current;
-  const rotateAnim = useRef(new Animated.Value(0)).current;
-  const pulseAnim = useRef(new Animated.Value(1)).current;
-  
-  // For the swipe indicator
-  const swipePosition = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
-  const swipeOpacity = useRef(new Animated.Value(0)).current;
-  
-  // For the hexagon pattern
-  const hexPatternOpacity = useRef(new Animated.Value(0)).current;
+  const shimmerAnim = useRef(new Animated.Value(-1)).current;
 
   useEffect(() => {
-    // Show the entry mechanism after video plays for a bit
     const timer = setTimeout(() => {
-      setShowEntry(true);
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 1200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(scaleAnim, {
-          toValue: 1,
-          duration: 1500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(hexPatternOpacity, {
-          toValue: 0.6,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-      ]).start();
-      
-      // Start the pulse animation
-      startPulseAnimation();
+      setShowButton(true);
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }).start();
+      startShimmer();
     }, 5000);
 
     return () => clearTimeout(timer);
   }, []);
 
-  // Create the pulse effect
-  const startPulseAnimation = () => {
+  const startShimmer = () => {
     Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulseAnim, {
-          toValue: 1.1,
-          duration: 1500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseAnim, {
-          toValue: 1,
-          duration: 1500,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-
-    // Start the hint animation after a delay
-    setTimeout(() => {
-      showSwipeHint();
-    }, 3000);
-  };
-
-  // Show a hint about how to enter
-  const showSwipeHint = () => {
-    swipePosition.setValue({x: -width * 0.15, y: 0});
-    Animated.sequence([
-      Animated.timing(swipeOpacity, {
+      Animated.timing(shimmerAnim, {
         toValue: 1,
-        duration: 400,
+        duration: 2000,
         useNativeDriver: true,
       }),
-      Animated.timing(swipePosition, {
-        toValue: {x: width * 0.15, y: 0},
-        duration: 1800,
-        useNativeDriver: true,
-      }),
-      Animated.timing(swipeOpacity, {
-        toValue: 0,
-        duration: 400,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      // Repeat the hint after a delay
-      setTimeout(showSwipeHint, 6000);
-    });
+    ).start();
   };
 
-  // Create the pan responder for the circular interaction
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderMove: (evt, gestureState) => {
-        // Convert the movement to a rotation angle
-        const dx = gestureState.moveX - width / 2;
-        const dy = gestureState.moveY - height / 2;
-        const angle = Math.atan2(dy, dx);
-        
-        // Update rotation animation
-        rotateAnim.setValue(angle);
-        
-        // Calculate progress based on rotation (0 to 1)
-        // We'll use a simplified approach: one full circle = entry
-        const normalizedAngle = (angle + Math.PI) / (2 * Math.PI);
-        const newProgress = Math.min(1, Math.max(0, gestureState.moveX / width));
-        setProgress(newProgress);
-        
-        // If progress is complete, trigger the navigation
-        if (newProgress >= 0.8) {
-          Vibration.vibrate(50); // Haptic feedback
-          navigation.navigate('HexaLoginScreen');
-        }
-      },
-      onPanResponderRelease: () => {
-        // Reset progress when released before completion
-        if (progress < 0.8) {
-          setProgress(0);
-        }
-      },
-    })
-  ).current;
-
-  // Interpolate the progress to visual properties
-  const circleColor = progress > 0.7 
-    ? ['#6ec1e4', '#3ba7cc', '#2294b8'] 
-    : ['#3ba7cc', '#2294b8', '#1a7a9c'];
-  
-  const progressInterpolate = progress * 100;
-  
-  // Calculate rotation for visual effect
-  const spin = rotateAnim.interpolate({
-    inputRange: [-Math.PI, Math.PI],
-    outputRange: ['-180deg', '180deg'],
+  const shimmerTranslate = shimmerAnim.interpolate({
+    inputRange: [-1, 1],
+    outputRange: [-width, width],
   });
 
   return (
@@ -163,58 +48,31 @@ export default function HexaWelcomeScreen({navigation}) {
         repeat
       />
       
-      {/* Hexagon Pattern Overlay */}
-      <Animated.View style={[styles.hexPattern, { opacity: hexPatternOpacity }]}>
-        {/* This would be an SVG or image with hexagon pattern */}
-      </Animated.View>
-      
-      {showEntry && (
-        <Animated.View 
-          style={[
-            styles.entryContainer, 
-            {
-              opacity: fadeAnim,
-              transform: [
-                { scale: scaleAnim },
-                { scale: pulseAnim },
-              ],
-            }
-          ]}
-          {...panResponder.panHandlers}
-        >
-          <Text style={styles.instructionText}>Slide to enter Haven</Text>
-          
-          <LinearGradient
-            colors={circleColor}
-            style={[styles.circleGradient, { transform: [{ rotate: spin }] }]}
-          >
-            <View style={styles.innerCircle}>
-              <LinearGradient
-                colors={['#1e1e1e', '#2a2a2a']}
-                style={styles.progressCircle}
-              >
-                <Text style={styles.percentText}>{Math.round(progressInterpolate)}%</Text>
-              </LinearGradient>
-            </View>
-          </LinearGradient>
-
-          {/* Swipe Hint Animation */}
-          <Animated.View 
-            style={[
-              styles.swipeHint,
-              {
-                opacity: swipeOpacity,
-                transform: [{ translateX: swipePosition.x }],
-              }
-            ]}
-          >
+      {showButton && (
+        <Animated.View style={[styles.buttonContainer, {opacity: fadeAnim}]}>
+          <TouchableOpacity onPress={() => navigation.navigate('HexaLoginScreen')}>
             <LinearGradient
-              colors={['transparent', 'rgba(255,255,255,0.7)', 'transparent']}
+              colors={['#6ec1e4', '#3ba7cc']} // Gradient colors for the button
               start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
-              style={styles.swipeGradient}
-            />
-          </Animated.View>
+              end={{x: 0, y: 1}}
+              style={styles.button}>
+              <Text style={styles.buttonText}>Enter Haven</Text>
+              <Animated.View
+                style={[
+                  styles.shimmerOverlay,
+                  {
+                    transform: [{translateX: shimmerTranslate}],
+                  },
+                ]}>
+                <LinearGradient
+                  colors={['transparent', 'rgba(255,255,255,0.5)', 'transparent']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.shimmer}
+                />
+              </Animated.View>
+            </LinearGradient>
+          </TouchableOpacity>
         </Animated.View>
       )}
     </View>
@@ -235,80 +93,48 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
-  hexPattern: {
+ 
+  buttonContainer: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'transparent',
-    // You would add a background image with hexagons here
+    bottom: height * 0.12,
+    alignSelf: 'center',
   },
-  entryContainer: {
-    position: 'absolute',
-    bottom: height * 0.15,
-    alignItems: 'center',
-    width: width * 0.8,
-  },
-  instructionText: {
-    fontFamily: 'Horyzen Digital 24',
-    fontSize: 20,
-    color: '#ffffff',
-    marginBottom: 30,
-    textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.6)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
-  },
-  circleGradient: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+  button: {
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 16,
+    overflow: 'hidden',
+
+    // Shadow & bevel
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.5,
-    shadowRadius: 12,
-    elevation: 15,
+    shadowOffset: {width: 0, height: 8},
+    shadowOpacity: 0.6,
+    shadowRadius: 10,
+    elevation: 12,
+
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
   },
-  innerCircle: {
-    width: 130,
-    height: 130,
-    borderRadius: 65,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(30, 30, 30, 0.6)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+  buttonText: {
+    fontFamily: 'Horyzen Digital 24', // Example corrected name
+    fontSize: 20,
+    color: '#1e1e1e',
+    fontStyle: 'normal',
+    fontWeight: '800',
+    textAlign: 'center',
+    
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 1.5, height: 1.5 },
+    textShadowRadius: 2,
   },
-  progressCircle: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
+  shimmerOverlay: {
+    ...StyleSheet.absoluteFillObject,
   },
-  percentText: {
-    fontFamily: 'Horyzen Digital 24',
-    fontSize: 28,
-    color: '#6ec1e4',
-    fontWeight: '700',
-  },
-  swipeHint: {
-    position: 'absolute',
-    width: width * 0.3,
-    height: 150,
-    borderRadius: 75,
-    overflow: 'hidden',
-  },
-  swipeGradient: {
-    width: '100%',
+  shimmer: {
+    width: 100,
     height: '100%',
   },
 });
 
-console.log('Font applied:', styles.instructionText.fontFamily);
+console.log('Font applied:', styles.buttonText.fontFamily);
