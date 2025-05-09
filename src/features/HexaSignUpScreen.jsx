@@ -202,18 +202,18 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
   },
  button: {
-  paddingVertical: 18, // Increase the vertical padding
-  paddingHorizontal: 30, // Horizontal padding
-  borderRadius: 16, // Rounded corners for the button
+  paddingVertical: 10, // Increase the vertical padding
+  paddingHorizontal: 10, // Horizontal padding
+  borderRadius: 30, // Rounded corners for the button
   alignItems: 'center',
   justifyContent: 'center',
   // For iOS shadow
   shadowColor: '#000',
-  shadowOffset: { width: 0, height: 10 }, // Shadow position
+  shadowOffset: { width: 5, height: 10 }, // Shadow position
   shadowOpacity: 0.25, // Shadow intensity
   shadowRadius: 8, // Shadow spread
   // For Android elevation
-  elevation: 5, // Elevation to give depth effect
+  elevation: 3, // Elevation to give depth effect
 },
 
   buttonText: {

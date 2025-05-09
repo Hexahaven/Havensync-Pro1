@@ -99,11 +99,19 @@ const styles = StyleSheet.create({
     elevation: 10, // Elevation for Android
   },
   button: {
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-  },
+    paddingVertical: 10, // Increase the vertical padding
+  paddingHorizontal: 10, // Horizontal padding
+  borderRadius: 30, // Rounded corners for the button
+  alignItems: 'center',
+  justifyContent: 'center',
+  // For iOS shadow
+  shadowColor: '#000',
+  shadowOffset: { width: 5, height: 10 }, // Shadow position
+  shadowOpacity: 30, // Shadow intensity
+  shadowRadius: 8, // Shadow spread
+  // For Android elevation
+  elevation: 3, // Elevation to give depth effect
+},
   buttonText: {
     color: '#fff',
     fontWeight: '700',

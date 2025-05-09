@@ -340,17 +340,19 @@ const styles = StyleSheet.create({
     fontFamily: 'Kiona-Regular',
   },
   gradientButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 14,
-    borderRadius: 20,
-    shadowColor: '#00c9ff',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.6,
-    shadowRadius: 20,
-    elevation: 15,
-  },
+  paddingVertical: 10, // Increase the vertical padding
+  paddingHorizontal: 10, // Horizontal padding
+  borderRadius: 30, // Rounded corners for the button
+  alignItems: 'center',
+  justifyContent: 'center',
+  // For iOS shadow
+  shadowColor: '#000',
+  shadowOffset: { width: 5, height: 10 }, // Shadow position
+  shadowOpacity: 30, // Shadow intensity
+  shadowRadius: 8, // Shadow spread
+  // For Android elevation
+  elevation: 3, // Elevation to give depth effect
+},
   buttonText: {
     fontSize: 18,
     fontFamily: 'Kiona-Regular',
