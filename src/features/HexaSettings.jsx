@@ -195,8 +195,9 @@ const HexaSettings = () => {
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <View style={styles.optionContent}>
+                {/* Image 'devices.gif' is missing, replacing with 'profile.gif' as placeholder */}
                 <Image
-                  source={require('../assets/gif/devices.gif')}
+                  source={require('../assets/gif/profile.gif')}
                   style={styles.devicesIcon}
                 />
                 <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
@@ -281,7 +282,7 @@ const HexaSettings = () => {
                     onPress={() => toggleDropdown('logout')}
                   >
                     <Text style={styles.buttonText}>Cancel</Text>
-                  </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             )}
