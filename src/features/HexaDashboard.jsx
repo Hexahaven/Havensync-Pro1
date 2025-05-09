@@ -6,13 +6,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  Image,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import TopSection from '../components/TopSection';
 import DeviceGrid from '../components/DeviceGrid';
 import RecentActivity from '../components/RecentActivity';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome, faPlug, faBell, faPlus, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faPlug, faBell, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useNavigation } from '@react-navigation/native';
 
 export default function HexaDashboard() {
@@ -22,18 +23,33 @@ export default function HexaDashboard() {
 
   return (
     <SafeAreaView style={[styles.container, darkMode && styles.dark]}>
-      {/* Header with Greeting and Profile Icon */}
-      <View style={styles.headerRow}>
-        <Text style={[styles.greetingText, darkMode && styles.greetingDark]}>
-          Hello, {userName}
-        </Text>
+      {/* Modern Header */}
+      <View style={styles.headerContainer}>
+        <TouchableOpacity>
+          <Text style={[styles.menuIcon, darkMode && styles.menuIconDark]}>≡</Text>
+        </TouchableOpacity>
+
+        <View style={styles.greetingContainer}>
+          <Text style={[styles.greetingText, darkMode && styles.greetingTextDark]}>
+            Hi {userName}
+          </Text>
+          <Text style={[styles.subGreeting, darkMode && styles.subGreetingDark]}>
+            Welcome to your smart home
+          </Text>
+        </View>
+
         <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
-          <FontAwesomeIcon icon={faUser} size={24} color={darkMode ? '#fff' : '#000'} />
+          <View style={styles.profileImageWrapper}>
+            <Image
+              source={require('../assets/profile.gif')} // Replace with URI or other logic as needed
+              style={styles.profileImage}
+            />
+          </View>
         </TouchableOpacity>
       </View>
 
+      {/* Main Scrollable Content */}
       <ScrollView contentContainerStyle={styles.scroll}>
-        {/* Remove greeting from TopSection if duplicated */}
         <TopSection />
         <DeviceGrid />
         <RecentActivity />
@@ -69,22 +85,53 @@ const styles = StyleSheet.create({
   dark: {
     backgroundColor: '#121212',
   },
-  headerRow: {
+
+  headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
+    padding: 20,
   },
-  greetingText: {
-    fontSize: 20,
-    fontWeight: '600',
+  menuIcon: {
+    fontSize: 30,
     color: '#333',
   },
-  greetingDark: {
+  menuIconDark: {
     color: '#fff',
   },
+  greetingContainer: {
+    flex: 10,
+    marginHorizontal: 20,
+  },
+  greetingText: {
+    fontSize: 25,
+    fontWeight: '700',
+    color: '#111',
+  },
+  greetingTextDark: {
+    color: '#fff',
+  },
+  subGreeting: {
+    fontSize: 14,
+    color: '#666',
+  },
+  subGreetingDark: {
+    color: '#aaa',
+  },
+  profileImageWrapper: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
+  profileImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+
   scroll: {
-    padding: 16,
+    padding: 40,
     paddingBottom: 100,
   },
   bottomNav: {
