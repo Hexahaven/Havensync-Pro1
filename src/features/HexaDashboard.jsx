@@ -5,10 +5,9 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import { useSelector } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome, faPlus, faBell, faUser, faBars } from '@fortawesome/free-solid-svg-icons';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerActions } from '@react-navigation/native';
 import TopSection from '../components/TopSection';
@@ -26,13 +25,17 @@ export default function HexaDashboard() {
     <SafeAreaView style={[styles.container, darkMode && styles.dark]}>
       <View style={styles.headerRow}>
         <TouchableOpacity onPress={openDrawer}>
-          <FontAwesomeIcon icon={faBars} size={22} color={darkMode ? '#fff' : '#000'} />
+          <Text style={[styles.icon, darkMode && styles.iconDark]}>☰</Text>
         </TouchableOpacity>
         <Text style={[styles.greeting, darkMode && styles.greetingDark]}>
           Hello, {userName}
         </Text>
         <TouchableOpacity onPress={() => navigation.navigate('HexaEditProfile')}>
-          <FontAwesomeIcon icon={faUser} size={22} color={darkMode ? '#fff' : '#000'} />
+          {/* Replace FontAwesomeIcon with Image for profile */}
+          <Image
+            source={require('../assets/profile.gif')}
+            style={[styles.profileIcon, darkMode && styles.profileIconDark]}
+          />
         </TouchableOpacity>
       </View>
 
@@ -42,16 +45,16 @@ export default function HexaDashboard() {
 
       <View style={[styles.bottomNav, darkMode && styles.bottomNavDark]}>
         <TouchableOpacity>
-          <FontAwesomeIcon icon={faHome} size={22} color="#555" />
+          <Text style={styles.icon}>🏠</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => navigation.navigate('HexaDeviceRadar')}
         >
-          <FontAwesomeIcon icon={faPlus} size={24} color="#fff" />
+          <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
         <TouchableOpacity>
-          <FontAwesomeIcon icon={faBell} size={22} color="#555" />
+          <Text style={styles.icon}>🔔</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -83,6 +86,22 @@ const styles = StyleSheet.create({
   greetingDark: {
     color: '#fff',
   },
+  profileIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 15, // to make the image circular
+  },
+  profileIconDark: {
+    borderColor: '#fff',
+    borderWidth: 2, // Optional, to give it a border in dark mode
+  },
+  icon: {
+    fontSize: 22,
+    color: '#333',
+  },
+  iconDark: {
+    color: '#fff',
+  },
   bottomNav: {
     position: 'absolute',
     bottom: 0,
@@ -110,5 +129,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
     elevation: 4,
+  },
+  addButtonText: {
+    fontSize: 30,
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
