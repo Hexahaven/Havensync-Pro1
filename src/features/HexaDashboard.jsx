@@ -181,26 +181,43 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 70,
-    backgroundColor: '#fff',
+    backgroundColor: '#84c9e8',  // Gradient added here for modern touch
     borderTopWidth: 1,
     borderTopColor: '#ddd',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     paddingHorizontal: 20,
+    borderRadius: 15, // Adding rounded corners for elegance
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: -4 }, // Shadow to add 3D effect
+    elevation: 6, // Elevation for Android shadow
   },
   bottomNavDark: {
     backgroundColor: '#1a1a1a',
     borderTopColor: '#444',
   },
+  navButton: {
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 30,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)', // Subtle background color for buttons
+    transition: 'background-color 0.3s ease', // Smooth transition for hover effect
+  },
   addButton: {
     width: 52,
     height: 52,
-    backgroundColor: '#84c9e8',
+    backgroundColor: '#4caf50',
     borderRadius: 26,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
-    elevation: 4,
+    elevation: 6, // More shadow for the center button to make it pop
+    shadowColor: '#4caf50',
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 8 },
   },
 });
