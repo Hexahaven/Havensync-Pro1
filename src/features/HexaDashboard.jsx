@@ -1,67 +1,40 @@
 import React from 'react';
 import {
-  View,
   SafeAreaView,
-  ScrollView,
+  View,
   StyleSheet,
-  TouchableOpacity,
   Text,
-  Image,
+  TouchableOpacity,
 } from 'react-native';
 import { useSelector } from 'react-redux';
-import TopSection from '../components/TopSection';
-import DeviceGrid from '../components/DeviceGrid';
-import RecentActivity from '../components/RecentActivity';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome, faPlug, faBell, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faPlus, faBell, faUser } from '@fortawesome/free-solid-svg-icons';
 import { useNavigation } from '@react-navigation/native';
+import TopSection from '../components/TopSection';
 
 export default function HexaDashboard() {
-  const darkMode = useSelector(state => state.profile.darkMode);
   const userName = useSelector(state => state.profile.name) || 'User';
+  const darkMode = useSelector(state => state.profile.darkMode);
   const navigation = useNavigation();
 
   return (
     <SafeAreaView style={[styles.container, darkMode && styles.dark]}>
-      {/* Modern Header */}
-      <View style={styles.headerContainer}>
-        <TouchableOpacity>
-          <Text style={[styles.menuIcon, darkMode && styles.menuIconDark]}>≡</Text>
-        </TouchableOpacity>
-
-        <View style={styles.greetingContainer}>
-          <Text style={[styles.greetingText, darkMode && styles.greetingTextDark]}>
-            Hi {userName}
-          </Text>
-          <Text style={[styles.subGreeting, darkMode && styles.subGreetingDark]}>
-            Welcome to your smart home
-          </Text>
-        </View>
-
-        <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
-          <View style={styles.profileImageWrapper}>
-            <Image
-              source={require('../assets/profile.gif')} // Replace with URI or other logic as needed
-              style={styles.profileImage}
-            />
-          </View>
+      <View style={styles.headerRow}>
+        <Text style={[styles.greeting, darkMode && styles.greetingDark]}>
+          Hello, {userName}
+        </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('HexaEditProfile')}>
+          <FontAwesomeIcon icon={faUser} size={22} color={darkMode ? '#fff' : '#000'} />
         </TouchableOpacity>
       </View>
 
-      {/* Main Scrollable Content */}
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <View style={styles.content}>
         <TopSection />
-        <DeviceGrid />
-        <RecentActivity />
-      </ScrollView>
+      </View>
 
-      {/* Bottom Navigation */}
       <View style={[styles.bottomNav, darkMode && styles.bottomNavDark]}>
         <TouchableOpacity>
-          <FontAwesomeIcon icon={faHome} size={20} color="#555" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <FontAwesomeIcon icon={faPlug} size={20} color="#555" />
+          <FontAwesomeIcon icon={faHome} size={22} color="#555" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.addButton}
@@ -70,7 +43,7 @@ export default function HexaDashboard() {
           <FontAwesomeIcon icon={faPlus} size={24} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity>
-          <FontAwesomeIcon icon={faBell} size={20} color="#555" />
+          <FontAwesomeIcon icon={faBell} size={22} color="#555" />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -85,54 +58,22 @@ const styles = StyleSheet.create({
   dark: {
     backgroundColor: '#121212',
   },
-
-  headerContainer: {
+  content: {
+    paddingHorizontal: 16,
+  },
+  headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
+    padding: 16,
   },
-  menuIcon: {
-    fontSize: 30,
+  greeting: {
+    fontSize: 20,
+    fontWeight: '600',
     color: '#333',
   },
-  menuIconDark: {
+  greetingDark: {
     color: '#fff',
-  },
-  greetingContainer: {
-    flex: 10,
-    marginHorizontal: 20,
-  },
-  greetingText: {
-    fontSize: 25,
-    fontWeight: '700',
-    color: '#111',
-  },
-  greetingTextDark: {
-    color: '#fff',
-  },
-  subGreeting: {
-    fontSize: 14,
-    color: '#666',
-  },
-  subGreetingDark: {
-    color: '#aaa',
-  },
-  profileImageWrapper: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    overflow: 'hidden',
-  },
-  profileImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-
-  scroll: {
-    padding: 40,
-    paddingBottom: 100,
   },
   bottomNav: {
     position: 'absolute',
@@ -142,7 +83,7 @@ const styles = StyleSheet.create({
     height: 70,
     backgroundColor: '#fff',
     borderTopWidth: 1,
-    borderTopColor: '#e1e1e1',
+    borderTopColor: '#ddd',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
