@@ -11,6 +11,8 @@ import Animated, {SlideInUp} from 'react-native-reanimated';
 import {useSelector} from 'react-redux';
 import DeviceDetectorLoader from '../components/DeviceDetectorLoader';
 
+import ManageDevice from '../components/ManageDevice';
+
 const Stack = createNativeStackNavigator();
 
 const CustomBackButton = React.memo(() => {
@@ -149,6 +151,13 @@ export default function Routes() {
       <Stack.Screen
         name="HexaSettings"
         component={HexaSettings}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="ManageDevice"
+        component={ManageDevice}
         options={{
           headerShown: false,
         }}

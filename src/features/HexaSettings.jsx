@@ -23,14 +23,8 @@ const HexaSettings = () => {
   const navigation = useNavigation();
 
   const [activeDropdown, setActiveDropdown] = useState(null);
-  // Mock device data: In a real app, fetch from backend
-  const [devices, setDevices] = useState([
-    { id: '1', name: 'Smart Light', emails: ['user1@example.com'] },
-    { id: '2', name: 'Thermostat', emails: ['user2@example.com', 'user3@example.com'] },
-  ]);
 
   const toggleDropdown = (key) => {
-    console.log('Toggling dropdown:', key, 'Current active:', activeDropdown);
     setActiveDropdown(activeDropdown === key ? null : key);
   };
 
@@ -51,8 +45,8 @@ const HexaSettings = () => {
   }, []);
 
   const handleDevicesPress = useCallback(() => {
-    toggleDropdown('devices');
-  }, []);
+    navigation.navigate('ManageDevice');
+  }, [navigation]);
 
   const handleIntegrationPress = useCallback((service) => {
     toggleDropdown(`integration-${service}`);
@@ -70,12 +64,6 @@ const HexaSettings = () => {
     });
     setActiveDropdown(null);
   };
-
-  const handleManageDeviceEmails = useCallback((deviceId) => {
-    // Placeholder: Navigate to email management screen for the device
-    // navigation.navigate('ManageDeviceEmailsScreen', { deviceId });
-    toggleDropdown('devices');
-  }, []);
 
   return (
     <SafeAreaView style={[styles.container, darkMode && styles.darkContainer]}>
@@ -195,7 +183,6 @@ const HexaSettings = () => {
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <View style={styles.optionContent}>
-                {/* Image 'devices.gif' is missing, replacing with 'profile.gif' as placeholder */}
                 <Image
                   source={require('../assets/gif/profile.gif')}
                   style={styles.devicesIcon}
@@ -205,41 +192,11 @@ const HexaSettings = () => {
                 </Text>
               </View>
               <Icon
-                name={activeDropdown === 'devices' ? 'expand-less' : 'expand-more'}
+                name="chevron-right"
                 size={24}
                 color={darkMode ? '#fff' : '#333'}
               />
             </TouchableOpacity>
-            {activeDropdown === 'devices' && (
-              <View style={[styles.dropdownContent, darkMode && styles.darkDropdownContent]}>
-                <Text style={[styles.dropdownText, darkMode && styles.textWhite]}>
-                  Assign email IDs to manage devices:
-                </Text>
-                {devices.map((device) => (
-                  <View key={device.id} style={styles.deviceRow}>
-                    <View>
-                      <Text style={[styles.dropdownText, darkMode && styles.textWhite]}>
-                        {device.name}
-                      </Text>
-                      <Text style={[styles.emailText, darkMode && styles.textWhite]}>
-                        Emails: {device.emails.length}/5 ({device.emails.join(', ') || 'None'})
-                      </Text>
-                    </View>
-                    <TouchableOpacity
-                      style={styles.manageEmailsButton}
-                      onPress={() => handleManageDeviceEmails(device.id)}
-                      accessibilityLabel={`Manage emails for ${device.name}`}
-                      accessibilityRole="button"
-                      disabled={device.emails.length >= 5}
-                    >
-                      <Text style={styles.buttonText}>
-                        {device.emails.length >= 5 ? 'Max Reached' : 'Manage Emails'}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                ))}
-              </View>
-            )}
           </View>
 
           <View>
@@ -470,15 +427,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     color: '#333',
   },
-  subHeader: {
-    fontWeight: '600',
-    marginTop: 8,
-  },
-  emailText: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 4,
-  },
   dropdownButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -500,19 +448,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: '600',
-  },
-  deviceRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
-  manageEmailsButton: {
-    backgroundColor: '#3498db',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    alignItems: 'center',
   },
 });
 
