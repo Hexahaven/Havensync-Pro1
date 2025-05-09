@@ -30,9 +30,14 @@ export default function HexaDeviceRadar() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const pulseAnim = new Animated.Value(0);
+  const rotateAnim = new Animated.Value(0);
+  const scaleAnim = new Animated.Value(1);
 
   useEffect(() => {
     animatePulse();
+    animateRotation();
+    animateScale();
+
     const timer = setTimeout(() => {
       setFoundDevices(mockDevices);
       setScanning(false);
@@ -45,14 +50,44 @@ export default function HexaDeviceRadar() {
       Animated.sequence([
         Animated.timing(pulseAnim, {
           toValue: 1,
-          duration: 1200,
+          duration: 1500,
           easing: Easing.out(Easing.circle),
           useNativeDriver: true,
         }),
         Animated.timing(pulseAnim, {
           toValue: 0,
-          duration: 1200,
+          duration: 1500,
           easing: Easing.in(Easing.circle),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  };
+
+  const animateRotation = () => {
+    Animated.loop(
+      Animated.timing(rotateAnim, {
+        toValue: 1,
+        duration: 6000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    ).start();
+  };
+
+  const animateScale = () => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(scaleAnim, {
+          toValue: 1.1,
+          duration: 1000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 1,
+          duration: 1000,
+          easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
         }),
       ])
@@ -74,6 +109,25 @@ export default function HexaDeviceRadar() {
     }),
   };
 
+  const rotateStyle = {
+    transform: [
+      {
+        rotate: rotateAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: ['0deg', '360deg'],
+        }),
+      },
+    ],
+  };
+
+  const scaleStyle = {
+    transform: [
+      {
+        scale: scaleAnim,
+      },
+    ],
+  };
+
   const handleConnect = (device) => {
     dispatch(
       addDevice({
@@ -92,9 +146,9 @@ export default function HexaDeviceRadar() {
       <Text style={styles.title}>Scanning for Devices...</Text>
       <View style={styles.radarContainer}>
         <Animated.View style={[styles.radarPulse, pulseStyle]} />
-        <View style={styles.radarCore}>
-          <FontAwesomeIcon icon={faWifi} size={40} color="white" />
-        </View>
+        <Animated.View style={[styles.radarCore, rotateStyle, scaleStyle]}>
+          <FontAwesomeIcon icon={faWifi} size={40} color="#fff" />
+        </Animated.View>
       </View>
 
       {!scanning && (
@@ -108,7 +162,7 @@ export default function HexaDeviceRadar() {
               style={styles.deviceItem}
               onPress={() => handleConnect(item)}
             >
-              <FontAwesomeIcon icon={faPlug} size={20} color="#333" />
+              <FontAwesomeIcon icon={faPlug} size={20} color="#fff" />
               <Text style={styles.deviceName}>{item.name}</Text>
               <Text style={styles.connectText}>Tap to connect</Text>
             </TouchableOpacity>
@@ -122,12 +176,12 @@ export default function HexaDeviceRadar() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#84c9e8',
+    backgroundColor: '#1f1f1f',
     alignItems: 'center',
     paddingTop: 60,
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#fff',
     marginBottom: 20,
@@ -136,10 +190,16 @@ const styles = StyleSheet.create({
     width: RADIUS,
     height: RADIUS,
     borderRadius: RADIUS / 2,
-    backgroundColor: '#74bcd9',
+    backgroundColor: 'rgba(114, 188, 217, 0.8)',
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
+    borderWidth: 2,
+    borderColor: '#fff',
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 10 },
   },
   radarPulse: {
     position: 'absolute',
@@ -147,6 +207,7 @@ const styles = StyleSheet.create({
     height: RADIUS,
     borderRadius: RADIUS / 2,
     backgroundColor: '#a3ddf5',
+    opacity: 0.5,
   },
   radarCore: {
     width: 80,
@@ -156,23 +217,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 2,
+    borderWidth: 2,
+    borderColor: '#fff',
+    shadowColor: '#000',
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
   },
   deviceItem: {
-    backgroundColor: '#fff',
+    backgroundColor: '#2c3e50',
     borderRadius: 14,
     padding: 16,
     marginBottom: 12,
-    elevation: 2,
+    elevation: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
   },
   deviceName: {
     fontSize: 16,
     fontWeight: '600',
-    marginTop: 4,
-    color: '#333',
+    marginLeft: 12,
+    color: '#fff',
   },
   connectText: {
     fontSize: 12,
-    color: '#888',
+    color: '#ddd',
     marginTop: 4,
   },
 });
