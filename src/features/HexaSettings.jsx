@@ -25,7 +25,8 @@ const HexaSettings = () => {
   const [activeDropdown, setActiveDropdown] = useState(null);
 
   const toggleDropdown = (key) => {
-    setActiveDropdown(activeDropdown === key ? null : key);
+    console.log('Toggling dropdown:', { key, currentActive: activeDropdown });
+    setActiveDropdown(prev => (prev === key ? null : key));
   };
 
   const handleToggleDarkMode = useCallback(() => {
@@ -45,7 +46,7 @@ const HexaSettings = () => {
   }, []);
 
   const handleDevicesPress = useCallback(() => {
-    navigation.navigate('ManageDeviceEmailsScreen');
+    navigation.navigate('ManageDevice');
   }, [navigation]);
 
   const handleIntegrationPress = useCallback((service) => {
@@ -324,10 +325,10 @@ const HexaSettings = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#c4d3d2', // Updated to new background color
   },
   darkContainer: {
-    backgroundColor: '#121212',
+    backgroundColor: '#3a4a49', // Darker shade for dark mode
   },
   contentContainer: {
     padding: 16,
@@ -383,7 +384,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
-    zIndex: 1,
   },
   optionContent: {
     flexDirection: 'row',
