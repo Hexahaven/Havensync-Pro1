@@ -12,7 +12,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-  export default function HexaSignUpScreen({ navigation }){
+export default function HexaSignUpScreen({ navigation }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -52,9 +52,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
   return (
     <LinearGradient colors={['#c4d3d2', '#c4d3d2']} style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.title}>Create Account</Text>
+      <Text style={styles.title}>Create Account</Text>
 
+      <View style={styles.card}>
         <TextInput
           style={styles.input}
           placeholder="Name"
@@ -117,12 +117,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
         <TouchableOpacity style={styles.buttonContainer} onPress={handleSignUp}>
           <LinearGradient
-  colors={['#00C9FF', '#92FE9D']} // Updated to match Login screen
-  start={{ x: 0, y: 0 }}
-  end={{ x: 1, y: 1 }}
-  style={styles.button}
->
-
+            colors={['#00C9FF', '#92FE9D']} // Updated to match Login screen
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.button}
+          >
             <Text style={styles.buttonText}>Sign Up</Text>
           </LinearGradient>
         </TouchableOpacity>
@@ -147,6 +146,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  title: {
+    fontSize: 25,
+    fontFamily: 'HoryzenDigital-24', // Updated font
+    marginBottom: 16,
+    textAlign: 'center',
+    color: '#333',
+  },
   card: {
     width: '85%',
     padding: 28,
@@ -158,13 +164,8 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     elevation: 12,
     transform: [{ perspective: 800 }],
-  },
-  title: {
-    fontSize: 25,
-    fontFamily: 'HoryzenDigital-24', // Updated font
-    marginBottom: 32,
-    textAlign: 'center',
-    color: '#333',
+    marginTop: 10, // Added marginTop to adjust position
+    height: 'auto', // Make card shorter
   },
   input: {
     height: 50,
@@ -201,32 +202,28 @@ const styles = StyleSheet.create({
     shadowOpacity: 80,
     shadowRadius: 6,
   },
- button: {
-  paddingVertical: 10, // Increase the vertical padding
-  paddingHorizontal: 10, // Horizontal padding
-  borderRadius: 30, // Rounded corners for the button
-  alignItems: 'center',
-  justifyContent: 'center',
-  // For iOS shadow
-  shadowColor: '#000',
-  shadowOffset: { width: 5, height: 10 }, // Shadow position
-  shadowOpacity: 0.25, // Shadow intensity
-  shadowRadius: 8, // Shadow spread
-  // For Android elevation
-  elevation: 3, // Elevation to give depth effect
-},
-
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 5, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 3,
+  },
   buttonText: {
-  color: '#fff',
-  fontSize: 20,
-  fontWeight: '700',
-  textShadowColor: 'rgba(0, 0, 0, 0.3)',  // Shadow color
-  textShadowOffset: { width: 1, height: 2 }, // Shadow position
-  textShadowRadius: 5,                     // Shadow blur radius
-  textStrokeWidth: 5,                      // Stroke width (simulated effect)
-  textStrokeColor: '#000',              // Stroke color
-},
-
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '700',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 2 },
+    textShadowRadius: 5,
+    textStrokeWidth: 5,
+    textStrokeColor: '#000',
+  },
   switchText: {
     textAlign: 'center',
     color: '#333',

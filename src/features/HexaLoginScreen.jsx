@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
+import FastImage from 'react-native-fast-image';
 
 export default function HexaLoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -17,11 +18,15 @@ export default function HexaLoginScreen({ navigation }) {
   const [focusedInput, setFocusedInput] = useState(null);
   const [loginStatus, setLoginStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showGif, setShowGif] = useState(false);
 
   const [emailAnim] = useState(new Animated.Value(email ? 1 : 0));
   const [passAnim] = useState(new Animated.Value(password ? 1 : 0));
   const buttonColorAnim = useRef(new Animated.Value(0)).current;
   const buttonScaleAnim = useRef(new Animated.Value(1)).current;
+
+  const [titleOpacity] = useState(new Animated.Value(0));
+  const [titleTranslateY] = useState(new Animated.Value(-30));
 
   const buttonBackgroundColor = buttonColorAnim.interpolate({
     inputRange: [0, 1, 2],
@@ -36,10 +41,28 @@ export default function HexaLoginScreen({ navigation }) {
   }, []);
 
   useEffect(() => {
+    Animated.parallel([
+      Animated.timing(titleOpacity, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.timing(titleTranslateY, {
+        toValue: 0,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  useEffect(() => {
     let timer;
     if (loginStatus === 'failed' || loginStatus === 'success') {
-      const timeoutDuration = loginStatus === 'success' ? 1000 : 2000;
+      setShowGif(true);
+      const timeoutDuration = 2000;
+
       timer = setTimeout(() => {
+        setShowGif(false);
         Animated.parallel([
           Animated.timing(buttonColorAnim, {
             toValue: 0,
@@ -57,6 +80,7 @@ export default function HexaLoginScreen({ navigation }) {
         });
       }, timeoutDuration);
     }
+
     return () => {
       if (timer) clearTimeout(timer);
     };
@@ -164,9 +188,19 @@ export default function HexaLoginScreen({ navigation }) {
 
   return (
     <LinearGradient colors={['#c4d3d2', '#c4d3d2']} style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.title}>Ready To Sync</Text>
+      <Animated.Text
+        style={[
+          styles.title,
+          {
+            opacity: titleOpacity,
+            transform: [{ translateY: titleTranslateY }],
+          },
+        ]}
+      >
+        Ready To Sync
+      </Animated.Text>
 
+      <View style={styles.card}>
         <View style={[styles.inputWrapper, getInputStyle('email')]}>
           <Animated.Text
             style={[
@@ -185,7 +219,8 @@ export default function HexaLoginScreen({ navigation }) {
                   outputRange: [16, 12],
                 }),
               },
-            ]}>
+            ]}
+          >
             Email
           </Animated.Text>
           <TextInput
@@ -218,7 +253,8 @@ export default function HexaLoginScreen({ navigation }) {
                   outputRange: [16, 12],
                 }),
               },
-            ]}>
+            ]}
+          >
             Password
           </Animated.Text>
           <TextInput
@@ -233,14 +269,16 @@ export default function HexaLoginScreen({ navigation }) {
           <TouchableOpacity
             style={styles.eyeIcon}
             onPress={() => setShowPassword(prev => !prev)}
-            disabled={isLoading}>
+            disabled={isLoading}
+          >
             <Icon name={showPassword ? 'eye-off' : 'eye'} size={22} color="#888" />
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity
           onPress={() => navigation.navigate('ForgotPasswordRequest')}
-          disabled={isLoading}>
+          disabled={isLoading}
+        >
           <Text style={[styles.forgotPasswordText, isLoading && styles.disabledText]}>
             Forgot Password?
           </Text>
@@ -269,11 +307,24 @@ export default function HexaLoginScreen({ navigation }) {
           </TouchableOpacity>
         </Animated.View>
 
+        {showGif && (
+          <FastImage
+            source={
+              loginStatus === 'success'
+                ? require('../assets/gif/login.gif')
+                : require('../assets/gif/fail.gif')
+            }
+            style={styles.inlineGif}
+            resizeMode={FastImage.resizeMode.contain}
+          />
+        )}
+
         <Text style={[styles.switchText, isLoading && styles.disabledText]}>
           Don't have an account?{' '}
           <Text
             onPress={() => !isLoading && navigation.navigate('HexaSignUpScreen')}
-            style={{ fontWeight: '700', color: isLoading ? '#999' : '#007BFF' }}>
+            style={{ fontWeight: '700', color: isLoading ? '#999' : '#007BFF' }}
+          >
             Sign Up
           </Text>
         </Text>
@@ -283,24 +334,19 @@ export default function HexaLoginScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center' 
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  title: {
+    fontSize: 28,
+    fontFamily: 'HoryzenDigital-24',
+    color: '#333',
+    marginBottom: 10,
   },
   card: {
-    width: '85%',
-    padding: 28,
+    width: '80%',
+    padding: 24,
     backgroundColor: 'rgba(255,255,255,0.95)',
     borderRadius: 20,
     elevation: 12,
-  },
-  title: {
-    fontSize: 25,
-    fontFamily: 'HoryzenDigital-24',
-    marginBottom: 32,
-    textAlign: 'center',
-    color: '#333',
   },
   inputWrapper: {
     marginBottom: 24,
@@ -340,19 +386,18 @@ const styles = StyleSheet.create({
     fontFamily: 'Kiona-Regular',
   },
   gradientButton: {
-  paddingVertical: 10, // Increase the vertical padding
-  paddingHorizontal: 10, // Horizontal padding
-  borderRadius: 30, // Rounded corners for the button
-  alignItems: 'center',
-  justifyContent: 'center',
-  // For iOS shadow
-  shadowColor: '#000',
-  shadowOffset: { width: 5, height: 10 }, // Shadow position
-  shadowOpacity: 30, // Shadow intensity
-  shadowRadius: 8, // Shadow spread
-  // For Android elevation
-  elevation: 3, // Elevation to give depth effect
-},
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 5, height: 10 },
+    shadowOpacity: 30,
+    shadowRadius: 8,
+    elevation: 3,
+    flexDirection: 'row',
+  },
   buttonText: {
     fontSize: 18,
     fontFamily: 'Kiona-Regular',
@@ -371,5 +416,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333',
     fontFamily: 'Kiona-Regular',
+  },
+  inlineGif: {
+    width: 120,
+    height: 120,
+    alignSelf: 'center',
+    marginTop: 20,
   },
 });
