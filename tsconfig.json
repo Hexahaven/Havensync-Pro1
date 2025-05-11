@@ -1,15 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "module": "es2015",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
-  },
-  "exclude": [
-    "node_modules/react-native"
-  ],
-  "extends": "expo/tsconfig.base"
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["babel__generator", "babel__template", "babel__traverse"]
+  }
 }
