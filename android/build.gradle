@@ -10,7 +10,8 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' } // Add this line
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven { url 'https://maven.pkg.github.com/facebook/react-native' }
     }
     dependencies {
         classpath("com.android.tools.build:gradle:8.0.2")
@@ -22,20 +23,8 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' } // Add this line
-    }
-}
-
-subprojects {
-    afterEvaluate { project ->
-        if (project.hasProperty("android")) {
-            android {
-                compileOptions {
-                    sourceCompatibility JavaVersion.VERSION_17
-                    targetCompatibility JavaVersion.VERSION_17
-                }
-            }
-        }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven { url 'https://maven.pkg.github.com/facebook/react-native' }
     }
 }
 
