@@ -1,474 +1,196 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   View,
   Text,
   StyleSheet,
-  Switch,
   TouchableOpacity,
   ScrollView,
-  Platform,
-  Linking,
+  Switch,
   Image,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleDarkMode } from '../redux/slices/profileSlice';
 import { logoutUser } from '../redux/slices/authSlice';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const HexaSettings = () => {
-  const darkMode = useSelector(state => state.profile.darkMode);
+export default function HexaSettings() {
   const dispatch = useDispatch();
+  const darkMode = useSelector(state => state.profile.darkMode);
   const navigation = useNavigation();
 
-  const [activeDropdown, setActiveDropdown] = useState(null);
-
-  const toggleDropdown = (key) => {
-    console.log('Toggling dropdown:', { key, currentActive: activeDropdown });
-    setActiveDropdown(prev => (prev === key ? null : key));
+  const themed = {
+    bg: darkMode ? '#1c1c1e' : '#f5f7fb',
+    card: darkMode ? '#2c2c2e' : '#ffffff',
+    text: darkMode ? '#ffffff' : '#1e1e1e',
+    subText: darkMode ? '#bbb' : '#777',
   };
 
-  const handleToggleDarkMode = useCallback(() => {
-    dispatch(toggleDarkMode());
-  }, [dispatch]);
-
-  const handleAboutPress = useCallback(() => {
-    toggleDropdown('about');
-  }, []);
-
-  const handleFeedbackPress = useCallback(() => {
-    const email = 'support@havensync.com';
-    const subject = 'HavenSync Feedback';
-    Linking.openURL(`mailto:${email}?subject=${encodeURIComponent(subject)}`).catch(() => {
-      toggleDropdown('feedback');
-    });
-  }, []);
-
-  const handleDevicesPress = useCallback(() => {
-    navigation.navigate('ManageDevice');
-  }, [navigation]);
-
-  const handleIntegrationPress = useCallback((service) => {
-    toggleDropdown(`integration-${service}`);
-  }, []);
-
-  const handleLogoutPress = useCallback(() => {
-    toggleDropdown('logout');
-  }, []);
-
-  const confirmLogout = () => {
+  const handleLogout = () => {
     dispatch(logoutUser());
     navigation.reset({
       index: 0,
       routes: [{ name: 'HexaLoginScreen' }],
     });
-    setActiveDropdown(null);
   };
 
   return (
-    <SafeAreaView style={[styles.container, darkMode && styles.darkContainer]}>
-      <ScrollView
-        contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false}
-        accessibilityLabel="Settings Scroll View"
-      >
-        <View style={styles.header}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            accessibilityLabel="Go Back"
-            accessibilityRole="button"
-          >
-            <Icon
-              name="arrow-back"
-              size={24}
-              color={darkMode ? '#fff' : '#333'}
-            />
-          </TouchableOpacity>
-          <Text style={[styles.title, darkMode && styles.textWhite]}>
-            Settings
-          </Text>
-        </View>
-
-        <View style={[styles.section, darkMode && styles.darkSection]}>
-          <Text style={[styles.sectionTitle, darkMode && styles.darkSectionTitle]}>
-            Appearance
-          </Text>
-          <TouchableOpacity
-            style={styles.optionRow}
-            onPress={handleToggleDarkMode}
-            accessibilityLabel="Toggle Dark Mode"
-            accessibilityRole="switch"
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <View style={styles.optionContent}>
-              <Image
-                source={require('../assets/gif/nightmode.gif')}
-                style={styles.darkModeIcon}
-              />
-              <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
-                Dark Mode
-              </Text>
-            </View>
-            <Switch
-              value={darkMode}
-              onValueChange={handleToggleDarkMode}
-              trackColor={{ false: '#999', true: '#4caf50' }}
-              thumbColor={darkMode ? '#fff' : '#ccc'}
-              ios_backgroundColor="#999"
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View style={[styles.section, darkMode && styles.darkSection]}>
-          <Text style={[styles.sectionTitle, darkMode && styles.darkSectionTitle]}>
-            General
-          </Text>
-          <View>
-            <TouchableOpacity
-              style={styles.optionRow}
-              onPress={handleAboutPress}
-              accessibilityLabel="About HavenSync"
-              accessibilityRole="button"
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
-              <View style={styles.optionContent}>
-                <Image
-                  source={require('../assets/gif/information.gif')}
-                  style={styles.aboutIcon}
-                />
-                <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
-                  About
-                </Text>
-              </View>
-              <Icon
-                name={activeDropdown === 'about' ? 'expand-less' : 'expand-more'}
-                size={24}
-                color={darkMode ? '#fff' : '#333'}
-              />
-            </TouchableOpacity>
-            {activeDropdown === 'about' && (
-              <View style={[styles.dropdownContent, darkMode && styles.darkDropdownContent]}>
-                <Text style={[styles.dropdownText, darkMode && styles.textWhite]}>
-                  HavenSync Home Automation App
-                  {'\n'}Version 1.0.0
-                  {'\n'}© 2024 HavenSync Inc.
-                </Text>
-              </View>
-            )}
-          </View>
-
-          <View>
-            <TouchableOpacity
-              style={styles.optionRow}
-              onPress={handleFeedbackPress}
-              accessibilityLabel="Send Feedback"
-              accessibilityRole="button"
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
-              <View style={styles.optionContent}>
-                <Image
-                  source={require('../assets/gif/feedback.gif')}
-                  style={styles.feedbackIcon}
-                />
-                <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
-                  Feedback
-                </Text>
-              </View>
-              <Icon
-                name={activeDropdown === 'feedback' ? 'expand-less' : 'expand-more'}
-                size={24}
-                color={darkMode ? '#fff' : '#333'}
-              />
-            </TouchableOpacity>
-            {activeDropdown === 'feedback' && (
-              <View style={[styles.dropdownContent, darkMode && styles.darkDropdownContent]}>
-                <Text style={[styles.dropdownText, darkMode && styles.textWhite]}>
-                  Unable to open email client. Please contact us at support@havensync.com
-                </Text>
-              </View>
-            )}
-          </View>
-
-          <View>
-            <TouchableOpacity
-              style={styles.optionRow}
-              onPress={handleDevicesPress}
-              accessibilityLabel="Manage Devices"
-              accessibilityRole="button"
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
-              <View style={styles.optionContent}>
-                <Image
-                  source={require('../assets/gif/profile.gif')}
-                  style={styles.devicesIcon}
-                />
-                <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
-                  Manage Devices
-                </Text>
-              </View>
-              <Icon
-                name="chevron-right"
-                size={24}
-                color={darkMode ? '#fff' : '#333'}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View>
-            <TouchableOpacity
-              style={styles.optionRow}
-              onPress={handleLogoutPress}
-              accessibilityLabel="Logout"
-              accessibilityRole="button"
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
-              <View style={styles.optionContent}>
-                <Image
-                  source={require('../assets/gif/logout.gif')}
-                  style={styles.logoutIcon}
-                />
-                <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
-                  Logout
-                </Text>
-              </View>
-              <Icon
-                name={activeDropdown === 'logout' ? 'expand-less' : 'expand-more'}
-                size={24}
-                color={darkMode ? '#fff' : '#333'}
-              />
-            </TouchableOpacity>
-            {activeDropdown === 'logout' && (
-              <View style={[styles.dropdownContent, darkMode && styles.darkDropdownContent]}>
-                <Text style={[styles.dropdownText, darkMode && styles.textWhite]}>
-                  Are you sure you want to logout?
-                </Text>
-                <View style={styles.dropdownButtonContainer}>
-                  <TouchableOpacity
-                    style={[styles.dropdownButton, styles.confirmButton]}
-                    onPress={confirmLogout}
-                  >
-                    <Text style={styles.buttonText}>Confirm</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.dropdownButton, styles.cancelButton]}
-                    onPress={() => toggleDropdown('logout')}
-                  >
-                    <Text style={styles.buttonText}>Cancel</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
+    <SafeAreaView style={[styles.container, { backgroundColor: themed.bg }]}>
+      <ScrollView contentContainerStyle={styles.scroll}>
+        {/* Profile Section */}
+        <View style={[styles.profileCard, { backgroundColor: themed.card }]}>
+          <Image
+            source={require('../assets/images/default_avatar.png')}
+            style={styles.avatar}
+          />
+          <View style={styles.profileText}>
+            <Text style={[styles.nickname, { color: themed.text }]}>
+              Tap to Set Nickname
+            </Text>
           </View>
         </View>
 
-        <View style={[styles.section, darkMode && styles.darkSection]}>
-          <Text style={[styles.sectionTitle, darkMode && styles.darkSectionTitle]}>
-            Integrations
+        {/* Third-Party Services */}
+        <View style={[styles.sectionCard, { backgroundColor: themed.card }]}>
+          <Text style={[styles.sectionTitle, { color: themed.text }]}>
+            Third-Party Services
           </Text>
-          {[
-            { name: 'Amazon Alexa', icon: 'alexa' },
-            { name: 'Google Home', icon: 'home' },
-          ].map((integration) => (
-            <View key={integration.name}>
-              <TouchableOpacity
-                style={styles.optionRow}
-                onPress={() => handleIntegrationPress(integration.name)}
-                accessibilityLabel={`Configure ${integration.name}`}
-                accessibilityRole="button"
-                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              >
-                <View style={styles.optionContent}>
-                  {integration.name === 'Amazon Alexa' ? (
-                    <Image
-                      source={require('../assets/images/alexa.png')}
-                      style={styles.integrationIcon}
-                    />
-                  ) : integration.name === 'Google Home' ? (
-                    <Image
-                      source={require('../assets/images/google.png')}
-                      style={styles.integrationIcon}
-                    />
-                  ) : (
-                    <Icon
-                      name={integration.icon}
-                      size={24}
-                      color={darkMode ? '#fff' : '#333'}
-                      style={styles.optionIcon}
-                    />
-                  )}
-                  <Text style={[styles.optionLabel, darkMode && styles.textWhite]}>
-                    {integration.name}
-                  </Text>
-                </View>
-                <Icon
-                  name={activeDropdown === `integration-${integration.name}` ? 'expand-less' : 'expand-more'}
-                  size={24}
-                  color={darkMode ? '#fff' : '#333'}
-                />
+          <View style={styles.serviceIcons}>
+            {[
+              { name: 'Alexa', icon: require('../assets/images/alexa.png') },
+              { name: 'Google', icon: require('../assets/images/google.png') },
+              { name: 'SmartThings', icon: require('../assets/images/st.png') },
+              { name: 'IFTTT', icon: require('../assets/images/ifttt.png') },
+            ].map(service => (
+              <TouchableOpacity key={service.name} style={styles.iconButton}>
+                <Image source={service.icon} style={styles.serviceIcon} />
+                <Text style={[styles.serviceLabel, { color: themed.subText }]}>
+                  {service.name}
+                </Text>
               </TouchableOpacity>
-              {activeDropdown === `integration-${integration.name}` && (
-                <View style={[styles.dropdownContent, darkMode && styles.darkDropdownContent]}>
-                  <Text style={[styles.dropdownText, darkMode && styles.textWhite]}>
-                    Configure your {integration.name} integration here.
-                  </Text>
-                </View>
-              )}
-            </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Settings Options */}
+        <View style={[styles.sectionCard, { backgroundColor: themed.card }]}>
+          {[
+            'Home Management',
+            'Message Center',
+            'Help Center',
+            'Android Auto',
+            'Google Home Devices',
+          ].map(item => (
+            <TouchableOpacity key={item} style={styles.row}>
+              <Text style={[styles.rowLabel, { color: themed.text }]}>{item}</Text>
+              <Text style={[styles.arrow, { color: themed.subText }]}>›</Text>
+            </TouchableOpacity>
           ))}
         </View>
+
+        {/* Appearance */}
+        <View style={[styles.sectionCard, { backgroundColor: themed.card }]}>
+          <TouchableOpacity style={styles.row}>
+            <Text style={[styles.rowLabel, { color: themed.text }]}>Dark Mode</Text>
+            <Switch
+              value={darkMode}
+              onValueChange={() => dispatch(toggleDarkMode())}
+              trackColor={{ false: '#aaa', true: '#4caf50' }}
+              thumbColor={darkMode ? '#fff' : '#ccc'}
+            />
+          </TouchableOpacity>
+        </View>
+
+        {/* Logout */}
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.logoutText}>Log Out</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#c4d3d2', // Updated to new background color
   },
-  darkContainer: {
-    backgroundColor: '#3a4a49', // Darker shade for dark mode
-  },
-  contentContainer: {
+  scroll: {
     padding: 16,
-    paddingBottom: 32,
+    paddingBottom: 40,
   },
-  header: {
+  profileCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 24,
+    padding: 14,
+    borderRadius: 16,
+    marginBottom: 20,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#333',
-    marginLeft: 16,
+  avatar: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: '#ddd',
+    marginRight: 14,
   },
-  section: {
-    marginBottom: 24,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    overflow: 'hidden',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
+  profileText: {
+    flex: 1,
   },
-  darkSection: {
-    backgroundColor: '#1e1e1e',
-    borderColor: '#333',
-    borderWidth: 1,
+  nickname: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  sectionCard: {
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-    padding: 16,
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: 14,
   },
-  darkSectionTitle: {
-    color: '#fff',
-    backgroundColor: '#1e1e1e',
-  },
-  optionRow: {
+  serviceIcons: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
   },
-  optionContent: {
-    flexDirection: 'row',
+  iconButton: {
     alignItems: 'center',
     flex: 1,
   },
-  optionIcon: {
-    marginRight: 12,
+  serviceIcon: {
+    width: 36,
+    height: 36,
+    marginBottom: 6,
   },
-  optionLabel: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
+  serviceLabel: {
+    fontSize: 12,
+    textAlign: 'center',
   },
-  textWhite: {
-    color: '#fff',
-  },
-  logoutIcon: {
-    width: 50,
-    height: 50,
-    marginRight: 15,
-  },
-  feedbackIcon: {
-    width: 32,
-    height: 32,
-    marginRight: 12,
-  },
-  aboutIcon: {
-    width: 32,
-    height: 32,
-    marginRight: 12,
-  },
-  darkModeIcon: {
-    width: 32,
-    height: 32,
-    marginRight: 12,
-  },
-  devicesIcon: {
-    width: 32,
-    height: 32,
-    marginRight: 12,
-  },
-  integrationIcon: {
-    width: 24,
-    height: 24,
-    marginRight: 12,
-  },
-  dropdownContent: {
-    backgroundColor: '#f9f9f9',
-    padding: 16,
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
-    marginTop: 0,
   },
-  darkDropdownContent: {
-    backgroundColor: '#2a2a2a',
-    borderBottomColor: '#444',
-  },
-  dropdownText: {
+  rowLabel: {
     fontSize: 16,
-    lineHeight: 24,
-    color: '#333',
   },
-  dropdownButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 16,
+  arrow: {
+    fontSize: 18,
+    fontWeight: '500',
   },
-  dropdownButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    flex: 0.45,
+  logoutButton: {
+    backgroundColor: '#fff',
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: 'center',
+    marginTop: 10,
   },
-  confirmButton: {
-    backgroundColor: '#e74c3c',
-  },
-  cancelButton: {
-    backgroundColor: '#3498db',
-  },
-  buttonText: {
-    color: '#fff',
+  logoutText: {
+    fontSize: 16,
+    color: '#e74c3c',
     fontWeight: '600',
   },
 });
-
-export default HexaSettings;
